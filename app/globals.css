@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Lumera Ventures Brand Tokens (Single Source of Truth) */
+  --color-obsidian: #050505;
+  --color-graphite: #15171B;
+  --color-white: #F7F7F5;
+  --color-electric-blue: #398BFF;
+  --color-champagne-gold: #D7B875;
+
+  /* Semantic Theme Variables */
+  --background: var(--color-obsidian);
+  --foreground: var(--color-white);
+  --primary: #d7b875;
+  --primary-foreground: var(--color-obsidian);
+  --secondary: var(--color-graphite);
+  --secondary-foreground: var(--color-white);
+  --accent: var(--color-champagne-gold);
+  --accent-foreground: var(--color-obsidian);
+  --card: var(--color-graphite);
+  --card-foreground: var(--color-white);
+  --muted: var(--color-graphite);
+  --muted-foreground: #8E95A2;
+  --border: #23272E;
+  --ring: #d7b875;
 }
 
 @theme inline {
+  /* Semantic Color Utilities */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  /* Brand Color Utilities */
+  --color-obsidian: var(--color-obsidian);
+  --color-graphite: var(--color-graphite);
+  --color-white: var(--color-white);
+  --color-electric-blue: var(--color-electric-blue);
+  --color-champagne-gold: var(--color-champagne-gold);
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
+  background-color: #000000;
+  background-image: url('/images/star-bg.jpg');
+  background-repeat: repeat;
+  background-size: 576px 1024px;
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
