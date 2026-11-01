@@ -1,30 +1,37 @@
-import Image from "next/image";
-import { Container } from "@/components/ui/Container";
+"use client";
 
-interface TrustPrinciple {
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
+
+interface MetricCard {
   number: string;
-  title: string;
+  suffix: string;
   description: string;
 }
 
-const TRUST_PRINCIPLES: TrustPrinciple[] = [
+const METRIC_CARDS: MetricCard[] = [
   {
-    number: "01",
-    title: "Thoughtful Planning",
-    description:
-      "Every project begins with understanding the space, audience, and requirements.",
+    number: "40",
+    suffix: "+ Projects",
+    description: "Monumental Facades & Commercial Installations",
   },
   {
-    number: "02",
-    title: "Precision in Execution",
-    description:
-      "Careful coordination, installation, and testing help ensure the display is ready for its intended use.",
+    number: "10",
+    suffix: "+ Years",
+    description: "Pioneering Architectural LED Engineering",
   },
   {
-    number: "03",
-    title: "Support Beyond Installation",
-    description:
-      "We aim to build lasting relationships through guidance and support after the display is installed.",
+    number: "45",
+    suffix: "Awards",
+    description: "Recognized for Technical & Visual Excellence",
+  },
+  {
+    number: "123",
+    suffix: "+ Clients",
+    description: "Trusted by Global Brands & Architects",
   },
 ];
 
@@ -33,46 +40,67 @@ export function TrustSection() {
     <section
       id="trust"
       aria-labelledby="trust-heading"
-      className="relative w-full bg-transparent py-16 sm:py-20 lg:py-24 border-t border-border/40 select-none overflow-hidden"
+      className="relative w-full bg-transparent text-foreground py-16 sm:py-20 lg:py-24 border-t border-border/40 select-none overflow-hidden"
     >
       <Container className="w-full">
-        {/* Top Composition: Narrative Header on Left + Supporting Visual on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center mb-14 sm:mb-18 lg:mb-20">
-          {/* Top-Left: Eyebrow, Headline, and Supporting Text */}
-          <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-center text-left">
-            {/* Eyebrow */}
+        {/* Top Half: 2-Column Split (Editorial Narrative on Left + Architectural Visual on Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-18 items-center">
+          {/* Left Column: Eyebrow, Monumental Headline, Narrative & Gold Button */}
+          <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center text-left">
+            {/* Eyebrow Label */}
             <div className="mb-3 sm:mb-4">
               <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.25em] text-accent uppercase">
                 WHY LUMERA
               </span>
             </div>
 
-            {/* Headline */}
+            {/* Monumental Headline */}
             <h2
               id="trust-heading"
-              className="font-heading text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-foreground uppercase leading-[1.06] mb-5 sm:mb-6"
+              className="font-sans text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-foreground uppercase leading-[1.08] mb-5 sm:mb-7"
             >
-              Built on trust.<br />
-              <span className="text-accent">Delivered with precision.</span>
+              BUILT TO BECOME A<br />
+              <span className="text-accent">LEGACY.</span>
             </h2>
 
-            {/* Supporting Text */}
-            <p className="text-base sm:text-lg lg:text-xl font-light text-muted-foreground leading-relaxed sm:leading-loose max-w-2xl">
-              From the first conversation to the final installation, we focus on thoughtful planning, reliable execution, and support that keeps your display performing.
+            {/* Paragraph 1 */}
+            <p className="font-sans text-sm sm:text-base lg:text-lg font-light text-muted-foreground leading-relaxed sm:leading-loose max-w-xl mb-4 sm:mb-5">
+              We believe great display engineering is more than assembling panels
+              together. It is about creating spaces with purpose, precision, and
+              character—experiences designed to stand the test of time.
             </p>
+
+            {/* Paragraph 2 */}
+            <p className="font-sans text-sm sm:text-base lg:text-lg font-light text-muted-foreground leading-relaxed sm:leading-loose max-w-xl mb-6 sm:mb-8">
+              From thoughtful planning and structural excellence to refined
+              craftsmanship and meticulous execution, we bring every detail
+              together to create displays that feel as monumental as they look.
+              Every project is approached with care, driven by quality, and built
+              with a lasting vision.
+            </p>
+
+            {/* Gold CTA Button */}
+            <div>
+              <Link href="/about" className="inline-block">
+                <Button variant="gold" size="md">
+                  About Us
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Top-Right: Supporting Authentic Installation Visual */}
-          <div className="lg:col-span-5 xl:col-span-5 flex items-center justify-center">
-            <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-xl">
+          {/* Right Column: Architectural Photography Showcase */}
+          <div className="lg:col-span-6 xl:col-span-6 flex items-center justify-center">
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] xl:aspect-[16/11] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-2xl">
               <Image
-                src="/images/building-facade.jpg"
-                alt="Architectural LED display engineered into a commercial facade"
+                src="/images/mall-screen.png"
+                alt="Lumera architectural curved panoramic LED display installation"
                 fill
-                sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 42vw, 520px"
+                sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 50vw, 640px"
                 className="object-cover object-center select-none pointer-events-none"
+                priority
               />
-              {/* Subtle edge depth gradient */}
+              {/* Subtle ambient edge gradient */}
               <div
                 className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 z-10"
                 aria-hidden="true"
@@ -81,37 +109,29 @@ export function TrustSection() {
           </div>
         </div>
 
-        {/* Bottom Composition: Three Trust Principles in Clean Horizontal Layout with Linear Dividers */}
-        <div className="border-t border-border/40 pt-10 sm:pt-14 lg:pt-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
-            {TRUST_PRINCIPLES.map((principle, idx) => (
-              <div
-                key={principle.number}
-                className={`flex flex-col text-left ${
-                  idx === 0
-                    ? "md:pr-8 lg:pr-12"
-                    : idx === 1
-                    ? "border-t md:border-t-0 md:border-l border-border/40 pt-8 md:pt-0 md:px-8 lg:px-12"
-                    : "border-t md:border-t-0 md:border-l border-border/40 pt-8 md:pt-0 md:pl-8 lg:pl-12"
-                }`}
-              >
-                {/* Principle Number */}
-                <span className="text-xs font-mono font-medium tracking-[0.25em] text-accent uppercase block mb-3 sm:mb-4">
-                  {principle.number}
+        {/* Bottom Half: 4 Metric Cards in a Single Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mt-12 sm:mt-16 lg:mt-20">
+          {METRIC_CARDS.map((card, idx) => (
+            <div
+              key={idx}
+              className="bg-card/70 backdrop-blur-xs border border-border/70 hover:border-accent/40 transition-colors duration-200 p-6 sm:p-7 lg:p-8 rounded-xl shadow-xl flex flex-col justify-between group"
+            >
+              {/* Number + Suffix */}
+              <div className="flex items-baseline gap-2 mb-3 sm:mb-4">
+                <span className="font-sans text-4xl sm:text-5xl font-bold tracking-tight text-foreground group-hover:text-accent transition-colors">
+                  {card.number}
                 </span>
-
-                {/* Principle Title */}
-                <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground uppercase leading-snug mb-2.5 sm:mb-3">
-                  {principle.title}
-                </h3>
-
-                {/* Principle Description */}
-                <p className="text-sm sm:text-base font-light text-muted-foreground leading-relaxed">
-                  {principle.description}
-                </p>
+                <span className="font-mono text-xs sm:text-sm font-semibold tracking-wider text-accent uppercase">
+                  {card.suffix}
+                </span>
               </div>
-            ))}
-          </div>
+
+              {/* Description */}
+              <p className="font-sans text-xs sm:text-sm font-light text-muted-foreground leading-relaxed">
+                {card.description}
+              </p>
+            </div>
+          ))}
         </div>
       </Container>
     </section>

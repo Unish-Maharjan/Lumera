@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 
 export function AdsSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const pinnedViewportRef = useRef<HTMLDivElement>(null);
   const billboardRef = useRef<HTMLDivElement>(null);
   const screenWrapperRef = useRef<HTMLDivElement>(null);
   const bezelRef = useRef<HTMLDivElement>(null);
@@ -21,7 +22,7 @@ export function AdsSection() {
 
   useGSAP(
     () => {
-      if (!sectionRef.current || !billboardRef.current) return;
+      if (!sectionRef.current || !pinnedViewportRef.current || !billboardRef.current) return;
 
       gsap.registerPlugin(ScrollTrigger);
 
@@ -29,11 +30,22 @@ export function AdsSection() {
 
       // Desktop & Tablet screens: continuous, silky-smooth scroll animation
       mm.add("(min-width: 768px)", () => {
+        // 1. Pin the billboard viewport until the next section has fully scrolled over it
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          pin: pinnedViewportRef.current,
+          pinSpacing: false,
+          anticipatePin: 1,
+        });
+
+        // 2. Shrink and assembly animation timeline
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
-            end: () => `+=${window.innerHeight * 2}`,
+            end: () => `+=${window.innerHeight * 1.25}`,
             scrub: 1.2,
           },
         });
@@ -147,11 +159,21 @@ export function AdsSection() {
 
       // Mobile screens
       mm.add("(max-width: 767px)", () => {
+        // 1. Pin the billboard viewport until the next section has fully scrolled over it
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          pin: pinnedViewportRef.current,
+          pinSpacing: false,
+          anticipatePin: 1,
+        });
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
-            end: () => `+=${window.innerHeight * 2}`,
+            end: () => `+=${window.innerHeight * 1.2}`,
             scrub: 1.2,
           },
         });
@@ -259,12 +281,15 @@ export function AdsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[350vh] bg-transparent text-[#F5F2EB]"
+      className="relative w-full h-[240vh] bg-black text-[#F5F2EB]"
       id="billboard-showcase"
       aria-label="Lumera Commercial Outdoor LED Billboard Showcase"
     >
-      {/* Pinned Viewport Container - Edge-to-Edge with Zero Padding */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden select-none z-10 bg-transparent">
+      {/* Pinned Viewport Container - Kept pinned at top:0 while next section scrolls over it */}
+      <div
+        ref={pinnedViewportRef}
+        className="relative h-screen w-full flex items-center justify-center overflow-hidden select-none z-0 bg-black"
+      >
         {/* Deep Atmospheric Champagne Gold Center Glow */}
         <div
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(214,189,130,0.2)_0%,_rgba(140,110,60,0.08)_42%,_rgba(50,38,18,0.03)_65%,_transparent_80%)] pointer-events-none"

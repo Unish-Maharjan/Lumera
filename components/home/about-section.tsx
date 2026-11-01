@@ -139,7 +139,7 @@ export function AboutSection() {
       ref={sectionRef}
       id="about"
       aria-labelledby="about-heading"
-      className="relative w-full bg-black text-foreground overflow-hidden select-none"
+      className="relative z-20 w-full bg-black text-foreground overflow-hidden select-none shadow-[0_-30px_90px_rgba(0,0,0,0.98)]"
     >
       {/* Top Black Gradient Blend Transitioning from AdsSection
       <div

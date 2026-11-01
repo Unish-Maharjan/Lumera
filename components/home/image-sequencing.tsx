@@ -37,8 +37,8 @@ export function ImageSequencing() {
     const centerShiftX = (canvasWidth - drawWidth) / 2;
     const centerShiftY = (canvasHeight - drawHeight) / 2;
 
-    // Clear and fill canvas with obsidian background
-    ctx.fillStyle = "#050505";
+    // Clear and fill canvas with pure black background matching the frames (#000000)
+    ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     ctx.drawImage(
@@ -173,22 +173,21 @@ export function ImageSequencing() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen bg-transparent overflow-hidden border-t border-border/40 select-none flex items-center justify-center"
+      className="relative w-full h-screen bg-black overflow-hidden select-none flex items-center justify-center"
     >
-      {/* Background Interactive Canvas */}
+      {/* Background Interactive Canvas matching pure black frame background */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full block pointer-events-none"
+        className="absolute inset-0 w-full h-full block pointer-events-none bg-black"
       />
-
 
       {/* Subtle Soft Vignettes for Seamless Section Blending */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background via-background/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/50 to-transparent z-10"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-background via-background/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/50 to-transparent z-10"
         aria-hidden="true"
       />
     </section>
