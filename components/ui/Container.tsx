@@ -29,8 +29,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
     ref
   ) => {
     const sizeClass = sizeStyles[size] ?? sizeStyles.xl;
-    // Matches the header's outer px-7 and inner px-10 so every section aligns perfectly with the logo
-    const widthClass = "w-[calc(100%-3.5rem)] [[header]_&]:w-full";
+    const widthClass = "w-full";
     const gutterClass = gutter ? "px-6 sm:px-8 lg:px-10" : "";
 
     return (

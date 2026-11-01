@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Inter } from "next/font/google";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "./globals.css";
@@ -11,9 +11,10 @@ import Footer from "@/components/layout/Footer";
 // Prevent Font Awesome from adding its CSS since it's imported above
 config.autoAddCss = false;
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -30,15 +31,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col relative bg-black text-foreground">
-        {/* Ambient starry background texture replacing flat black */}
-        <div
-          className="fixed inset-0 pointer-events-none -z-10 bg-[url('/images/star-bg.jpg')] bg-repeat"
-          style={{ backgroundSize: "576px 1024px" }}
-          aria-hidden="true"
-        />
+      <body className="min-h-full flex flex-col relative bg-black text-foreground font-sans">
         <Preloader>
           <Header/>
           <SmoothScroll>{children}</SmoothScroll>

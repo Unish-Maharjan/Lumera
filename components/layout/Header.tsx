@@ -3,27 +3,29 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMagnifyingGlass,
-  faUser,
-  faBagShopping,
-} from "@fortawesome/free-solid-svg-icons";
 import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
 import { usePreloader } from "@/components/ui/Preloader";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Shop", href: "#shop" },
-  { label: "Collections", href: "#collections" },
   { label: "About Us", href: "/about" },
-  { label: "Blog", href: "#blog" },
+  { label: "Our Services", href: "/#spaces" },
+  { label: "Our Products", href: "/#products" },
+];
+
+const mobileNavLinks = [
+  { label: "About Us", href: "/about" },
+  { label: "Our Services", href: "/#spaces" },
+  { label: "Our Products", href: "/#products" },
+  { label: "Contact Us", href: "/#cta" },
 ];
 
 export function Header() {
   const { triggerPreloader } = usePreloader();
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -51,96 +53,102 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleLinkClick = (e: React.MouseEvent, label: string, href: string) => {
+    setIsMobileMenuOpen(false);
+    if (
+      label === "About Us" &&
+      typeof window !== "undefined" &&
+      window.location.pathname !== "/about"
+    ) {
+      e.preventDefault();
+      triggerPreloader(href);
+    }
+  };
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full
-         transition-all duration-300 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       } ${
-        isScrolled
+        isScrolled || isMobileMenuOpen
           ? "bg-black/90 backdrop-blur-md border-b border-white/10 shadow-2xl"
           : "bg-transparent border-b border-transparent shadow-none"
       }`}
     >
-      <Container className="h-14 sm:h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center -my-3 sm:-my-4">
+      <Container className="w-full relative h-14 flex items-center justify-between">
+        {/* Left: Brand Logo */}
+        <Link href="/" className="flex items-center shrink-0">
           <Image
             src="/logo/background-less-logo.png"
             alt="Lumera Ventures"
-            width={180}
-            height={80}
+            width={220}
+            height={89}
             priority
-            className="h-20 sm:h-24 w-auto object-contain select-none drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]"
+            className="h-7 sm:h-8 lg:h-9 w-auto object-contain select-none"
           />
         </Link>
 
-        {/* Center Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 lg:gap-10">
+        {/* Middle: Centered Navigation Links */}
+        <nav className="hidden md:flex items-center justify-center gap-6 lg:gap-10 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link) => (
             <Link
-              key={link.label}
+              key={`${link.label}-${link.href}`}
               href={link.href}
-              onClick={(e) => {
-                if (link.label === "About Us") {
-                  e.preventDefault();
-                  triggerPreloader(link.href);
-                }
-              }}
-              className={`text-xs lg:text-sm tracking-wide transition-colors duration-200 ${
-                !isScrolled
-                  ? link.label === "Home"
-                    ? "text-white font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-                    : "text-white/80 hover:text-white font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-                  : link.label === "Home"
-                    ? "text-white font-semibold"
-                    : "text-white/75 hover:text-white font-medium"
-              }`}
+              onClick={(e) => handleLinkClick(e, link.label, link.href)}
+              className="text-xs lg:text-sm font-medium tracking-wide text-white/85 hover:text-accent transition-colors duration-200"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        {/* Right Action Icons */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
-          <button
-            type="button"
-            aria-label="Search"
-            className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-colors cursor-pointer ${
-              !isScrolled
-                ? "bg-black/30 backdrop-blur-md border border-white/20 text-white/90 hover:bg-white/20 hover:text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-                : "bg-white/[0.08] border border-white/10 text-white/90 hover:bg-white/15 hover:text-white"
-            }`}
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-          </button>
+        {/* Right: Contact Us CTA Button & Mobile Hamburger */}
+        <div className="flex items-center justify-end gap-2.5 sm:gap-3.5 shrink-0">
+          <Link href="/#cta">
+            <Button
+              variant="gold"
+              size="sm"
+              className="text-[11px] sm:text-xs tracking-wider px-3 sm:px-4 py-1.5 sm:py-2"
+            >
+              Contact Us
+            </Button>
+          </Link>
 
+          {/* Mobile Menu Toggle Button */}
           <button
             type="button"
-            aria-label="Account"
-            className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-colors cursor-pointer ${
-              !isScrolled
-                ? "bg-black/30 backdrop-blur-md border border-white/20 text-white/90 hover:bg-white/20 hover:text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-                : "bg-white/[0.08] border border-white/10 text-white/90 hover:bg-white/15 hover:text-white"
-            }`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            className="md:hidden flex h-9 w-9 items-center justify-center text-white/90 hover:text-accent transition-colors cursor-pointer"
           >
-            <FontAwesomeIcon icon={faUser} className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-          </button>
-
-          <button
-            type="button"
-            aria-label="Cart"
-            className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-colors cursor-pointer ${
-              !isScrolled
-                ? "bg-black/30 backdrop-blur-md border border-white/20 text-white/90 hover:bg-white/20 hover:text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-                : "bg-white/[0.08] border border-white/10 text-white/90 hover:bg-white/15 hover:text-white"
-            }`}
-          >
-            <FontAwesomeIcon icon={faBagShopping} className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
           </button>
         </div>
       </Container>
+
+      {/* Mobile Dropdown Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl px-6 py-6 transition-all">
+          <nav className="flex flex-col gap-4">
+            {mobileNavLinks.map((link) => (
+              <Link
+                key={`mobile-${link.label}-${link.href}`}
+                href={link.href}
+                onClick={(e) => handleLinkClick(e, link.label, link.href)}
+                className="text-sm font-medium tracking-wide text-white/85 hover:text-accent transition-colors py-1"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

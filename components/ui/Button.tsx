@@ -14,41 +14,43 @@ export type ButtonVariant =
   | "#d7b875";
 export type ButtonSize = "sm" | "md" | "lg";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
+  // Architectural Dark Obsidian Rectangle as Normal (Inverts to Bone White on Hover)
   primary:
-    "bg-primary text-primary-foreground hover:opacity-90 active:scale-[0.98] shadow-sm",
-  secondary:
-    "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border active:scale-[0.98]",
-  outline:
-    "bg-transparent text-foreground border border-border hover:bg-secondary hover:text-foreground active:scale-[0.98]",
-  accent:
-    "bg-accent text-accent-foreground hover:opacity-95 active:scale-[0.98] shadow-sm",
-  ghost:
-    "bg-transparent text-foreground hover:bg-secondary/70 hover:text-foreground active:scale-[0.98]",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   gold:
-    "bg-[#d7b875] text-[#050505] hover:bg-[#c9a75f] active:scale-[0.98] shadow-sm font-semibold",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   champagne:
-    "bg-[#d7b875] text-[#050505] hover:bg-[#c9a75f] active:scale-[0.98] shadow-sm font-semibold",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   "champagne-gold":
-    "bg-[#d7b875] text-[#050505] hover:bg-[#c9a75f] active:scale-[0.98] shadow-sm font-semibold",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   "gold-gradient":
-    "bg-gradient-to-r from-[#d7b875] via-[#edd8a6] to-[#c49f52] text-[#050505] shadow-lg shadow-[#d7b875]/25 border border-[#edd8a6]/40 font-semibold",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   "gradient-gold":
-    "bg-gradient-to-r from-[#d7b875] via-[#edd8a6] to-[#c49f52] text-[#050505] shadow-lg shadow-[#d7b875]/25 border border-[#edd8a6]/40 font-semibold",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   "#d7b875":
-    "bg-[#d7b875] text-[#050505] hover:bg-[#c9a75f] active:scale-[0.98] shadow-sm font-semibold",
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
+  accent:
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
+  secondary:
+    "bg-[#15171B] text-[#F7F7F5] border border-white/20 hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
+  outline:
+    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
+  ghost:
+    "bg-transparent text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.99]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-9 px-3.5 text-xs gap-1.5 rounded-lg",
-  md: "h-11 px-5 text-sm gap-2 rounded-xl",
-  lg: "h-12 px-6 text-base gap-2.5 rounded-xl",
+  sm: "h-9 px-5 sm:px-6 text-[11px] sm:text-xs tracking-[0.2em] rounded-none",
+  md: "h-11 px-7 sm:px-8 text-xs sm:text-[13px] tracking-[0.2em] rounded-none",
+  lg: "h-12 sm:h-13 px-9 sm:px-11 text-xs sm:text-sm tracking-[0.22em] rounded-none",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -66,7 +68,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 cursor-pointer";
+      "inline-flex items-center justify-center font-mono font-medium uppercase transition-colors duration-200 ease-out select-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-50 cursor-pointer";
 
     const variantClass = variantStyles[variant] ?? variantStyles.primary;
     const sizeClass = sizeStyles[size] ?? sizeStyles.md;
@@ -82,7 +84,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && (
           <svg
-            className="animate-spin -ml-0.5 h-4 w-4 text-current"
+            className="animate-spin -ml-0.5 mr-2 h-4 w-4 text-current"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -103,7 +105,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </svg>
         )}
-        {children}
+        <span>{children}</span>
       </button>
     );
   }
@@ -112,4 +114,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export default Button;
-

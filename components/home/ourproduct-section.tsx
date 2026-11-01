@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
 
 interface ProductItem {
   id: string;
@@ -16,7 +18,7 @@ const PRODUCTS: ProductItem[] = [
     series: "01",
     name: "LUMERA MATRIX",
     category: "Fine Pitch",
-    summary: "Ultra-fine pitch MicroLED architecture for luxury flagships & corporate studios.",
+    summary: "Ultra-fine pitch MicroLED displays for flagships & studios.",
     imageSrc: "/products/product-1.webp",
   },
   {
@@ -24,7 +26,7 @@ const PRODUCTS: ProductItem[] = [
     series: "02",
     name: "LUMERA VORTEX",
     category: "Stage & Rental",
-    summary: "High-refresh virtual production & modular stage video panels.",
+    summary: "High-refresh modular LED panels for virtual production.",
     imageSrc: "/products/product-2.webp",
   },
   {
@@ -32,7 +34,7 @@ const PRODUCTS: ProductItem[] = [
     series: "03",
     name: "LUMERA STRATA",
     category: "Outdoor Commercial",
-    summary: "High-brightness architectural facade and digital billboard display.",
+    summary: "High-brightness architectural facade and billboard screens.",
     imageSrc: "/products/product-3.webp",
   },
   {
@@ -40,24 +42,8 @@ const PRODUCTS: ProductItem[] = [
     series: "04",
     name: "LUMERA CRYSTAL",
     category: "Transparent Glass",
-    summary: "82% high-transparency architectural glass LED wall.",
+    summary: "82% high-transparency architectural glass LED video wall.",
     imageSrc: "/products/product-4.webp",
-  },
-  {
-    id: "lumera-curve",
-    series: "05",
-    name: "LUMERA CURVE",
-    category: "3D & Creative",
-    summary: "Flexible concave and convex modules for 90° seamless anamorphic corners.",
-    imageSrc: "/products/product-5.webp",
-  },
-  {
-    id: "lumera-titan",
-    series: "06",
-    name: "LUMERA TITAN",
-    category: "DOOH Display",
-    summary: "Heavy-duty dual-service access commercial DOOH billboard screens.",
-    imageSrc: "/products/product-6.webp",
   },
 ];
 
@@ -66,65 +52,88 @@ export function OurProductSection() {
     <section
       id="products"
       aria-labelledby="products-heading"
-      className="relative bg-transparent py-20 sm:py-28 lg:py-32 text-foreground overflow-hidden border-t border-border/40"
+      className="relative bg-black pt-10 sm:pt-14 lg:pt-20 text-foreground font-sans border-t border-white/[0.08] select-none overflow-hidden"
     >
-      <Container>
-        {/* Section Header: 3-Line Heading */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 sm:mb-16">
+      <Container className="w-full">
+        {/* Section Header: Top-Left */}
+        <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20 text-left">
+         
+          {/* Heading */}
           <h2
             id="products-heading"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.75rem] font-bold tracking-tight text-foreground uppercase leading-[0.92] select-none"
+            className="font-sans text-3xl sm:text-5xl md:text-6xl font-bold text-foreground uppercase mb-4 sm:mb-5"
           >
-            PRECISION HARDWARE.<br />
-            BUILT FOR<br />
-            <span className="text-accent">PERFORMANCE.</span>
+            Displays for every space.
           </h2>
         </div>
 
-        {/* Clean, Simple 3-Column Grid (6 Cards, Human-Designed) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {PRODUCTS.map((product) => (
-            <article
-              key={product.id}
-              className="relative w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-card border border-border/70 flex flex-col justify-between p-6 sm:p-7"
-            >
-              {/* Full-bleed Product Image */}
-              <Image
-                src={product.imageSrc}
-                alt={product.name}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover select-none pointer-events-none"
-              />
+        {/* OXI Instruments-Inspired Minimal Two-Column Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 border-t border-b border-white/[0.08]">
+          {PRODUCTS.map((product, idx) => {
+            const isLeftCol = idx % 2 === 0;
+            // Clean border logic: no conflicting Tailwind responsive classes
+            const borderBottomClass =
+              idx < 2
+                ? "border-b md:border-b"
+                : idx === 2
+                ? "border-b md:border-b-0"
+                : "border-b-0";
+            const borderRightClass = isLeftCol ? "md:border-r" : "";
 
-              {/* Top Row: Series & Category */}
-              <div className="relative z-10 flex items-center justify-between">
-                <span className="text-xs font-mono font-medium tracking-widest text-accent uppercase">
-                  {product.series}
-                </span>
-                <span className="text-[10px] font-mono tracking-wider text-muted-foreground uppercase px-2.5 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm">
-                  {product.category}
-                </span>
-              </div>
+            return (
+              <article
+                key={product.id}
+                className={`group relative flex flex-col justify-between min-h-[580px] sm:min-h-[680px] lg:min-h-[800px] xl:min-h-[860px] p-6 sm:p-10 lg:p-12 bg-black border-white/[0.08] ${borderBottomClass} ${borderRightClass}`}
+              >
+                {/* Cell Header: Product Name at Top-Left (OXI Style) */}
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs sm:text-sm font-sans text-white uppercase font-medium">
+                    {product.name}
+                  </span>
+                </div>
 
-              {/* Bottom Gradient & Text: Clean, Simple, Uncluttered */}
-              <div className="relative z-10 p-6 sm:p-7 bg-gradient-to-t from-black/90 via-black/50 to-transparent -mx-6 sm:-mx-7 -mb-6 sm:-mb-7">
-                <h3 className="text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1.5">
-                  {product.name}
-                </h3>
-                <p className="text-xs text-white/70 font-light leading-relaxed">
-                  {product.summary}
-                </p>
-              </div>
-            </article>
-          ))}
+                {/* Dominant Product Image: Centered in pure obsidian void */}
+                <div className="relative w-full flex-1 flex items-center justify-center my-6 sm:my-8 min-h-[360px] sm:min-h-[460px] lg:min-h-[560px] xl:min-h-[640px]">
+                  <div className="relative w-full h-full min-h-[340px] sm:min-h-[440px] lg:min-h-[540px] xl:min-h-[600px] max-w-[640px] flex items-center justify-center">
+                    <Image
+                      src={product.imageSrc}
+                      alt={`${product.name} LED display panel`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-contain select-none pointer-events-none drop-shadow-[0_25px_60px_rgba(0,0,0,0.85)] transition-opacity duration-300 group-hover:opacity-25"
+                      priority={idx < 2}
+                    />
+
+                    {/* Description Appearing in the Middle on Hover (Boxless, Inset Text) */}
+                    <div className="absolute inset-6 sm:inset-10 lg:inset-14 flex items-center justify-center z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <p className="text-xs sm:text-sm font-sans uppercase text-white text-center max-w-md drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+                        {product.summary}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cell Footer: Left-aligned button */}
+                <div className="flex flex-col text-left">
+                  <div>
+                    <Link href="/#cta" className="inline-block">
+                      <Button variant="gold" size="sm">
+                        Explore solution
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </Container>
     </section>
   );
 }
 
-// Backward-compatible alias for existing imports
+// Backward-compatible aliases for existing imports
 export const ApplicationSection = OurProductSection;
+export const ProductGrid = OurProductSection;
 
 export default OurProductSection;

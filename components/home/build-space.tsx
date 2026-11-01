@@ -58,161 +58,166 @@ export function BuildSpace() {
     <section
       id="spaces"
       aria-labelledby="build-space-heading"
-      className="relative z-20 bg-black bg-[url('/images/star-bg.jpg')] bg-repeat bg-fixed -mt-[100vh] py-15 sm:py-28 lg:py-20 text-foreground overflow-hidden border-t border-border/40 shadow-[0_-25px_60px_rgba(0,0,0,0.95)]"
-      style={{ backgroundSize: "576px 1024px" }}
+      className="relative z-20 bg-black -mt-[100vh] py-20 sm:py-28 lg:py-32 text-foreground overflow-hidden border-t border-border/40 shadow-[0_-25px_60px_rgba(0,0,0,0.95)]"
     >
-      <Container>
-        {/* Section Header: 3-Line Heading */}
-        <div className="mb-12 sm:mb-16">
-          {/* Main 3-Line Heading */}
+      <Container className="w-full">
+        {/* Section Header: Top-Left Grouped Heading + Description */}
+        <div className="max-w-2xl mb-12 sm:mb-16 lg:mb-20 text-left">
+          <div className="mb-4">
+            <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.25em] text-accent uppercase">
+              APPLICATIONS
+            </span>
+          </div>
           <h2
             id="build-space-heading"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.75rem] font-bold tracking-tight text-foreground uppercase leading-[0.92] select-none"
+            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground uppercase leading-[1.02] select-none mb-4 sm:mb-5"
           >
-            BUILT FOR<br />
-            EVERY<br />
-            <span className="text-accent">SPACE.</span>
+            Built for<br />
+            every <span className="text-accent">space.</span>
           </h2>
+          <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
+            From premier retail environments to monumental building facades, explore LED display configurations tailored for architectural scale.
+          </p>
         </div>
 
-        {/* Asymmetric Editorial Grid matching Figma Screenshots */}
-        <div className="flex flex-col gap-4 sm:gap-5">
-          {/* Top Block: Card 01, Card 03, Card 04 on Left (Cols 1-8); Card 02 on Right (Cols 9-12) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
-            {/* Left Column Group (Cols 1-8) */}
-            <div className="lg:col-span-8 flex flex-col gap-4 sm:gap-5">
-              {/* Card 01: Shopping Malls (Top Left - Spans 2 cols wide) */}
-              <article className="relative w-full aspect-[16/9] sm:aspect-[21/9] lg:aspect-auto lg:h-[320px] overflow-hidden bg-card border border-border/60">
-                <Image
-                  src={CARDS[0].imageSrc}
-                  alt={CARDS[0].imageAlt}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                  className="object-cover select-none pointer-events-none"
-                  priority
-                />
-                {/* Top Number */}
-                <span className="absolute top-4 left-4 sm:top-5 sm:left-5 text-[11px] sm:text-xs font-mono tracking-widest text-white/80">
+        {/* Clean, Consistent Bento Grid */}
+        <div className="flex flex-col gap-5 sm:gap-6 lg:gap-7">
+          {/* Row 1: 2 Cards (7 cols + 5 cols) - Equal Height */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-7">
+            {/* Card 01: Shopping Malls (7 cols) */}
+            <article className="group relative w-full lg:col-span-7 h-[360px] sm:h-[420px] lg:h-[460px] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-xl">
+              <Image
+                src={CARDS[0].imageSrc}
+                alt={CARDS[0].imageAlt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 58vw"
+                className="object-cover object-center select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-105"
+                priority
+              />
+              {/* Subtle Number Badge */}
+              <div className="absolute top-5 left-5 sm:top-6 sm:left-6 z-10">
+                <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.2em] text-accent uppercase bg-black/60 border border-white/10 px-2.5 py-1 rounded backdrop-blur-sm">
                   {CARDS[0].number}
                 </span>
-                {/* Bottom Gradient & Text */}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 lg:p-7 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
-                  <h3 className="text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1">
-                    {CARDS[0].title}
-                  </h3>
-                  <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed max-w-md">
-                    {CARDS[0].description}
-                  </p>
-                </div>
-              </article>
-
-              {/* Middle Row: Card 03 (Col 1) & Card 04 (Col 2) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 items-start">
-                {/* Card 03: Retail Spaces (Middle Left) */}
-                <article className="relative w-full aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[340px] overflow-hidden bg-card border border-border/60">
-                  <Image
-                    src={CARDS[2].imageSrc}
-                    alt={CARDS[2].imageAlt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-cover select-none pointer-events-none"
-                  />
-                  {/* Top Number */}
-                  <span className="absolute top-4 left-4 sm:top-5 sm:left-5 text-[11px] sm:text-xs font-mono tracking-widest text-white/80">
-                    {CARDS[2].number}
-                  </span>
-                  {/* Bottom Gradient & Text */}
-                  <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
-                    <h3 className="text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1">
-                      {CARDS[2].title}
-                    </h3>
-                    <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed">
-                      {CARDS[2].description}
-                    </p>
-                  </div>
-                </article>
-
-                {/* Card 04: Building Facades (Middle Center - Tall Portrait) */}
-                <article className="relative w-full aspect-[3/4] sm:aspect-[3/4] lg:aspect-auto min-h-[440px] sm:min-h-[520px] lg:h-[600px] overflow-hidden bg-card border border-border/60">
-                  <Image
-                    src={CARDS[3].imageSrc}
-                    alt={CARDS[3].imageAlt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-cover select-none pointer-events-none"
-                  />
-                  {/* Top Number */}
-                  <span className="absolute top-4 left-4 sm:top-5 sm:left-5 text-[11px] sm:text-xs font-mono tracking-widest text-white/80">
-                    {CARDS[3].number}
-                  </span>
-                  {/* Bottom Gradient & Text */}
-                  <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
-                    <h3 className="text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1">
-                      {CARDS[3].title}
-                    </h3>
-                    <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed">
-                      {CARDS[3].description}
-                    </p>
-                  </div>
-                </article>
               </div>
-            </div>
+              {/* Bottom Scrim & Text */}
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 lg:p-8 bg-gradient-to-t from-black/90 via-black/45 to-transparent z-10 flex flex-col justify-end">
+                <h3 className="font-heading text-xl sm:text-2xl font-bold tracking-tight uppercase text-white mb-2">
+                  {CARDS[0].title}
+                </h3>
+                <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed max-w-lg">
+                  {CARDS[0].description}
+                </p>
+              </div>
+            </article>
 
-            {/* Right Column (Cols 9-12): Card 02 Outdoor Advertising (Length matches Card 1 + gap + Card 3) */}
-            <div className="lg:col-span-4">
-              <article className="relative w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-auto min-h-[460px] sm:min-h-[560px] lg:h-[680px] overflow-hidden bg-card border border-border/60">
-                <Image
-                  src={CARDS[1].imageSrc}
-                  alt={CARDS[1].imageAlt}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 34vw"
-                  className="object-cover select-none pointer-events-none"
-                  priority
-                />
-                {/* Top Number */}
-                <span className="absolute top-4 left-4 sm:top-5 sm:left-5 text-[11px] sm:text-xs font-mono tracking-widest text-white/80">
+            {/* Card 02: Outdoor Advertising (5 cols) */}
+            <article className="group relative w-full lg:col-span-5 h-[360px] sm:h-[420px] lg:h-[460px] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-xl">
+              <Image
+                src={CARDS[1].imageSrc}
+                alt={CARDS[1].imageAlt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                className="object-cover object-center select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-105"
+                priority
+              />
+              {/* Subtle Number Badge */}
+              <div className="absolute top-5 left-5 sm:top-6 sm:left-6 z-10">
+                <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.2em] text-accent uppercase bg-black/60 border border-white/10 px-2.5 py-1 rounded backdrop-blur-sm">
                   {CARDS[1].number}
                 </span>
-                {/* Bottom Gradient & Text */}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 lg:p-7 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
-                  <h3 className="text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1">
-                    {CARDS[1].title}
-                  </h3>
-                  <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed">
-                    {CARDS[1].description}
-                  </p>
-                </div>
-              </article>
-            </div>
+              </div>
+              {/* Bottom Scrim & Text */}
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 lg:p-8 bg-gradient-to-t from-black/90 via-black/45 to-transparent z-10 flex flex-col justify-end">
+                <h3 className="font-heading text-xl sm:text-2xl font-bold tracking-tight uppercase text-white mb-2">
+                  {CARDS[1].title}
+                </h3>
+                <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed max-w-md">
+                  {CARDS[1].description}
+                </p>
+              </div>
+            </article>
           </div>
 
-          {/* Bottom Block: Card 05 Events & Venues on Left (Cols 1-8); Col 9-12 Empty */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-            <div className="lg:col-span-8">
-              <article className="relative w-full aspect-[16/9] sm:aspect-[21/9] lg:aspect-auto lg:h-[320px] overflow-hidden bg-card border border-border/60">
-                <Image
-                  src={CARDS[4].imageSrc}
-                  alt={CARDS[4].imageAlt}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                  className="object-cover select-none pointer-events-none"
-                />
-                {/* Top Number */}
-                <span className="absolute top-4 left-4 sm:top-5 sm:left-5 text-[11px] sm:text-xs font-mono tracking-widest text-white/80">
+          {/* Row 2: 3 Cards (4 cols + 4 cols + 4 cols) - Equal Height */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+            {/* Card 03: Retail Spaces */}
+            <article className="group relative w-full h-[360px] sm:h-[400px] lg:h-[440px] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-xl">
+              <Image
+                src={CARDS[2].imageSrc}
+                alt={CARDS[2].imageAlt}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover object-center select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              {/* Subtle Number Badge */}
+              <div className="absolute top-5 left-5 sm:top-6 sm:left-6 z-10">
+                <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.2em] text-accent uppercase bg-black/60 border border-white/10 px-2.5 py-1 rounded backdrop-blur-sm">
+                  {CARDS[2].number}
+                </span>
+              </div>
+              {/* Bottom Scrim & Text */}
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 bg-gradient-to-t from-black/90 via-black/45 to-transparent z-10 flex flex-col justify-end">
+                <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1.5">
+                  {CARDS[2].title}
+                </h3>
+                <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed">
+                  {CARDS[2].description}
+                </p>
+              </div>
+            </article>
+
+            {/* Card 04: Building Facades */}
+            <article className="group relative w-full h-[360px] sm:h-[400px] lg:h-[440px] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-xl">
+              <Image
+                src={CARDS[3].imageSrc}
+                alt={CARDS[3].imageAlt}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover object-center select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              {/* Subtle Number Badge */}
+              <div className="absolute top-5 left-5 sm:top-6 sm:left-6 z-10">
+                <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.2em] text-accent uppercase bg-black/60 border border-white/10 px-2.5 py-1 rounded backdrop-blur-sm">
+                  {CARDS[3].number}
+                </span>
+              </div>
+              {/* Bottom Scrim & Text */}
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 bg-gradient-to-t from-black/90 via-black/45 to-transparent z-10 flex flex-col justify-end">
+                <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1.5">
+                  {CARDS[3].title}
+                </h3>
+                <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed">
+                  {CARDS[3].description}
+                </p>
+              </div>
+            </article>
+
+            {/* Card 05: Events & Venues */}
+            <article className="group relative w-full md:col-span-2 lg:col-span-1 h-[360px] sm:h-[400px] lg:h-[440px] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-xl">
+              <Image
+                src={CARDS[4].imageSrc}
+                alt={CARDS[4].imageAlt}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 33vw"
+                className="object-cover object-center select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              {/* Subtle Number Badge */}
+              <div className="absolute top-5 left-5 sm:top-6 sm:left-6 z-10">
+                <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.2em] text-accent uppercase bg-black/60 border border-white/10 px-2.5 py-1 rounded backdrop-blur-sm">
                   {CARDS[4].number}
                 </span>
-                {/* Bottom Gradient & Text */}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 lg:p-7 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
-                  <h3 className="text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1">
-                    {CARDS[4].title}
-                  </h3>
-                  <p className="text-xs sm:text-[13px] text-white/80 leading-relaxed max-w-md">
-                    {CARDS[4].description}
-                  </p>
-                </div>
-              </article>
-            </div>
-            {/* Cols 9-12 intentionally blank dark space */}
+              </div>
+              {/* Bottom Scrim & Text */}
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 bg-gradient-to-t from-black/90 via-black/45 to-transparent z-10 flex flex-col justify-end">
+                <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight uppercase text-white mb-1.5">
+                  {CARDS[4].title}
+                </h3>
+                <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed">
+                  {CARDS[4].description}
+                </p>
+              </div>
+            </article>
           </div>
         </div>
       </Container>

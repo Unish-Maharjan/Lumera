@@ -34,53 +34,108 @@ export function InstallationSection() {
     <section
       id="installation"
       aria-labelledby="installation-heading"
-      className="relative bg-transparent py-14 sm:py-20 lg:py-30 text-foreground overflow-hidden border-t border-border/40"
+      className="relative bg-obsidian/75 py-16 sm:py-20 lg:py-24 text-foreground overflow-hidden border-t border-border/40 select-none"
     >
       <Container>
-        {/* Section Header */}
-        <div className="mb-20 sm:mb-28">
-          {/* Main 3-Line Heading */}
-          <h2
-            id="installation-heading"
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight text-foreground uppercase leading-[0.92] select-none"
-          >
-            FROM CONCEPT<br />
-            TO<br />
-            <span className="text-accent">INSTALLATION.</span>
-          </h2>
+        {/* Compact Intro Row: Left Heading + Right Supporting Description */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 sm:gap-8 lg:gap-12 mb-14 sm:mb-18 lg:mb-20 text-left">
+          {/* Left: Eyebrow + 2-Line Controlled Heading */}
+          <div className="max-w-xl">
+            <div className="mb-3 sm:mb-4">
+              <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.25em] text-accent uppercase">
+                OUR PROCESS
+              </span>
+            </div>
+            <h2
+              id="installation-heading"
+              className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground uppercase leading-[1.08] select-none"
+            >
+              FROM CONCEPT<br />
+              TO <span className="text-accent">INSTALLATION.</span>
+            </h2>
+          </div>
+
+          {/* Right: Vertically Aligned Supporting Text */}
+          <div className="max-w-md lg:max-w-sm lg:pb-1">
+            <p className="text-sm sm:text-base text-muted-foreground font-light leading-relaxed">
+              A structured four-phase engineering methodology delivering seamless calibration, certified structural safety, and lasting reliability.
+            </p>
+          </div>
         </div>
 
-        {/* 4-Column Process Timeline Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-8 lg:gap-0">
-          {STEPS.map((step) => (
-            <div
-              key={step.number}
-              className="flex flex-col lg:border-r lg:border-border/40 lg:px-8 first:pl-0 last:border-r-0 last:pr-0"
-            >
-              {/* Step Number */}
-              <span className="text-xs font-mono tracking-widest text-muted-foreground/70">
-                {step.number}
-              </span>
+        {/* Desktop Connected Horizontal Timeline (lg and above) */}
+        <div className="hidden lg:grid grid-cols-4 gap-8">
+          {STEPS.map((step, index) => {
+            const isLast = index === STEPS.length - 1;
+            return (
+              <div key={step.number} className="relative flex flex-col">
+                {/* Marker & Continuous Connecting Line */}
+                <div className="relative flex items-center mb-6">
+                  {/* Subtle connecting line across markers */}
+                  {!isLast && (
+                    <div
+                      className="absolute top-3.5 left-3.5 -right-[46px] h-px bg-border/80 z-0"
+                      aria-hidden="true"
+                    />
+                  )}
 
-              {/* Progress Line with Electric Blue Marker Node */}
-              <div className="relative w-full h-px bg-border/60 my-6 sm:my-7">
-                <span
-                  className="absolute -top-[2.5px] left-0 h-1.5 w-1.5 bg-primary shrink-0"
-                  aria-hidden="true"
-                />
+                  {/* Small Numbered Marker */}
+                  <div className="relative z-10 flex items-center justify-center w-7 h-7 rounded-full bg-obsidian border border-border/90 text-[11px] font-mono font-medium text-accent shrink-0">
+                    {step.number}
+                  </div>
+                </div>
+
+                {/* Left-Aligned Step Title */}
+                <h3 className="font-heading text-base sm:text-lg font-bold uppercase tracking-tight text-foreground mb-2">
+                  {step.title}
+                </h3>
+
+                {/* Left-Aligned Step Description */}
+                <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                  {step.description}
+                </p>
               </div>
+            );
+          })}
+        </div>
 
-              {/* Step Title */}
-              <h3 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-foreground mb-2">
-                {step.title}
-              </h3>
+        {/* Mobile & Tablet Stacked Timeline (< lg) */}
+        <div className="flex flex-col lg:hidden">
+          {STEPS.map((step, index) => {
+            const isLast = index === STEPS.length - 1;
+            return (
+              <div
+                key={step.number}
+                className="relative flex items-start gap-4 sm:gap-5 pb-8 last:pb-0"
+              >
+                {/* Vertical Track Column */}
+                <div className="relative flex flex-col items-center self-stretch shrink-0">
+                  {/* Small Numbered Marker */}
+                  <div className="relative z-10 flex items-center justify-center w-7 h-7 rounded-full bg-obsidian border border-border/90 text-[11px] font-mono font-medium text-accent shrink-0">
+                    {step.number}
+                  </div>
 
-              {/* Step Description */}
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                {step.description}
-              </p>
-            </div>
-          ))}
+                  {/* Vertical Connecting Line */}
+                  {!isLast && (
+                    <div
+                      className="w-px flex-1 bg-border/80 my-2 min-h-[24px]"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="pt-0.5">
+                  <h3 className="font-heading text-base sm:text-lg font-bold uppercase tracking-tight text-foreground mb-1.5">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </Container>
     </section>

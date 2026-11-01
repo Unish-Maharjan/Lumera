@@ -1,6 +1,7 @@
 import React from "react";
-import AboutSection from "@/components/home/about-section";
-import InstallationSection from "@/components/home/installation-section";
+import AboutHero from "@/components/about/hero-section";
+import OurStory from "@/components/about/our-story";
+import TrustSection from "@/components/about/trust-section";
 import CtaSection from "@/components/home/cta-section";
 
 export const metadata = {
@@ -11,8 +12,9 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-transparent text-foreground pt-14 sm:pt-16">
-      <AboutSection />
-      <InstallationSection />
+      <AboutHero />
+      <OurStory />
+      <TrustSection />
       <CtaSection />
     </main>
   );

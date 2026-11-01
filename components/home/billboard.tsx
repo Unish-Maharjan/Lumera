@@ -1,15 +1,19 @@
 "use client";
 
 import React, { useRef } from "react";
-
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Button } from "@/components/ui/Button";
 
 export function AdsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const billboardRef = useRef<HTMLDivElement>(null);
+  const screenWrapperRef = useRef<HTMLDivElement>(null);
+  const bezelRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const heroCtaRef = useRef<HTMLDivElement>(null);
   const lightsRef = useRef<HTMLDivElement>(null);
   const standRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
@@ -29,12 +33,26 @@ export function AdsSection() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
-            end: () => `+=${window.innerHeight * 1.5}`,
-            scrub: 1,
+            end: () => `+=${window.innerHeight * 2}`,
+            scrub: 1.2,
           },
         });
 
-        // 1. Shrink billboard from full viewport down to compact 16:9 board
+        // 0. Hero CTA at the bottom disappears immediately once scrolling starts (0 to 0.18)
+        if (heroCtaRef.current) {
+          tl.to(
+            heroCtaRef.current,
+            {
+              opacity: 0,
+              y: -24,
+              duration: 0.18,
+              ease: "power2.inOut",
+            },
+            0
+          );
+        }
+
+        // 1. Shrink billboard from full viewport down to compact 16:9 board (0.25 to 1.1)
         tl.fromTo(
           billboardRef.current,
           {
@@ -52,11 +70,36 @@ export function AdsSection() {
             maxHeight: "382.5px",
             borderRadius: "2px",
             y: -32,
-            duration: 1,
+            duration: 0.85,
             ease: "power2.inOut",
           },
-          0
+          0.25
         );
+
+        // Fade in outer billboard shadow
+        if (screenWrapperRef.current) {
+          tl.fromTo(
+            screenWrapperRef.current,
+            { boxShadow: "0 0 0 rgba(0,0,0,0)" },
+            {
+              boxShadow:
+                "0 25px 80px -15px rgba(0, 0, 0, 0.98), 0 0 65px rgba(214, 189, 130, 0.22)",
+              duration: 0.7,
+              ease: "power2.out",
+            },
+            0.4
+          );
+        }
+
+        // Fade in steel bezel & rivets as it shrinks away from full bleed
+        if (bezelRef.current) {
+          tl.fromTo(
+            bezelRef.current,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.6, ease: "power2.out" },
+            0.4
+          );
+        }
 
         // 2. Seamlessly reveal Top 6 Floodlights
         if (lightsRef.current) {
@@ -64,7 +107,7 @@ export function AdsSection() {
             lightsRef.current,
             { opacity: 0, y: -20 },
             { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            0.25
+            0.45
           );
         }
 
@@ -74,7 +117,7 @@ export function AdsSection() {
             standRef.current,
             { opacity: 0, y: 25 },
             { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            0.25
+            0.45
           );
         }
 
@@ -84,19 +127,22 @@ export function AdsSection() {
             overlayRef.current,
             { opacity: 0 },
             { opacity: 0.12, duration: 0.5, ease: "power1.inOut" },
-            0.3
+            0.5
           );
         }
 
-        // 5. Reveal editorial text at the bottom AT THE END OF THE SCROLL (0.7 -> 1.05)
+        // 5. Reveal editorial text at the bottom AT THE END OF THE SCROLL
         if (captionRef.current) {
           tl.fromTo(
             captionRef.current,
             { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
-            0.7
+            { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+            0.85
           );
         }
+
+        // Buffer hold before unpinning
+        tl.to({}, { duration: 0.25 });
       });
 
       // Mobile screens
@@ -105,10 +151,23 @@ export function AdsSection() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
-            end: () => `+=${window.innerHeight * 1.5}`,
-            scrub: 1,
+            end: () => `+=${window.innerHeight * 2}`,
+            scrub: 1.2,
           },
         });
+
+        if (heroCtaRef.current) {
+          tl.to(
+            heroCtaRef.current,
+            {
+              opacity: 0,
+              y: -20,
+              duration: 0.18,
+              ease: "power2.inOut",
+            },
+            0
+          );
+        }
 
         tl.fromTo(
           billboardRef.current,
@@ -121,23 +180,46 @@ export function AdsSection() {
             y: 0,
           },
           {
-            width: "82vw",
-            height: "46.125vw", // Exact 16:9 ratio
+            width: "86vw",
+            height: "48.375vw", // Exact 16:9 ratio
             maxWidth: "380px",
             borderRadius: "2px",
             y: -24,
-            duration: 1,
+            duration: 0.85,
             ease: "power2.inOut",
           },
-          0
+          0.25
         );
+
+        if (screenWrapperRef.current) {
+          tl.fromTo(
+            screenWrapperRef.current,
+            { boxShadow: "0 0 0 rgba(0,0,0,0)" },
+            {
+              boxShadow:
+                "0 20px 60px -10px rgba(0, 0, 0, 0.98), 0 0 40px rgba(214, 189, 130, 0.2)",
+              duration: 0.7,
+              ease: "power2.out",
+            },
+            0.4
+          );
+        }
+
+        if (bezelRef.current) {
+          tl.fromTo(
+            bezelRef.current,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.6, ease: "power2.out" },
+            0.4
+          );
+        }
 
         if (lightsRef.current) {
           tl.fromTo(
             lightsRef.current,
             { opacity: 0, y: -15 },
             { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            0.25
+            0.45
           );
         }
 
@@ -146,7 +228,7 @@ export function AdsSection() {
             standRef.current,
             { opacity: 0, y: 20 },
             { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-            0.25
+            0.45
           );
         }
 
@@ -155,19 +237,20 @@ export function AdsSection() {
             overlayRef.current,
             { opacity: 0 },
             { opacity: 0.1, duration: 0.5, ease: "power1.inOut" },
-            0.3
+            0.5
           );
         }
 
-        // Mobile: text at end of scroll
         if (captionRef.current) {
           tl.fromTo(
             captionRef.current,
             { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
-            0.7
+            { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+            0.85
           );
         }
+
+        tl.to({}, { duration: 0.25 });
       });
     },
     { scope: sectionRef }
@@ -176,13 +259,12 @@ export function AdsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[350vh] bg-transparent text-[#F5F2EB] border-t border-border/40"
+      className="relative w-full h-[350vh] bg-transparent text-[#F5F2EB]"
       id="billboard-showcase"
       aria-label="Lumera Commercial Outdoor LED Billboard Showcase"
     >
-      {/* Pinned Viewport Container */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden select-none px-4 z-10 bg-transparent">
-
+      {/* Pinned Viewport Container - Edge-to-Edge with Zero Padding */}
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden select-none z-10 bg-transparent">
         {/* Deep Atmospheric Champagne Gold Center Glow */}
         <div
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(214,189,130,0.2)_0%,_rgba(140,110,60,0.08)_42%,_rgba(50,38,18,0.03)_65%,_transparent_80%)] pointer-events-none"
@@ -193,16 +275,40 @@ export function AdsSection() {
           aria-hidden="true"
         />
 
-        {/* The Animated Billboard Structure */}
+        {/* Initial Hero CTA at the bottom of the fullscreen video (disappears once scrolled) */}
+        <div
+          ref={heroCtaRef}
+          className="absolute bottom-10 sm:bottom-14 lg:bottom-16 left-0 right-0 z-30 flex flex-col items-center justify-center text-center px-4 will-change-[transform,opacity]"
+        >
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white uppercase leading-[1.08] mb-3 sm:mb-4 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] max-w-3xl">
+            Illuminating spaces<br />
+            with <span className="text-accent">precision.</span>
+          </h1>
+
+          <div className="flex items-center justify-center pt-1">
+            <Link href="#products">
+              <Button variant="gold" size="sm">
+                Explore Collection
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* The Animated Billboard Structure - Initial Fullscreen Dimensions */}
         <div
           ref={billboardRef}
-          className="relative z-10 flex items-center justify-center will-change-[width,height,transform]"
+          className="relative z-10 flex items-center justify-center w-screen h-screen will-change-[width,height,transform]"
+          style={{
+            width: "100vw",
+            height: "100vh",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
+          }}
         >
           {/* 6 Top-Mounted Billboard Floodlights (Attached flush to top edge) */}
           <div
             ref={lightsRef}
             className="absolute -top-6 sm:-top-8 left-0 right-0 flex justify-between px-3 sm:px-6 pointer-events-none z-30 opacity-0 will-change-[transform,opacity]"
-
           >
             {[
               { id: 1, angle: "-10deg" },
@@ -241,15 +347,13 @@ export function AdsSection() {
 
           {/* The Screen Display (Enclosing 16:9 Video with Overflow-Hidden) */}
           <div
-            className="relative w-full h-full overflow-hidden rounded-[inherit] bg-black shadow-2xl"
-            style={{
-              boxShadow:
-                "0 25px 80px -15px rgba(0, 0, 0, 0.98), 0 0 65px rgba(214, 189, 130, 0.22)",
-            }}
+            ref={screenWrapperRef}
+            className="relative w-full h-full overflow-hidden rounded-[inherit] bg-black"
           >
             {/* Commercial Billboard Outer Steel Bezel & Corner Rivets */}
             <div
-              className="absolute inset-0 pointer-events-none z-20 rounded-[inherit] border-[3px] sm:border-[5px] border-[#18181b] ring-1 ring-white/15"
+              ref={bezelRef}
+              className="absolute inset-0 pointer-events-none z-20 rounded-[inherit] border-[3px] sm:border-[5px] border-[#18181b] ring-1 ring-white/15 opacity-0 will-change-[opacity]"
               style={{
                 boxShadow:
                   "inset 0 2px 3px rgba(255,255,255,0.18), inset 0 -3px 6px rgba(0,0,0,0.9)",
@@ -265,7 +369,7 @@ export function AdsSection() {
             {/* Video Player - 16:9 aspect fits flush edge-to-edge inside the billboard */}
             <video
               ref={videoRef}
-              src="/video/ads.mp4"
+              src="/video/wormhole.mp4"
               autoPlay
               loop
               muted
@@ -324,7 +428,7 @@ export function AdsSection() {
                     key={x}
                     x1={x}
                     y1="2"
-                    x2={x}
+                    x2={x + 100}
                     y2="58"
                     stroke="currentColor"
                     strokeWidth="3"
@@ -384,15 +488,21 @@ export function AdsSection() {
           </div>
         </div>
 
-        {/* Editorial Text Block revealed at the bottom AT THE END OF THE SCROLL */}
+        {/* Editorial Text Block revealed near the screen display */}
         <div
           ref={captionRef}
-          className="absolute bottom-5 sm:bottom-7 md:bottom-8 left-0 right-0 max-w-xl sm:max-w-2xl mx-auto text-center pointer-events-none opacity-0 z-30 flex flex-col items-center px-4 will-change-[transform,opacity] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
+          className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-0 right-0 max-w-xl mx-auto text-center pointer-events-none opacity-0 z-30 flex flex-col items-center px-4 will-change-[transform,opacity] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
         >
-          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-3.5xl font-normal tracking-tight text-white leading-tight max-w-2xl font-serif">
+          <h3 className="font-heading text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-white uppercase leading-snug">
             Commercial Displays Engineered for Urban Presence
           </h3>
         </div>
+
+        {/* Ambient bottom-weighted black gradient blending seamlessly into the About section
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-44 sm:h-64 lg:h-80 bg-gradient-to-t from-black via-black/85 to-transparent z-25"
+          aria-hidden="true"
+        /> */}
       </div>
     </section>
   );

@@ -181,6 +181,7 @@ export function ImageSequencing() {
         className="absolute inset-0 w-full h-full block pointer-events-none"
       />
 
+
       {/* Subtle Soft Vignettes for Seamless Section Blending */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background via-background/40 to-transparent"
