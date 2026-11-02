@@ -10,14 +10,15 @@ import { usePreloader } from "@/components/ui/Preloader";
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Our Services", href: "/#spaces" },
-  { label: "Our Products", href: "/#products" },
+  { label: "Services", href: "/#spaces" },
+  { label: "Products", href: "/#products" },
+  { label: "Events", href: "/#products" },
 ];
 
 const mobileNavLinks = [
   { label: "About Us", href: "/about" },
-  { label: "Our Services", href: "/#spaces" },
-  { label: "Our Products", href: "/#products" },
+  { label: "Services", href: "/#spaces" },
+  { label: "Products", href: "/#products" },
   { label: "Contact Us", href: "/#cta" },
 ];
 
@@ -89,13 +90,14 @@ export function Header() {
         </Link>
 
         {/* Middle: Centered Navigation Links */}
-        <nav className="hidden md:flex items-center justify-center gap-6 lg:gap-10 absolute left-1/2 -translate-x-1/2">
+        <nav className="hidden md:flex items-center justify-center gap-6 
+        lg:gap-10 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link) => (
             <Link
               key={`${link.label}-${link.href}`}
               href={link.href}
               onClick={(e) => handleLinkClick(e, link.label, link.href)}
-              className="text-xs lg:text-sm font-medium tracking-wide text-white/85 hover:text-accent transition-colors duration-200"
+              className="text-sm font-medium text-white/85 hover:text-accent transition-colors duration-200"
             >
               {link.label}
             </Link>

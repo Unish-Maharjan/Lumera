@@ -1,145 +1,247 @@
-import { Container } from "@/components/ui/Container";
+/* eslint-disable @next/next/no-img-element */
+"use client";
 
-interface ProcessStep {
-  number: string;
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+interface StageItem {
+  src: string;
+  step: string;
   title: string;
-  description: string;
+  desc: string;
 }
 
-const STEPS: ProcessStep[] = [
+const stages: StageItem[] = [
   {
-    number: "01",
-    title: "CONSULTATION",
-    description: "Understanding your space and requirements.",
+    src: "/images/installation/1.png",
+    step: "STEP 01",
+    title: "Engineering & CAD Blueprint",
+    desc: "Structural framing calculations, 4800mm grid layout, and laser-guided alignment tolerances.",
   },
   {
-    number: "02",
-    title: "DESIGN & PLANNING",
-    description: "Developing the right display solution.",
+    src: "/images/installation/image-2.jfif",
+    step: "STEP 02",
+    title: "Hardware Assembly & Precision Wiring",
+    desc: "Die-cast module integration, redundant power distribution, and high-throughput data cabling.",
   },
   {
-    number: "03",
-    title: "SUPPLY & INSTALLATION",
-    description: "Delivering and installing the display system.",
-  },
-  {
-    number: "04",
-    title: "TESTING & SUPPORT",
-    description: "Ensuring reliable performance.",
+    src: "/images/installation/3.png",
+    step: "STEP 03",
+    title: "Optical Calibration & Illumination",
+    desc: "Sub-pixel chromatic balancing, thermal stress testing, and living monumental presence.",
   },
 ];
 
-export function InstallationSection() {
+export default function WatchInstallation() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const imageRefs = useRef<HTMLImageElement[]>([]);
+  const textRefs = useRef<HTMLDivElement[]>([]);
+
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      const images = imageRefs.current;
+      const texts = textRefs.current;
+
+      if (!section || images.length !== stages.length) return;
+
+      // Initial image states
+      gsap.set(images, {
+        opacity: 1,
+        clipPath: "inset(100% 0% 0% 0%)",
+        WebkitClipPath: "inset(100% 0% 0% 0%)",
+      });
+
+      // First image is fully visible
+      gsap.set(images[0], {
+        clipPath: "inset(0% 0% 0% 0%)",
+        WebkitClipPath: "inset(0% 0% 0% 0%)",
+      });
+
+      // Initial text states: Step 1 active, others hidden
+      if (texts.length === stages.length) {
+        gsap.set(texts, { opacity: 0, y: 14 });
+        gsap.set(texts[0], { opacity: 1, y: 0 });
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "+=300%",
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Stage 1 → Stage 2
+      tl.to(images[0], {
+        clipPath: "inset(0% 0% 100% 0%)",
+        WebkitClipPath: "inset(0% 0% 100% 0%)",
+        duration: 1,
+        ease: "none",
+      });
+
+      tl.to(
+        images[1],
+        {
+          clipPath: "inset(0% 0% 0% 0%)",
+          WebkitClipPath: "inset(0% 0% 0% 0%)",
+          duration: 1,
+          ease: "none",
+        },
+        "<"
+      );
+
+      // Text 0 → Text 1
+      if (texts.length === stages.length) {
+        tl.to(
+          texts[0],
+          {
+            opacity: 0,
+            y: -12,
+            duration: 0.45,
+            ease: "power2.inOut",
+          },
+          "<"
+        );
+        tl.to(
+          texts[1],
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "<+=0.2"
+        );
+      }
+
+      // Hold stage 2
+      tl.to({}, { duration: 0.5 });
+
+      // Stage 2 → Stage 3
+      tl.to(images[1], {
+        clipPath: "inset(0% 0% 100% 0%)",
+        WebkitClipPath: "inset(0% 0% 100% 0%)",
+        duration: 1,
+        ease: "none",
+      });
+
+      tl.to(
+        images[2],
+        {
+          clipPath: "inset(0% 0% 0% 0%)",
+          WebkitClipPath: "inset(0% 0% 0% 0%)",
+          duration: 1,
+          ease: "none",
+        },
+        "<"
+      );
+
+      // Text 1 → Text 2
+      if (texts.length === stages.length) {
+        tl.to(
+          texts[1],
+          {
+            opacity: 0,
+            y: -12,
+            duration: 0.45,
+            ease: "power2.inOut",
+          },
+          "<"
+        );
+        tl.to(
+          texts[2],
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "<+=0.2"
+        );
+      }
+
+      tl.to({}, { duration: 0.75 });
+
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
+    },
+    {
+      scope: sectionRef,
+      dependencies: [],
+    }
+  );
+
   return (
     <section
-      id="installation"
-      aria-labelledby="installation-heading"
-      className="relative bg-obsidian/75 py-16 sm:py-20 lg:py-24 text-foreground overflow-hidden border-t border-border/40 select-none"
+      ref={sectionRef}
+      id="process"
+      aria-labelledby="process-heading"
+      className="relative h-screen min-h-screen w-full overflow-hidden bg-black select-none flex flex-col justify-between"
     >
-      <Container>
-        {/* Compact Intro Row: Left Heading + Right Supporting Description */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 sm:gap-8 lg:gap-12 mb-14 sm:mb-18 lg:mb-20 text-left">
-          {/* Left: Eyebrow + 2-Line Controlled Heading */}
-          <div className="max-w-xl">
-            <div className="mb-3 sm:mb-4">
-              <span className="text-xs sm:text-[13px] font-mono font-medium tracking-[0.25em] text-accent uppercase">
-                OUR PROCESS
-              </span>
-            </div>
-            <h2
-              id="installation-heading"
-              className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground uppercase leading-[1.08] select-none"
+      {/* Top Header & Dynamic Stage Content in empty space */}
+      <div className="w-full pt-8 sm:pt-10 lg:pt-12 px-4 sm:px-8 max-w-5xl mx-auto flex flex-col items-center justify-center text-center z-20">
+        <h2
+          id="process-heading"
+          className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-tight mb-2 sm:mb-3"
+        >
+          Our <span className="text-accent">process</span>.
+        </h2>
+{/* 
+        Dynamic Stage Info Container
+        <div className="relative h-14 sm:h-16 w-full flex items-center justify-center">
+          {stages.map((stage, index) => (
+            <div
+              key={stage.src}
+              ref={(el) => {
+                if (el) textRefs.current[index] = el;
+              }}
+              className="absolute inset-0 flex flex-col items-center justify-center will-change-[transform,opacity]"
             >
-              FROM CONCEPT<br />
-              TO <span className="text-accent">INSTALLATION.</span>
-            </h2>
-          </div>
-
-          {/* Right: Vertically Aligned Supporting Text */}
-          <div className="max-w-md lg:max-w-sm lg:pb-1">
-            <p className="text-sm sm:text-base text-muted-foreground font-light leading-relaxed">
-              A structured four-phase engineering methodology delivering seamless calibration, certified structural safety, and lasting reliability.
-            </p>
-          </div>
-        </div>
-
-        {/* Desktop Connected Horizontal Timeline (lg and above) */}
-        <div className="hidden lg:grid grid-cols-4 gap-8">
-          {STEPS.map((step, index) => {
-            const isLast = index === STEPS.length - 1;
-            return (
-              <div key={step.number} className="relative flex flex-col">
-                {/* Marker & Continuous Connecting Line */}
-                <div className="relative flex items-center mb-6">
-                  {/* Subtle connecting line across markers */}
-                  {!isLast && (
-                    <div
-                      className="absolute top-3.5 left-3.5 -right-[46px] h-px bg-border/80 z-0"
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  {/* Small Numbered Marker */}
-                  <div className="relative z-10 flex items-center justify-center w-7 h-7 rounded-full bg-obsidian border border-border/90 text-[11px] font-mono font-medium text-accent shrink-0">
-                    {step.number}
-                  </div>
-                </div>
-
-                {/* Left-Aligned Step Title */}
-                <h3 className="font-heading text-base sm:text-lg font-bold uppercase tracking-tight text-foreground mb-2">
-                  {step.title}
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-mono text-[10px] sm:text-xs text-accent uppercase tracking-[0.25em] font-semibold">
+                  {stage.step}
+                </span>
+                <span className="text-zinc-600 text-xs">•</span>
+                <h3 className="font-heading text-sm sm:text-base md:text-lg font-medium text-white uppercase tracking-wider">
+                  {stage.title}
                 </h3>
-
-                {/* Left-Aligned Step Description */}
-                <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
-                  {step.description}
-                </p>
               </div>
-            );
-          })}
-        </div>
+              <p className="font-sans text-xs sm:text-sm text-zinc-400 font-light max-w-xl line-clamp-2">
+                {stage.desc}
+              </p>
+            </div>
+          ))}
+        </div> */}
+      </div>
 
-        {/* Mobile & Tablet Stacked Timeline (< lg) */}
-        <div className="flex flex-col lg:hidden">
-          {STEPS.map((step, index) => {
-            const isLast = index === STEPS.length - 1;
-            return (
-              <div
-                key={step.number}
-                className="relative flex items-start gap-4 sm:gap-5 pb-8 last:pb-0"
-              >
-                {/* Vertical Track Column */}
-                <div className="relative flex flex-col items-center self-stretch shrink-0">
-                  {/* Small Numbered Marker */}
-                  <div className="relative z-10 flex items-center justify-center w-7 h-7 rounded-full bg-obsidian border border-border/90 text-[11px] font-mono font-medium text-accent shrink-0">
-                    {step.number}
-                  </div>
-
-                  {/* Vertical Connecting Line */}
-                  {!isLast && (
-                    <div
-                      className="w-px flex-1 bg-border/80 my-2 min-h-[24px]"
-                      aria-hidden="true"
-                    />
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="pt-0.5">
-                  <h3 className="font-heading text-base sm:text-lg font-bold uppercase tracking-tight text-foreground mb-1.5">
-                    {step.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </Container>
+      {/* 75% Image Container */}
+      <div className="relative flex-1 w-full overflow-hidden pb-4 sm:pb-6">
+        {stages.map((stage, index) => (
+          <img
+            key={stage.src}
+            ref={(el) => {
+              if (el) imageRefs.current[index] = el;
+            }}
+            src={stage.src}
+            alt={stage.title}
+            className="absolute inset-0 h-full w-full object-contain object-center"
+            draggable={false}
+          />
+        ))}
+      </div>
     </section>
   );
 }
 
-export default InstallationSection;
+export { WatchInstallation as InstallationSection };

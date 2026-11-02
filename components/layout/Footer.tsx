@@ -12,8 +12,23 @@ import Container from "../ui/Container";
 
 export function Footer() {
   return (
-    <footer className="w-full bg-black text-zinc-400 font-sans border-t border-white/[0.08] pt-14 sm:pt-18 lg:pt-20 pb-8 sm:pb-12 select-none">
-      <Container className="w-full flex flex-col">
+    <footer className="relative w-full bg-black text-zinc-400 font-sans border-t border-white/[0.08] pt-14 sm:pt-16 lg:pt-18 pb-4 sm:pb-6 select-none overflow-hidden">
+      {/* Background Moon Image */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
+        <Image
+          src="/images/footer (2).png"
+          alt="Moon Footer Background"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-bottom opacity-95"
+        />
+        {/* Subtle top vignette to ensure 100% seamless blend with page black */}
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black
+         to-transparent pointer-events-none" />
+      </div>
+
+      <Container className="relative z-10 w-full flex flex-col justify-between">
         {/* 1. Top Section: 4-Column Editorial Navigation Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 pb-10 sm:pb-10 lg:pb-10">
           {/* Column 1: INFORMATION */}
@@ -217,26 +232,24 @@ export function Footer() {
         </div>
 
 
-        {/* 3. Bottom Section: Monumental Lumera Ventures Logo (Replacing ALPINE TIMEPIECES) */}
-        <div className="w-full flex items-center justify-center pt-6 sm:pt-10 lg:pt-12 pb-2">
-          <div className="relative w-full max-w-[440px] sm:max-w-[580px] lg:max-w-[740px] xl:max-w-[860px] aspect-[1024/415]">
-            <Image
-              src="/logo/lumera-monumental-logo.png"
-              alt="Lumera Ventures"
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 860px"
-              className="object-contain object-center pointer-events-none select-none drop-shadow-[0_10px_35px_rgba(215,184,117,0.16)]"
-            />
-          </div>
+        {/* 2. Middle Section: Monumental Lumera Ventures Text */}
+        <div className="w-full flex items-center justify-center pt-8 sm:pt-14 lg:pt-18 pb-4 sm:pb-6 overflow-hidden">
+          <h2
+            className="w-full text-center font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7.5rem] 2xl:text-[8.5rem] uppercase text-white/95 select-none leading-none tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
+          >
+            LUMERA VENTURES
+          </h2>
         </div>
-        {/* 2. Middle Section: Copyright & Designed/Developed By (Above the Monumental Logo) */}
-        <div className=" mt-4 pt-3 sm:pt-5 border-t border-white/[0.08] flex flex-col sm:flex-row 
-        items-start sm:items-center justify-between gap-4 text-xs sm:text-[13px] font-sans text-zinc-500">
-          <p>© 2026 Lumera Ventures. All rights reserved.</p>
-          <div className="flex items-center gap-2.5">
+
+        {/* 3. Bottom Section: Baseline Divider, Copyright & Attribution */}
+        <div className="w-full pt-4 sm:pt-5 pb-2 sm:pb-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-[13px] font-sans text-zinc-400">
+          <p className="text-center sm:text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+            © 2026 Lumera Ventures. All rights reserved.
+          </p>
+
+          <div className="flex items-center gap-2.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
             <span>Designed And Developed By</span>
-            <div className="relative h-5 w-16 opacity-85 hover:opacity-100 transition-opacity">
+            <div className="relative h-5 w-16 opacity-90 hover:opacity-100 transition-opacity">
               <Image
                 src="/logo/webx-logo.svg"
                 alt="WebX"

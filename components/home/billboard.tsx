@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
 
 export function AdsSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -19,6 +20,7 @@ export function AdsSection() {
   const standRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const initialOverlayRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -59,6 +61,19 @@ export function AdsSection() {
               y: -24,
               duration: 0.18,
               ease: "power2.inOut",
+            },
+            0
+          );
+        }
+
+        // Fade out beginning overlay smoothly as scroll begins
+        if (initialOverlayRef.current) {
+          tl.to(
+            initialOverlayRef.current,
+            {
+              opacity: 0,
+              duration: 0.28,
+              ease: "power2.out",
             },
             0
           );
@@ -191,6 +206,18 @@ export function AdsSection() {
           );
         }
 
+        if (initialOverlayRef.current) {
+          tl.to(
+            initialOverlayRef.current,
+            {
+              opacity: 0,
+              duration: 0.28,
+              ease: "power2.out",
+            },
+            0
+          );
+        }
+
         tl.fromTo(
           billboardRef.current,
           {
@@ -288,7 +315,8 @@ export function AdsSection() {
       {/* Pinned Viewport Container - Kept pinned at top:0 while next section scrolls over it */}
       <div
         ref={pinnedViewportRef}
-        className="relative h-screen w-full flex items-center justify-center overflow-hidden select-none z-0 bg-black"
+        className="relative h-screen w-full flex items-center justify-center 
+        overflow-hidden select-none z-0 bg-black"
       >
         {/* Deep Atmospheric Champagne Gold Center Glow */}
         <div
@@ -300,23 +328,61 @@ export function AdsSection() {
           aria-hidden="true"
         />
 
-        {/* Initial Hero CTA at the bottom of the fullscreen video (disappears once scrolled) */}
+        {/* Initial Hero Content (matches reference photo split layout, disappears on scroll) */}
         <div
           ref={heroCtaRef}
-          className="absolute bottom-10 sm:bottom-14 lg:bottom-16 left-0 right-0 z-30 flex flex-col items-center justify-center text-center px-4 will-change-[transform,opacity]"
+          className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between pt-24 sm:pt-28 pb-8 sm:pb-10 will-change-[transform,opacity]"
         >
-          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white uppercase leading-[1.08] mb-3 sm:mb-4 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] max-w-3xl">
-            Illuminating spaces<br />
-            with <span className="text-accent">precision.</span>
-          </h1>
+          <Container size="xl" className="w-full flex-1 flex flex-col justify-between pointer-events-auto">
+            {/* Top Clearance under the fixed header */}
+            <div className="w-full" aria-hidden="true" />
 
-          <div className="flex items-center justify-center pt-1">
-            <Link href="#products">
-              <Button variant="gold" size="sm">
-                Explore Collection
-              </Button>
-            </Link>
-          </div>
+            {/* Two Div Layout: Div 1 (Illuminating Spaces + Button) & Div 2 (with Precision. + Paragraph) */}
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start mt-34 py-4 sm:py-6">
+              {/* Div 1: Illuminating Spaces + Button */}
+              <div className="flex flex-col items-start text-left">
+                <h1 className="font-heading text-4xl 
+                sm:text-6xl md:text-7xl xl:text-8xl 
+                font-bold text-white uppercase leading-[0.95] tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+                  Illuminating<br />
+                  Spaces
+                </h1>
+
+                <div className="pt-6 sm:pt-8">
+                  <Link href="#products">
+                    <Button variant="gold" size="md">
+                      Explore Collection
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Div 2: with Precision. + Paragraph */}
+              <div className="flex flex-col items-start text-left ml-40">
+                <h2 className="font-heading text-4xl sm:text-6xl md:text-7xl xl:text-7xl font-bold uppercase leading-[0.95] tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] mb-5 sm:mb-7">
+                  <span className="text-white block">with</span>
+                  <span className="text-accent block">Precision.</span>
+                </h2>
+
+                <p className="font-sans text-xs sm:text-sm md:text-base text-zinc-300 font-light leading-relaxed max-w-md drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+                  We assist our clients in integrating architectural microLED and advanced display systems into visionary environments.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Status Row: Scroll to Explore & Commercial Grade Display */}
+            <div className="w-full flex items-center justify-between pt-3 pb-1">
+              <div className="flex items-center gap-2.5 font-mono text-xs text-zinc-400 tracking-wider select-none">
+                <span className="text-accent font-bold text-sm">+</span>
+                <span>Scroll to explore</span>
+              </div>
+
+              <div className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-zinc-500 uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Commercial Grade Display</span>
+              </div>
+            </div>
+          </Container>
         </div>
 
         {/* The Animated Billboard Structure - Initial Fullscreen Dimensions */}
@@ -360,7 +426,8 @@ export function AdsSection() {
 
                 {/* Spotlight Light Cone projecting onto the billboard */}
                 <div
-                  className="absolute top-3.5 sm:top-5 w-14 sm:w-20 h-20 sm:h-28 bg-[radial-gradient(ellipse_at_top,_rgba(255,250,230,0.32)_0%,_transparent_75%)] pointer-events-none blur-xs"
+                  className="absolute top-3.5 sm:top-5 w-14 sm:w-20 h-20 sm:h-28 
+                  bg-[radial-gradient(ellipse_at_top,_rgba(255,250,230,0.32)_0%,_transparent_75%)] pointer-events-none blur-xs"
                   style={{
                     transform: `translateX(-50%) rotate(${light.angle})`,
                     left: "50%",
@@ -394,7 +461,7 @@ export function AdsSection() {
             {/* Video Player - 16:9 aspect fits flush edge-to-edge inside the billboard */}
             <video
               ref={videoRef}
-              src="/video/wormhole.mp4"
+              src="/video/1_1.mp4"
               autoPlay
               loop
               muted
@@ -403,10 +470,21 @@ export function AdsSection() {
               className="w-full h-full object-cover object-center pointer-events-none"
             />
 
+            {/* Ambient beginning overlay for high contrast, legibility and cinematic depth */}
+            <div
+              ref={initialOverlayRef}
+              className="absolute inset-0 pointer-events-none z-10 bg-black/20 bg-gradient-to-t 
+              from-black/0 via-black/20 to-black/50 will-change-[opacity]"
+              aria-hidden="true"
+            />
+          
+
+
             {/* Micro-LED Billboard Dot-Pitch Texture Overlay */}
             <div
               ref={overlayRef}
-              className="absolute inset-0 pointer-events-none z-10 bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:4px_4px] opacity-0"
+              className="absolute inset-0 pointer-events-none z-10 
+              bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:4px_4px] opacity-0"
               aria-hidden="true"
             />
 
@@ -518,16 +596,10 @@ export function AdsSection() {
           ref={captionRef}
           className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-0 right-0 max-w-xl mx-auto text-center pointer-events-none opacity-0 z-30 flex flex-col items-center px-4 will-change-[transform,opacity] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
         >
-          <h3 className="font-heading text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-white uppercase leading-snug">
-            Commercial Displays Engineered for Urban Presence
+          <h3 className="font-inter text-lg text-accent sm:text-xl md:text-2xl font-bold uppercase leading-snug">
+           Engineered to Stand Out
           </h3>
         </div>
-
-        {/* Ambient bottom-weighted black gradient blending seamlessly into the About section
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-44 sm:h-64 lg:h-80 bg-gradient-to-t from-black via-black/85 to-transparent z-25"
-          aria-hidden="true"
-        /> */}
       </div>
     </section>
   );

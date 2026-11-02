@@ -28,7 +28,7 @@ export function HeroSection() {
           preload="auto"
           className="h-full w-full object-cover select-none pointer-events-none"
         >
-          <source src="/video/hero-section (3).mp4" type="video/mp4" />
+          <source src="/video/1_1.mp4" type="video/mp4" />
           <source src="/hero-section.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -54,7 +54,7 @@ export function HeroSection() {
           }`}
         >
           {/* Main Hero Headline */}
-          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground uppercase leading-[1.08] max-w-3xl">
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground uppercase leading-[1.08] max-w-3xl tracking-tight">
             Illuminating spaces<br />
             with <span className="text-accent">precision.</span>
           </h1>

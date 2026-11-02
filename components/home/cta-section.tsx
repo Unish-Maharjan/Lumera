@@ -43,14 +43,14 @@ export function CtaSection() {
         {/* Monumental Headline with high readability drop shadow */}
         <h2
           id="cta-heading"
-          className="font-sans text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white uppercase select-none mb-4 sm:mb-5 drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] max-w-2xl"
+          className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white uppercase select-none mb-4 sm:mb-5 drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] max-w-2xl"
         >
           LET&apos;S CREATE<br />
           SOMETHING <span className="text-accent">BRIGHTER.</span>
         </h2>
 
         {/* Subtitle */}
-        <p className="font-sans text-xs sm:text-sm md:text-base text-white/80 font-normal max-w-md mb-6 sm:mb-8">
+        <p className="font-inter text-xs sm:text-sm md:text-base text-white/80 font-normal max-w-md mb-6 sm:mb-8">
           Have a space in mind? Let&apos;s explore what&apos;s possible.
         </p>
 

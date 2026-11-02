@@ -1,5 +1,7 @@
+"use client";
+
+import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
@@ -48,30 +50,40 @@ const PRODUCTS: ProductItem[] = [
 ];
 
 export function OurProductSection() {
+  const handleScrollToCta = () => {
+    const target =
+      document.getElementById("contact-cta") ||
+      document.getElementById("cta");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.location.hash = "#contact-cta";
+    }
+  };
+
   return (
     <section
       id="products"
       aria-labelledby="products-heading"
-      className="relative bg-black pt-10 sm:pt-14 lg:pt-20 text-foreground font-sans border-t border-white/[0.08] select-none overflow-hidden"
+      className="relative bg-black pt-10 sm:pt-14 lg:pt-20 text-foreground border-t border-white/[0.08] select-none overflow-hidden"
     >
       <Container className="w-full">
         {/* Section Header: Top-Left */}
-        <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20 text-left">
-         
-          {/* Heading */}
+        <div className="max-w-5xl mx-auto mb-12 sm:mb-16 lg:mb-20 text-center">
           <h2
             id="products-heading"
-            className="font-sans text-3xl sm:text-5xl md:text-6xl font-bold text-foreground uppercase mb-4 sm:mb-5"
+            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold 
+            text-foreground uppercase mb-4 sm:mb-5"
           >
-            Displays for every space.
+            Displays for <span className="text-accent">every</span> space.
           </h2>
         </div>
+      </Container>
 
-        {/* OXI Instruments-Inspired Minimal Two-Column Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 border-t border-b border-white/[0.08]">
+      {/* Minimal Two-Column Product Grid - Spanning Full Viewport Width (100vw) */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 border-t border-b border-white/20">
           {PRODUCTS.map((product, idx) => {
             const isLeftCol = idx % 2 === 0;
-            // Clean border logic: no conflicting Tailwind responsive classes
             const borderBottomClass =
               idx < 2
                 ? "border-b md:border-b"
@@ -83,51 +95,66 @@ export function OurProductSection() {
             return (
               <article
                 key={product.id}
-                className={`group relative flex flex-col justify-between min-h-[580px] sm:min-h-[680px] lg:min-h-[800px] xl:min-h-[860px] p-6 sm:p-10 lg:p-12 bg-black border-white/[0.08] ${borderBottomClass} ${borderRightClass}`}
+                className={`group relative flex flex-col justify-between min-h-[580px] sm:min-h-[680px] lg:min-h-[780px] xl:min-h-[850px] p-6 sm:p-10 lg:p-12 xl:p-14 bg-black border-white/20 ${borderBottomClass} ${borderRightClass} transition-colors duration-300 hover:bg-zinc-950/60 overflow-hidden`}
               >
-                {/* Cell Header: Product Name at Top-Left (OXI Style) */}
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xs sm:text-sm font-sans text-white uppercase font-medium">
+                {/* Cell Header: Clean Product Name at Top (Fades Out on Hover) */}
+                <div className="flex items-center justify-center w-full  z-10 transition-opacity duration-300 group-hover:opacity-0">
+                  <span className="text-xs sm:text-sm font-inter text-white text-center uppercase font-medium">
                     {product.name}
                   </span>
                 </div>
 
-                {/* Dominant Product Image: Centered in pure obsidian void */}
-                <div className="relative w-full flex-1 flex items-center justify-center my-6 sm:my-8 min-h-[360px] sm:min-h-[460px] lg:min-h-[560px] xl:min-h-[640px]">
-                  <div className="relative w-full h-full min-h-[340px] sm:min-h-[440px] lg:min-h-[540px] xl:min-h-[600px] max-w-[640px] flex items-center justify-center">
+                {/* Dominant Product Image with Hover-Revealed Text & Action Buttons */}
+                <div className="relative w-full flex-1 flex items-center justify-center my-4 sm:my-6 min-h-[420px] sm:min-h-[520px] lg:min-h-[620px] xl:min-h-[680px]">
+                  <div className="relative w-full h-full min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] xl:min-h-[660px] max-w-[850px] xl:max-w-[960px] flex items-center justify-center">
+                    {/* Background Product Image */}
                     <Image
                       src={product.imageSrc}
                       alt={`${product.name} LED display panel`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-contain select-none pointer-events-none drop-shadow-[0_25px_60px_rgba(0,0,0,0.85)] transition-opacity duration-300 group-hover:opacity-25"
+                      className="object-contain select-none pointer-events-none drop-shadow-[0_25px_60px_rgba(0,0,0,0.85)] scale-105 sm:scale-110 lg:scale-115 transition-all duration-500 group-hover:scale-[1.18] group-hover:opacity-50"
                       priority={idx < 2}
                     />
 
-                    {/* Description Appearing in the Middle on Hover (Boxless, Inset Text) */}
-                    <div className="absolute inset-6 sm:inset-10 lg:inset-14 flex items-center justify-center z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <p className="text-xs sm:text-sm font-sans uppercase text-white text-center max-w-md drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+                    {/* Content Revealed on Hover: Title, Narrative Text & Pill Buttons */}
+                    <div className="absolute inset-4 sm:inset-8 lg:inset-5 flex flex-col items-center 
+                    justify-start text-center z-20 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto">
+                      {/* Product Headline */}
+                      <h3 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-bold text-white uppercase mb-2 sm:mb-3 drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)]">
+                        {product.name}
+                      </h3>
+
+                      {/* Summary Copy */}
+                      <p className="font-sans text-xs sm:text-sm md:text-base text-zinc-300 font-light max-w-md mb-6 sm:mb-8 leading-relaxed drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
                         {product.summary}
                       </p>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Cell Footer: Left-aligned button */}
-                <div className="flex flex-col text-left">
-                  <div>
-                    <Link href="/#cta" className="inline-block">
-                      <Button variant="gold" size="sm">
-                        Explore solution
-                      </Button>
-                    </Link>
+                      {/* Action Buttons using Lumera Button component */}
+                      <div className="flex items-center justify-center gap-3 sm:gap-4">
+                        <Button
+                          variant="gold"
+                          size="sm"
+                          onClick={handleScrollToCta}
+                        >
+                          Learn more
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleScrollToCta}
+                        >
+                          Inquire
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </article>
             );
           })}
         </div>
-      </Container>
     </section>
   );
 }
