@@ -65,7 +65,7 @@ export function OurProductSection() {
     <section
       id="products"
       aria-labelledby="products-heading"
-      className="relative bg-black pt-10 sm:pt-14 lg:pt-20 text-foreground border-t border-white/[0.08] select-none overflow-hidden"
+      className="relative bg-black pt-10 sm:pt-14 lg:pt-20 text-foreground select-none overflow-hidden"
     >
       <Container className="w-full">
         {/* Section Header: Top-Left */}
@@ -95,7 +95,8 @@ export function OurProductSection() {
             return (
               <article
                 key={product.id}
-                className={`group relative flex flex-col justify-between min-h-[580px] sm:min-h-[680px] lg:min-h-[780px] xl:min-h-[850px] p-6 sm:p-10 lg:p-12 xl:p-14 bg-black border-white/20 ${borderBottomClass} ${borderRightClass} transition-colors duration-300 hover:bg-zinc-950/60 overflow-hidden`}
+                className={`group relative flex flex-col justify-between min-h-[580px] sm:min-h-[680px] lg:min-h-[780px] xl:min-h-[850px] p-6 sm:p-10 lg:p-12 xl:p-14
+                   bg-black border-white/20 ${borderBottomClass} ${borderRightClass} transition-colors duration-300 hover:bg-zinc-950/60 overflow-hidden`}
               >
                 {/* Cell Header: Clean Product Name at Top (Fades Out on Hover) */}
                 <div className="flex items-center justify-center w-full  z-10 transition-opacity duration-300 group-hover:opacity-0">

@@ -19,20 +19,21 @@ const stages: StageItem[] = [
   {
     src: "/images/installation/1.png",
     step: "STEP 01",
-    title: "Engineering & CAD Blueprint",
-    desc: "Structural framing calculations, 4800mm grid layout, and laser-guided alignment tolerances.",
+    title: "Plan & Design",
+    desc: "We plan the structure, dimensions, and layout to ensure a precise fit\
+     and seamless installation.",
   },
   {
     src: "/images/installation/image-2.jfif",
     step: "STEP 02",
-    title: "Hardware Assembly & Precision Wiring",
-    desc: "Die-cast module integration, redundant power distribution, and high-throughput data cabling.",
+    title: "Install & Assemble",
+    desc: "Our team securely assembles the LED panels, connects the wiring, and ensures every component fits perfectly.",
   },
   {
     src: "/images/installation/3.png",
     step: "STEP 03",
-    title: "Optical Calibration & Illumination",
-    desc: "Sub-pixel chromatic balancing, thermal stress testing, and living monumental presence.",
+    title: "Testing & Calibration",
+    desc: "We fine-tune brightness, color, and performance to deliver a clear, vibrant, and reliable display.",
   },
 ];
 
@@ -49,7 +50,7 @@ export default function WatchInstallation() {
 
       if (!section || images.length !== stages.length) return;
 
-      // Initial image states
+      // Initial image clipPath states
       gsap.set(images, {
         opacity: 1,
         clipPath: "inset(100% 0% 0% 0%)",
@@ -62,10 +63,19 @@ export default function WatchInstallation() {
         WebkitClipPath: "inset(0% 0% 0% 0%)",
       });
 
-      // Initial text states: Step 1 active, others hidden
+      // Initial text clipPath states (allow horizontal overflow to stay visible while doing vertical wipe)
       if (texts.length === stages.length) {
-        gsap.set(texts, { opacity: 0, y: 14 });
-        gsap.set(texts[0], { opacity: 1, y: 0 });
+        gsap.set(texts, {
+          opacity: 1,
+          clipPath: "inset(100% -100% 0% -100%)",
+          WebkitClipPath: "inset(100% -100% 0% -100%)",
+        });
+
+        // First text is fully visible
+        gsap.set(texts[0], {
+          clipPath: "inset(0% -100% 0% -100%)",
+          WebkitClipPath: "inset(0% -100% 0% -100%)",
+        });
       }
 
       const tl = gsap.timeline({
@@ -80,7 +90,7 @@ export default function WatchInstallation() {
         },
       });
 
-      // Stage 1 → Stage 2
+      // Stage 1 → Stage 2 (Images & Texts animate with exact same clipPath at exact same time)
       tl.to(images[0], {
         clipPath: "inset(0% 0% 100% 0%)",
         WebkitClipPath: "inset(0% 0% 100% 0%)",
@@ -99,34 +109,34 @@ export default function WatchInstallation() {
         "<"
       );
 
-      // Text 0 → Text 1
       if (texts.length === stages.length) {
         tl.to(
           texts[0],
           {
-            opacity: 0,
-            y: -12,
-            duration: 0.45,
-            ease: "power2.inOut",
+            clipPath: "inset(0% -100% 100% -100%)",
+            WebkitClipPath: "inset(0% -100% 100% -100%)",
+            duration: 1,
+            ease: "none",
           },
           "<"
         );
+
         tl.to(
           texts[1],
           {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "power2.out",
+            clipPath: "inset(0% -100% 0% -100%)",
+            WebkitClipPath: "inset(0% -100% 0% -100%)",
+            duration: 1,
+            ease: "none",
           },
-          "<+=0.2"
+          "<"
         );
       }
 
       // Hold stage 2
       tl.to({}, { duration: 0.5 });
 
-      // Stage 2 → Stage 3
+      // Stage 2 → Stage 3 (Images & Texts animate with exact same clipPath at exact same time)
       tl.to(images[1], {
         clipPath: "inset(0% 0% 100% 0%)",
         WebkitClipPath: "inset(0% 0% 100% 0%)",
@@ -145,27 +155,27 @@ export default function WatchInstallation() {
         "<"
       );
 
-      // Text 1 → Text 2
       if (texts.length === stages.length) {
         tl.to(
           texts[1],
           {
-            opacity: 0,
-            y: -12,
-            duration: 0.45,
-            ease: "power2.inOut",
+            clipPath: "inset(0% -100% 100% -100%)",
+            WebkitClipPath: "inset(0% -100% 100% -100%)",
+            duration: 1,
+            ease: "none",
           },
           "<"
         );
+
         tl.to(
           texts[2],
           {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "power2.out",
+            clipPath: "inset(0% -100% 0% -100%)",
+            WebkitClipPath: "inset(0% -100% 0% -100%)",
+            duration: 1,
+            ease: "none",
           },
-          "<+=0.2"
+          "<"
         );
       }
 
@@ -187,58 +197,69 @@ export default function WatchInstallation() {
       ref={sectionRef}
       id="process"
       aria-labelledby="process-heading"
-      className="relative h-screen min-h-screen w-full overflow-hidden bg-black select-none flex flex-col justify-between"
+      className="relative h-screen min-h-screen w-full
+       bg-black select-none flex flex-col justify-between mt-20 py-10 sm:py-18 lg:py-20 
+       "
     >
-      {/* Top Header & Dynamic Stage Content in empty space */}
-      <div className="w-full pt-8 sm:pt-10 lg:pt-12 px-4 sm:px-8 max-w-5xl mx-auto flex flex-col items-center justify-center text-center z-20">
+      {/* Top Header */}
+      <div className="w-full max-w-7xl mx-auto flex items-center
+       justify-center pb-3 sm:pb-4 z-20">
         <h2
           id="process-heading"
-          className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-tight mb-2 sm:mb-3"
+          className="font-heading text-2xl sm:text-3xl md:text-7xl
+          font-bold text-white uppercase"
         >
           Our <span className="text-accent">process</span>.
         </h2>
-{/* 
-        Dynamic Stage Info Container
-        <div className="relative h-14 sm:h-16 w-full flex items-center justify-center">
+      </div>
+
+      {/* 2-Column Split: Left = Image (70%), Right = Title & Description (30%) - Full Width */}
+      <div className="flex-1 w-full grid grid-cols-1 lg:grid-cols-10 gap-4 items-center relative py-2 sm:py-4 px-4 sm:px-6 lg:px-10 xl:px-14">
+        {/* Left Side: Photo Container (70%) */}
+        <div className="lg:col-span-7 relative w-full h-[42svh] sm:h-[50svh] lg:h-[65vh] xl:h-[70vh] overflow-hidden rounded-xs flex items-center justify-center">
+          {stages.map((stage, index) => (
+            <img
+              key={stage.src}
+              ref={(el) => {
+                if (el) imageRefs.current[index] = el;
+              }}
+              src={stage.src}
+              alt={stage.title}
+              className="absolute inset-0 h-full w-full object-contain object-center will-change-[clip-path]"
+              draggable={false}
+            />
+          ))}
+        </div>
+
+        {/* Right Side: Title and Description for each photo (30%) */}
+        <div className="lg:col-span-3 relative w-full h-[28svh] sm:h-[30svh]
+         lg:h-[65vh] xl:h-[70vh] flex items-center overflow-visible">
           {stages.map((stage, index) => (
             <div
               key={stage.src}
               ref={(el) => {
                 if (el) textRefs.current[index] = el;
               }}
-              className="absolute inset-0 flex flex-col items-center justify-center will-change-[transform,opacity]"
+              className="absolute inset-0 flex flex-col justify-center px-1 sm:px-2 lg:px-4 will-change-[clip-path] overflow-visible"
+              style={{
+                clipPath: index === 0 ? "inset(0% -100% 0% -100%)" : "inset(100% -100% 0% -100%)",
+                WebkitClipPath: index === 0 ? "inset(0% -100% 0% -100%)" : "inset(100% -100% 0% -100%)",
+              }}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-mono text-[10px] sm:text-xs text-accent uppercase tracking-[0.25em] font-semibold">
-                  {stage.step}
-                </span>
-                <span className="text-zinc-600 text-xs">•</span>
-                <h3 className="font-heading text-sm sm:text-base md:text-lg font-medium text-white uppercase tracking-wider">
-                  {stage.title}
-                </h3>
-              </div>
-              <p className="font-sans text-xs sm:text-sm text-zinc-400 font-light max-w-xl line-clamp-2">
+              {/* Title */}
+              <h3 className="font-heading text-lg sm:text-xl md:text-2xl
+               lg:text-xl xl:text-2xl 2xl:text-3xl font-bold 
+               uppercase text-white whitespace-nowrap mb-6 sm:mb-8 lg:mb-10 w-max overflow-visible">
+                {stage.title}
+              </h3>
+
+              {/* Description */}
+              <p className="font-sans text-xs sm:text-sm lg:text-sm xl:text-base text-zinc-300 font-light max-w-md">
                 {stage.desc}
               </p>
             </div>
           ))}
-        </div> */}
-      </div>
-
-      {/* 75% Image Container */}
-      <div className="relative flex-1 w-full overflow-hidden pb-4 sm:pb-6">
-        {stages.map((stage, index) => (
-          <img
-            key={stage.src}
-            ref={(el) => {
-              if (el) imageRefs.current[index] = el;
-            }}
-            src={stage.src}
-            alt={stage.title}
-            className="absolute inset-0 h-full w-full object-contain object-center"
-            draggable={false}
-          />
-        ))}
+        </div>
       </div>
     </section>
   );

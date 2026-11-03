@@ -5,6 +5,7 @@ import TestimonialSection from "@/components/home/testimonial";
 import CtaSection from "@/components/home/cta-section";
 import AdsSection from "@/components/home/billboard";
 import WatchInstallation from "@/components/home/installation-section";
+import TrustCounter from "@/components/home/trust-counter";
 
 export default function Home() {
   return (
@@ -12,8 +13,9 @@ export default function Home() {
       <AdsSection/>
       <AboutSection />
       <ImageSequencing />
+      <TrustCounter/>
       <OurProductSection />
-     <WatchInstallation/>
+      <WatchInstallation/>
       <TestimonialSection />
       <CtaSection />
     </main>
