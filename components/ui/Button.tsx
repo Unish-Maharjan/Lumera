@@ -11,13 +11,16 @@ export type ButtonVariant =
   | "champagne-gold"
   | "gold-gradient"
   | "gradient-gold"
-  | "#d7b875";
+  | "#d7b875"
+  | "white";
 export type ButtonSize = "sm" | "md" | "lg";
+export type ButtonRounded = "none" | "sm" | "md" | "lg" | "xl" | "full";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  rounded?: ButtonRounded;
   isLoading?: boolean;
 }
 
@@ -45,12 +48,23 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
   ghost:
     "bg-transparent text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.99]",
+  white:
+    "bg-white text-black border border-white hover:bg-[#eaeae8] hover:border-[#eaeae8] hover:text-black active:scale-[0.99]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-9 px-5 sm:px-6 text-[11px] sm:text-xs tracking-[0.2em] rounded-none",
-  md: "h-11 px-7 sm:px-8 text-xs sm:text-[13px] tracking-[0.2em] rounded-none",
-  lg: "h-12 sm:h-13 px-9 sm:px-11 text-xs sm:text-sm tracking-[0.22em] rounded-none",
+  sm: "h-9 px-5 sm:px-6 text-[11px] sm:text-xs tracking-[0.2em]",
+  md: "h-11 px-7 sm:px-8 text-xs sm:text-[13px] tracking-[0.2em]",
+  lg: "h-12 sm:h-13 px-9 sm:px-11 text-xs sm:text-sm tracking-[0.22em]",
+};
+
+const roundedStyles: Record<ButtonRounded, string> = {
+  none: "rounded-none",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  full: "rounded-full",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -59,6 +73,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       variant = "primary",
       size = "md",
+      rounded = "full",
       isLoading = false,
       disabled = false,
       className = "",
@@ -72,6 +87,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantClass = variantStyles[variant] ?? variantStyles.primary;
     const sizeClass = sizeStyles[size] ?? sizeStyles.md;
+    const roundedClass = roundedStyles[rounded] ?? roundedStyles.full;
 
     return (
       <button
@@ -79,7 +95,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         aria-busy={isLoading}
-        className={`${baseStyles} ${variantClass} ${sizeClass} ${className}`.trim()}
+        className={`${baseStyles} ${variantClass} ${sizeClass} ${roundedClass} ${className}`.trim()}
         {...props}
       >
         {isLoading && (

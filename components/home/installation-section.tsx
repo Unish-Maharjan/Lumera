@@ -30,7 +30,7 @@ const stages: StageItem[] = [
     desc: "Our team securely assembles the LED panels, connects the wiring, and ensures every component fits perfectly.",
   },
   {
-    src: "/images/installation/3.png",
+    src: "/images/installation/3gold.png",
     step: "STEP 03",
     title: "Testing & Calibration",
     desc: "We fine-tune brightness, color, and performance to deliver a clear, vibrant, and reliable display.",
@@ -247,10 +247,17 @@ export default function WatchInstallation() {
               }}
             >
               {/* Title */}
-              <h3 className="font-heading text-lg sm:text-xl md:text-2xl
-               lg:text-xl xl:text-2xl 2xl:text-3xl font-bold 
-               uppercase text-white whitespace-nowrap mb-6 sm:mb-8 lg:mb-10 w-max overflow-visible">
-                {stage.title}
+              <h3 className="font-heading text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl 2xl:text-3xl font-bold uppercase text-white whitespace-nowrap mb-6 sm:mb-8 lg:mb-10 w-max overflow-visible">
+                {stage.title.includes("&") ? (
+                  <>
+                    {stage.title.split("&")[0]}&amp;{" "}
+                    <span className="text-accent">
+                      {stage.title.split("&")[1].trim()}
+                    </span>
+                  </>
+                ) : (
+                  stage.title
+                )}
               </h3>
 
               {/* Description */}

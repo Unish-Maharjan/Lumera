@@ -10,16 +10,17 @@ import { usePreloader } from "@/components/ui/Preloader";
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
+  { label: "Products", href: "/products" },
   { label: "Services", href: "/#spaces" },
-  { label: "Products", href: "/#products" },
-  { label: "Events", href: "/#products" },
+  { label: "Events", href: "/#spaces" },
 ];
 
 const mobileNavLinks = [
+  { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
+  { label: "Products", href: "/products" },
   { label: "Services", href: "/#spaces" },
-  { label: "Products", href: "/#products" },
-  { label: "Contact Us", href: "/#cta" },
+  { label: "Contact Us", href: "/#contact-cta" },
 ];
 
 export function Header() {
@@ -57,9 +58,9 @@ export function Header() {
   const handleLinkClick = (e: React.MouseEvent, label: string, href: string) => {
     setIsMobileMenuOpen(false);
     if (
-      label === "About Us" &&
+      (label === "About Us" || label === "Products") &&
       typeof window !== "undefined" &&
-      window.location.pathname !== "/about"
+      window.location.pathname !== href
     ) {
       e.preventDefault();
       triggerPreloader(href);
@@ -106,7 +107,7 @@ export function Header() {
 
         {/* Right: Contact Us CTA Button & Mobile Hamburger */}
         <div className="flex items-center justify-end gap-2.5 sm:gap-3.5 shrink-0">
-          <Link href="/#cta">
+          <Link href="/#contact-cta">
             <Button
               variant="gold"
               size="sm"

@@ -1,21 +1,25 @@
-import React from "react";
+import { Metadata } from "next";
+import AboutHero from "@/components/about/about-hero";
 import OurStory from "@/components/about/our-story";
-import TrustSection from "@/components/about/trust-section";
+import OurPhilosophy from "@/components/about/our-philosophy";
+import OurExpertise from "@/components/about/our-expertise";
+import OurImpact from "@/components/about/our-impact";
 import CtaSection from "@/components/home/cta-section";
-import HeroSection from "@/components/home/hero-section";
 
-export const metadata = {
-  title: "About Us | Lumera Ventures",
-  description: "Learn about Lumera Ventures, our architectural philosophy, and precision LED installation technology.",
+export const metadata: Metadata = {
+  title: "About | Lumera LED & Architectural Lighting",
+  description:
+    "Discover Lumera's architectural philosophy, precision engineering, and turnkey LED display and lighting installations.",
 };
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-transparent text-foreground pt-14 sm:pt-16">
-      <HeroSection/>
-      {/* <AboutHero /> */}
+    <main className="min-h-screen bg-black text-foreground">
+      <AboutHero />
       <OurStory />
-      <TrustSection />
+      <OurPhilosophy />
+      <OurExpertise />
+      <OurImpact />
       <CtaSection />
     </main>
   );

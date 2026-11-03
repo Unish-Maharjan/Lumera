@@ -1,56 +1,36 @@
+import React from "react";
 import Image from "next/image";
-import { Container } from "@/components/ui/Container";
+import Container from "@/components/ui/Container";
 
 export function OurStory() {
   return (
-    <section
-      id="our-story"
-      aria-labelledby="our-story-title"
-      className="relative w-full bg-transparent py-16 sm:py-20 lg:py-24 border-t border-border/40 select-none overflow-hidden"
-    >
-      <Container className="w-full">
-        {/* Title of OUR STORY at the top of the section */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14 lg:mb-16">
-          <h2
-            id="our-story-title"
-            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground uppercase leading-[1.04]"
-          >
-            OUR <span className="text-accent">STORY</span>
-          </h2>
-        </div>
+    <section className="relative w-full bg-black text-foreground py-20 sm:py-28 lg:py-36 border-t border-white/10">
+      <Container size="xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* Narrative Column */}
+          <div className="lg:col-span-6 flex flex-col justify-center">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent mb-4 sm:mb-6 block">
+              OUR STORY
+            </span>
 
-        {/* Two-Column Editorial Spread */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-14 xl:gap-16 items-center">
-          {/* Left Column: Story Content */}
-          <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center text-left">
-            {/* Headline */}
-            <h3 className="font-heading text-2xl sm:text-4xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-foreground uppercase leading-[1.08] mb-5 sm:mb-6">
-              Built around<br />
-              <span className="text-accent">what’s possible.</span>
-            </h3>
+            <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight text-white mb-6 sm:mb-8">
+              The force behind the <span className="text-accent">light.</span>
+            </h2>
 
-            {/* Description */}
-            <p className="text-base sm:text-lg lg:text-xl font-light text-muted-foreground leading-relaxed sm:leading-loose max-w-xl">
-              Every space has the potential to communicate something powerful. Lumera was built around the idea that LED displays should do more than show content—they should bring spaces to life.
+            <p className="font-sans text-base sm:text-lg text-zinc-300 font-light leading-relaxed max-w-xl">
+              Founded on the belief that digital illumination should integrate seamlessly with architectural form, Lumera bridges structural engineering with spatial artistry. We partner with architects, developers, and institutions to turn structural surfaces into living, responsive media engineered for permanence.
             </p>
           </div>
 
-          {/* Right Column: Architectural Visual */}
-          <div className="lg:col-span-6 xl:col-span-6 flex items-center justify-center">
-            <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[5/4] xl:aspect-[4/3] overflow-hidden rounded-2xl bg-card border border-border/70 shadow-2xl">
+          {/* Architectural Image Column */}
+          <div className="lg:col-span-6">
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden border border-white/10 bg-zinc-950">
               <Image
-                src="/images/retail-space.png"
-                alt="Architectural LED display integrated into a commercial retail flagship environment"
+                src="/images/mall-screen.png"
+                alt="Lumera curved interior LED architectural installation"
                 fill
-                sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 50vw, 640px"
-                className="object-cover object-center select-none pointer-events-none"
-                priority
-              />
-
-              {/* Ambient Edge Gradient */}
-              <div
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 z-10"
-                aria-hidden="true"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-center brightness-95 contrast-[1.05]"
               />
             </div>
           </div>

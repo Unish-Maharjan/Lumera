@@ -134,7 +134,7 @@ export function OurProductSection() {
                       {/* Action Buttons using Lumera Button component */}
                       <div className="flex items-center justify-center gap-3 sm:gap-4">
                         <Button
-                          variant="gold"
+                          variant="white"
                           size="sm"
                           onClick={handleScrollToCta}
                         >

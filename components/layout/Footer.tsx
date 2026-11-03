@@ -1,18 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebookF,
-  faInstagram,
-  faTiktok,
-  faWhatsapp,
-} from "@fortawesome/free-brands-svg-icons";
 import Container from "../ui/Container";
 
 export function Footer() {
   return (
-    <footer className="relative w-full bg-black text-zinc-400 font-sans border-t border-white/[0.08] pt-14 sm:pt-16 lg:pt-18 pb-4 sm:pb-6 select-none overflow-hidden">
+    <footer className="relative w-full bg-black text-zinc-400 font-sans pt-12 sm:pt-16 lg:pt-20 pb-4 sm:pb-6 select-none overflow-hidden">
       {/* Background Moon Image */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
         <Image
@@ -23,211 +16,139 @@ export function Footer() {
           sizes="100vw"
           className="object-cover object-bottom opacity-95"
         />
-        {/* Subtle top vignette to ensure 100% seamless blend with page black */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black
-         to-transparent pointer-events-none" />
+        {/* Top vignette to seamlessly blend with CTA black */}
+        <div className="absolute inset-x-0 top-0 h-20 sm:h-28 lg:h-36 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
       </div>
 
       <Container className="relative z-10 w-full flex flex-col justify-between">
-        {/* 1. Top Section: 4-Column Editorial Navigation Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 pb-10 sm:pb-10 lg:pb-10">
-          {/* Column 1: INFORMATION */}
-          <div className="flex flex-col gap-3.5 sm:gap-4">
-            <span className="text-xs sm:text-[13px] font-sans tracking-wider text-white uppercase font-semibold">
-              Information
+        {/* 1. Top Section: Clean Horizontal Links & Contact Bar (Matching Reference) */}
+        <div className="w-full flex flex-col lg:flex-row lg:items-start justify-between gap-8 sm:gap-10
+         pb-8 sm:pb-12 pt-4">
+          {/* Left Side: Links */}
+          <div className="flex flex-col items-start">
+            <span className="text-white font-semibold text-base sm:text-lg inline-block pb-1 mb-4 select-none">
+              Links
             </span>
-            <ul className="flex flex-col gap-2.5 sm:gap-3 text-xs sm:text-[13px]">
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about#our-story"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Our Story
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#spaces"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Our Services
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#installation"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Our Process
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#contact-cta"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
+            <nav aria-label="Footer Navigation">
+              <ul className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 lg:gap-x-10 gap-y-2.5 text-xs sm:text-sm text-zinc-300 font-light">
+                <li>
+                  <Link
+                    href="/"
+                    className="hover:text-white transition-colors duration-200"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="hover:text-white transition-colors duration-200"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#spaces"
+                    className="hover:text-white transition-colors duration-200"
+                  >
+                    Services
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/products"
+                    className="hover:text-white transition-colors duration-200"
+                  >
+                    Products
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#process"
+                    className="hover:text-white transition-colors duration-200"
+                  >
+                    Process
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#contact-cta"
+                    className="hover:text-white transition-colors duration-200"
+                  >
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </nav>
           </div>
 
-          {/* Column 2: OUR SOLUTIONS */}
-          <div className="flex flex-col gap-3.5 sm:gap-4">
-            <span className="text-xs sm:text-[13px] font-sans tracking-wider text-white uppercase font-semibold">
-              Our Solutions
+          {/* Right Side: Contact */}
+          <div className="flex flex-col items-start lg:items-end">
+            <span className="text-white font-semibold text-base sm:text-lg 
+             inline-block pb-1 mb-4 select-none">
+              Contact
             </span>
-            <ul className="flex flex-col gap-2.5 sm:gap-3 text-xs sm:text-[13px]">
-              <li>
-                <Link
-                  href="/#products"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Fine Pitch MicroLED
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#products"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Stage & Rental LED
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#products"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Outdoor Commercial
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#products"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Transparent Glass
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#contact-cta"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Custom Installations
-                </Link>
-              </li>
-            </ul>
-          </div>
+            <div className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 lg:gap-x-10 gap-y-2.5 text-xs sm:text-sm text-zinc-300 font-light">
+              <a
+                href="tel:+9779876543210"
+                className="hover:text-white transition-colors duration-200 whitespace-nowrap"
+              >
+                +977 9876543210
+              </a>
+              <span className="whitespace-nowrap">
+                Kathmandu, Nepal
+              </span>
+              <a
+                href="mailto:projects@lumeraventures.com"
+                className="hover:text-white transition-colors duration-200 whitespace-nowrap"
+              >
+                projects@lumeraventures.com
+              </a>
+            </div>
 
-          {/* Column 3: LEGAL */}
-          <div className="flex flex-col gap-3.5 sm:gap-4">
-            <span className="text-xs sm:text-[13px] font-sans tracking-wider text-white uppercase font-semibold">
-              Legal
-            </span>
-            <ul className="flex flex-col gap-2.5 sm:gap-3 text-xs sm:text-[13px]">
-              <li>
-                <Link
-                  href="/#contact-cta"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#contact-cta"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about#trust"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Warranty & Support
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about#trust"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Authenticity & Care
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#contact-cta"
-                  className="hover:text-white transition-colors duration-150"
-                >
-                  Technical Specifications
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: FOLLOW US */}
-          <div className="flex flex-col gap-3.5 sm:gap-4">
-            <span className="text-xs sm:text-[13px] font-sans tracking-wider text-white uppercase font-semibold">
-              Follow Us
-            </span>
-            <div className="flex items-center gap-2.5 sm:gap-3 pt-1">
-              {/* Facebook */}
+            {/* Social Media Channels */}
+            {/* <div className="flex items-center gap-2.5 sm:gap-3 pt-4 sm:pt-5">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="w-9 h-9 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
+                className="w-8 h-8 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
               >
-                <FontAwesomeIcon icon={faFacebookF} className="w-3.5 h-3.5" />
+                <FontAwesomeIcon icon={faFacebookF} className="w-3 h-3" />
               </a>
 
-              {/* Instagram */}
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="w-9 h-9 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
+                className="w-8 h-8 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
               >
-                <FontAwesomeIcon icon={faInstagram} className="w-3.5 h-3.5" />
+                <FontAwesomeIcon icon={faInstagram} className="w-3 h-3" />
               </a>
 
-              {/* TikTok */}
               <a
                 href="https://tiktok.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok"
-                className="w-9 h-9 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
+                className="w-8 h-8 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
               >
-                <FontAwesomeIcon icon={faTiktok} className="w-3.5 h-3.5" />
+                <FontAwesomeIcon icon={faTiktok} className="w-3 h-3" />
               </a>
 
-              {/* WhatsApp */}
               <a
                 href="https://whatsapp.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
-                className="w-9 h-9 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
+                className="w-8 h-8 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 hover:border-white/60 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xs"
               >
-                <FontAwesomeIcon icon={faWhatsapp} className="w-3.5 h-3.5" />
+                <FontAwesomeIcon icon={faWhatsapp} className="w-3 h-3" />
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
 

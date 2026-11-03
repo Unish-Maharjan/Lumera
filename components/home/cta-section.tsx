@@ -1,64 +1,117 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 import Image from "next/image";
-import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 
 export function CtaSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const colorLayerRef = useRef<HTMLDivElement>(null);
+
+  const updateMask = (clientX: number, clientY: number) => {
+    if (!sectionRef.current || !colorLayerRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    const mask = `radial-gradient(circle 280px at ${x}px ${y}px, black 0%, rgba(0,0,0,0.85) 45%, transparent 100%)`;
+    colorLayerRef.current.style.maskImage = mask;
+    colorLayerRef.current.style.webkitMaskImage = mask;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    updateMask(e.clientX, e.clientY);
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+    if (colorLayerRef.current) {
+      colorLayerRef.current.style.opacity = "1";
+    }
+    updateMask(e.clientX, e.clientY);
+  };
+
+  const handleMouseLeave = () => {
+    if (colorLayerRef.current) {
+      colorLayerRef.current.style.opacity = "0";
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
+    if (e.touches[0] && colorLayerRef.current) {
+      colorLayerRef.current.style.opacity = "1";
+      updateMask(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
+    if (e.touches[0]) {
+      updateMask(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (colorLayerRef.current) {
+      colorLayerRef.current.style.opacity = "0";
+    }
+  };
+
   return (
     <section
+      ref={sectionRef}
       id="contact-cta"
       aria-labelledby="cta-heading"
-      className="relative w-full min-h-[420px] sm:min-h-[480px] lg:min-h-[520px] bg-transparent overflow-hidden flex items-center justify-center py-16 sm:py-24 lg:py-28 select-none border-t border-border/40"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      className="relative w-full h-screen min-h-screen bg-transparent overflow-hidden flex items-center justify-center select-none border-t border-border/40"
     >
       {/* Background Architectural Photography */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Base Layer: Black & White Image */}
         <Image
           src="/images/cta.png"
           alt="Architectural city LED billboard illuminated at night"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center pointer-events-none select-none grayscale contrast-[1.1] brightness-[0.92]"
+          className="object-cover object-center pointer-events-none select-none grayscale contrast-[1.08] brightness-[0.98]"
         />
 
-        {/* Subtle contrast scrim to let the architectural image shine through */}
+        {/* Interactive Pointer-Revealed Color Layer */}
         <div
-          className="absolute inset-0 bg-black/20 pointer-events-none"
-          aria-hidden="true"
-        />
+          ref={colorLayerRef}
+          className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-0 will-change-[mask-image]"
+          style={{
+            maskImage:
+              "radial-gradient(circle 0px at 0px 0px, transparent 100%, transparent 100%)",
+            WebkitMaskImage:
+              "radial-gradient(circle 0px at 0px 0px, transparent 100%, transparent 100%)",
+          }}
+        >
+          <Image
+            src="/images/cta.png"
+            alt="Architectural city LED billboard illuminated in full color"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center pointer-events-none select-none contrast-[1.15] brightness-[1.05] saturate-[1.25]"
+          />
+        </div>
 
-        {/* Minimal Edge Blending */}
+        {/* Minimal Edge Blending - Subtle transitions to keep the section crisp and visible */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-background/40 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-black/40 to-transparent"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background/40 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-28 lg:h-36 bg-gradient-to-t from-black via-black/40 to-transparent z-10"
           aria-hidden="true"
         />
       </div>
 
-      {/* Centered Content Layout matching Figma */}
-      <Container className="relative z-10 w-full flex flex-col items-center justify-center text-center">
-        {/* Monumental Headline with high readability drop shadow */}
-        <h2
-          id="cta-heading"
-          className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white uppercase select-none mb-4 sm:mb-5 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] max-w-2xl"
-        >
-          LET&apos;S CREATE<br />
-          SOMETHING <span className="text-accent">BRIGHTER.</span>
-        </h2>
-
-        {/* Subtitle */}
-        <p className="font-inter text-xs sm:text-sm md:text-base text-white/90 font-medium max-w-md mb-6 sm:mb-8 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-          Have a space in mind? Let&apos;s explore what&apos;s possible.
-        </p>
-
-        {/* Primary CTA Button */}
-        <Button variant="gold" size="md">
-          Start Your Project
-        </Button>
-      </Container>
+      
     </section>
   );
 }
