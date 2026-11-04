@@ -31,7 +31,7 @@ const EVENTS: EventItem[] = [
     title: "Kathmandu Tech Expo 2025",
     location: "Bhrikuti Mandap, Kathmandu",
     image: "/images/buildspace/outdoor.avif",
-    categories: ["Exhibitions", "Corporate"],
+    categories: ["Exhibitions", "Corporate", "Installations"],
   },
   {
     id: "global-innovation-summit",
@@ -39,7 +39,7 @@ const EVENTS: EventItem[] = [
     title: "Global Innovation Summit",
     location: "ICC, Kathmandu",
     image: "/images/buildspace/mall.avif",
-    categories: ["Corporate", "Installations"],
+    categories: ["Corporate", "Installations", "Exhibitions"],
   },
   {
     id: "nepal-music-festival",
@@ -47,7 +47,7 @@ const EVENTS: EventItem[] = [
     title: "Nepal Music Festival",
     location: "Dasarath Rangashala",
     image: "/images/buildspace/events.avif",
-    categories: ["Public Events"],
+    categories: ["Public Events", "Installations"],
   },
   {
     id: "smart-city-expo-2024",
@@ -55,7 +55,7 @@ const EVENTS: EventItem[] = [
     title: "Smart City Expo 2024",
     location: "Bhrikuti Mandap, Kathmandu",
     image: "/images/ourservices/service-1.jpg",
-    categories: ["Exhibitions", "Installations"],
+    categories: ["Exhibitions", "Corporate", "Public Events", "Installations"],
   },
   {
     id: "heritage-illumination-gala",
@@ -87,7 +87,7 @@ export function EventsGridSection() {
     <section className="relative w-full bg-black py-12 sm:py-16 lg:py-20 text-white select-none">
       <Container size="xl">
         {/* Category Tabs */}
-        <div className="flex flex-wrap items-center gap-6 sm:gap-8 border-b border-white/10 mb-8 sm:mb-12">
+        <div className="flex flex-wrap items-center gap-6 sm:gap-8 mb-8 sm:mb-12">
           {CATEGORIES.map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -95,13 +95,16 @@ export function EventsGridSection() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`text-sm font-medium transition-colors cursor-pointer pb-3 -mb-px border-b-2 ${
+                className={`text-sm font-medium transition-colors cursor-pointer pb-2 relative ${
                   isActive
-                    ? "text-accent border-accent"
-                    : "text-zinc-400 hover:text-white border-transparent"
+                    ? "text-accent"
+                    : "text-zinc-400 hover:text-white"
                 }`}
               >
-                {tab}
+                <span>{tab}</span>
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" />
+                )}
               </button>
             );
           })}
@@ -114,7 +117,7 @@ export function EventsGridSection() {
               key={event.id}
               href="/contact"
               className="group relative aspect-[16/10] min-h-[260px] sm:min-h-[320px] md:min-h-[360px] 
-              rounded-2xl overflow-hidden border border-white/10 bg-zinc-950"
+              rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 hover:border-accent/40 bg-zinc-950 transition-colors duration-300"
             >
               {/* Background Image */}
               <Image
@@ -122,12 +125,12 @@ export function EventsGridSection() {
                 alt={event.title}
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover object-center brightness-[0.88] contrast-[1.05]"
+                className="object-cover object-center brightness-[0.88] contrast-[1.05] transition-transform duration-500 ease-out group-hover:scale-105"
               />
 
               {/* Gradient Vignettes for optimal text readability */}
-              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/80 via-black/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/80 to-transparent" />
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
 
               {/* Date Badge (Top Left) */}
               <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
@@ -139,7 +142,7 @@ export function EventsGridSection() {
               {/* Event Info (Bottom Row) */}
               <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 z-10 flex items-end justify-between gap-4">
                 <div>
-                  <h3 className="font-heading text-lg sm:text-xl font-medium text-white">
+                  <h3 className="font-heading text-lg sm:text-xl font-medium text-white group-hover:text-zinc-100 transition-colors">
                     {event.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-zinc-400 font-light mt-1">
@@ -148,8 +151,9 @@ export function EventsGridSection() {
                 </div>
 
                 {/* View Details Link */}
-                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-accent shrink-0 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-accent shrink-0 whitespace-nowrap group-hover:text-accent-light transition-colors">
                   <span>View Details</span>
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </div>
               </div>
             </Link>

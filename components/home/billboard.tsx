@@ -21,26 +21,33 @@ function Floodlights({
   return (
     <div
       ref={lightsRef}
-      className={`absolute -top-5 sm:-top-7 left-0 right-0 flex justify-between px-3 sm:px-5 pointer-events-none z-30 ${className}`.trim()}
+      className={`absolute -top-6 sm:-top-8 left-0 right-0 flex justify-between px-3 sm:px-6 pointer-events-none z-30 ${className}`.trim()}
     >
       {angles.map((angle, idx) => (
         <div key={idx} className="relative flex flex-col items-center">
-          {/* Angled Mounting Bracket Arm */}
+          {/* Structural Cantilever Arm extending toward viewer */}
           <div
-            className="w-1 sm:w-1.5 h-3.5 sm:h-5 bg-gradient-to-b from-zinc-500 to-zinc-700 border-x border-white/20 origin-bottom"
+            className="w-1 sm:w-1.5 h-4 sm:h-5.5 bg-gradient-to-b from-zinc-300 via-zinc-500 to-zinc-800 border-x border-white/30 origin-bottom shadow-md"
             style={{ transform: `rotate(${angle})` }}
           />
-          {/* Floodlight Fixture Housing */}
+          {/* Heavy Industrial Floodlight Casing with Cooling Fins */}
           <div
-            className="w-4 sm:w-6 h-2 sm:h-3 bg-zinc-800 rounded-xs border border-zinc-400/60 shadow-lg flex items-center justify-center -mt-0.5"
+            className="relative w-5 sm:w-7 h-2.5 sm:h-3.5 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 rounded-[2px] border border-zinc-400/80 shadow-[0_4px_10px_rgba(0,0,0,0.95)] flex items-center justify-center -mt-0.5"
             style={{ transform: `rotate(${angle})` }}
           >
-            <div className="w-3 sm:w-4.5 h-1 sm:h-1.5 bg-[#FFFDF5] rounded-xs shadow-[0_0_10px_#ffffff,0_0_20px_rgba(255,245,210,0.85)]" />
+            {/* Cooling Fin Lines */}
+            <div className="absolute -top-1 inset-x-0.5 flex justify-between px-0.5">
+              <div className="w-[1px] h-1 bg-zinc-400" />
+              <div className="w-[1px] h-1 bg-zinc-400" />
+              <div className="w-[1px] h-1 bg-zinc-400" />
+            </div>
+            {/* Glowing Lamp Core with Halation Glow */}
+            <div className="w-3.5 sm:w-5 h-1 sm:h-1.5 bg-[#FFFDF5] rounded-xs shadow-[0_0_12px_#ffffff,0_0_24px_rgba(255,245,210,0.95)]" />
           </div>
 
-          {/* Spotlight Light Cone projecting onto the billboard */}
+          {/* Volumetric Spotlight Beam projecting downward onto the LED billboard */}
           <div
-            className="absolute top-3 sm:top-4 w-12 sm:w-16 h-18 sm:h-24 bg-[radial-gradient(ellipse_at_top,_rgba(255,250,230,0.35)_0%,_transparent_75%)] pointer-events-none blur-xs"
+            className="absolute top-4 sm:top-5 w-14 sm:w-20 h-20 sm:h-28 bg-[radial-gradient(ellipse_at_top,_rgba(255,250,230,0.45)_0%,_rgba(255,240,200,0.12)_45%,_transparent_75%)] pointer-events-none blur-xs"
             style={{
               transform: `translateX(-50%) rotate(${angle})`,
               left: "50%",
@@ -65,62 +72,137 @@ function BillboardStand({
       ref={standRef}
       className={`absolute top-full left-0 right-0 flex flex-col items-center pointer-events-none z-20 ${className}`.trim()}
     >
-      {/* 1. Catwalk Walkway with Safety Railing */}
-      <div className="relative w-[102%] h-3 sm:h-4 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 border-t border-b border-zinc-500/80 shadow-md flex items-center z-20">
-        <div className="absolute -top-2.5 sm:-top-3 left-0 right-0 h-2.5 sm:h-3 border-t-[1.5px] border-zinc-400 flex justify-between px-2 sm:px-4 pointer-events-none">
-          {Array.from({ length: 19 }).map((_, idx) => (
-            <div key={idx} className="w-[1px] h-full bg-zinc-400" />
+      {/* 1. Catwalk Walkway with Safety Railing & Industrial Cantilever Brackets */}
+      <div className="relative w-[103%] -mt-0.5 flex flex-col items-center z-20">
+        {/* Safety Railing: Top Grab Rail + Mid Knee Rail + Vertical Posts */}
+        <div className="relative w-full h-3 sm:h-4.5 border-t-[1.5px] border-zinc-400/90 shadow-[0_1px_2px_rgba(0,0,0,0.9)] flex justify-between px-2 sm:px-4 pointer-events-none">
+          {/* Mid Safety Rail */}
+          <div className="absolute top-1/2 inset-x-0 h-[1px] bg-zinc-500/70" />
+          {/* Vertical Pickets / Stanchion Posts */}
+          {Array.from({ length: 21 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="w-[1.5px] h-full bg-gradient-to-b from-zinc-300 via-zinc-500 to-zinc-700 shadow-sm"
+            />
           ))}
         </div>
-        <div className="w-full h-full opacity-20 bg-[repeating-linear-gradient(45deg,#ffffff,#ffffff_1px,transparent_1px,transparent_4px)]" />
+
+        {/* Catwalk Deck: 3D Steel Grating Walkway with Toe-Board Kickplate */}
+        <div className="relative w-full h-3.5 sm:h-4 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border-t border-b border-zinc-400/80 shadow-[0_4px_10px_rgba(0,0,0,0.95)] flex items-center overflow-hidden">
+          {/* Steel Toe-Board Kickplate on Front Edge */}
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-zinc-600 via-zinc-400 to-zinc-600 border-t border-white/20" />
+          {/* Walkway Expanded Metal Mesh Texture */}
+          <div className="w-full h-full opacity-35 bg-[repeating-linear-gradient(45deg,#ffffff,#ffffff_1px,transparent_1px,transparent_4px)]" />
+        </div>
+
+        {/* Cantilevered Triangular Support Gussets Under the Catwalk */}
+        <div className="w-full flex justify-around px-[8%] -mt-0.5 z-10 pointer-events-none">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div
+              key={i}
+              className="w-1.5 sm:w-2 h-2 sm:h-3 bg-gradient-to-b from-zinc-600 to-zinc-900 border-x border-zinc-500/50 shadow-sm"
+            />
+          ))}
+        </div>
       </div>
 
-      {/* 2. Industrial 8-Bay Lattice Truss with Diagonal "X" Cross-Braces */}
-      <div className="relative w-[102%] -mt-0.5 z-10">
+      {/* 2. Heavy 3D Structural Lattice Truss with Depth Shading */}
+      <div className="relative w-[102%] -mt-1 z-10 drop-shadow-[0_6px_12px_rgba(0,0,0,0.9)]">
         <svg
-          className="w-full h-7 sm:h-9 md:h-11 text-zinc-600/90 drop-shadow-md"
+          className="w-full h-8 sm:h-10 md:h-12 text-zinc-500"
           viewBox="0 0 800 60"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio="none"
         >
-          <line x1="0" y1="2" x2="800" y2="2" stroke="currentColor" strokeWidth="4" />
-          <line x1="0" y1="58" x2="800" y2="58" stroke="currentColor" strokeWidth="4" />
+          {/* Back Shadow of Truss for 3D depth */}
+          <path
+            d="M0 4L800 4 M0 58L800 58"
+            stroke="rgba(0,0,0,0.85)"
+            strokeWidth="6"
+          />
+
+          {/* Top Heavy Steel Tubular Chord with Cylindrical Shading */}
+          <line x1="0" y1="3" x2="800" y2="3" stroke="#a1a1aa" strokeWidth="4.5" />
+          <line x1="0" y1="1.5" x2="800" y2="1.5" stroke="#ffffff" strokeWidth="1" opacity="0.6" />
+
+          {/* Bottom Heavy Steel Tubular Chord */}
+          <line x1="0" y1="57" x2="800" y2="57" stroke="#71717a" strokeWidth="4.5" />
+          <line x1="0" y1="55.5" x2="800" y2="55.5" stroke="#a1a1aa" strokeWidth="1" opacity="0.4" />
+
+          {/* Vertical Structural Posts with Specular Line */}
           {[0, 100, 200, 300, 400, 500, 600, 700, 800].map((x) => (
-            <line
-              key={x}
-              x1={x}
-              y1="2"
-              x2={x + 100}
-              y2="58"
-              stroke="currentColor"
-              strokeWidth="3"
-            />
+            <g key={x}>
+              <line x1={x} y1="3" x2={x} y2="57" stroke="#27272a" strokeWidth="4" />
+              <line x1={x} y1="3" x2={x} y2="57" stroke="#71717a" strokeWidth="2.5" />
+              <circle cx={x} cy="3" r="3" fill="#a1a1aa" />
+              <circle cx={x} cy="57" r="3" fill="#71717a" />
+            </g>
           ))}
+
+          {/* Diagonal "X" Cross-Braces with 3D Overlap */}
           {[0, 100, 200, 300, 400, 500, 600, 700].map((x, i) => (
             <g key={i}>
-              <line x1={x} y1="2" x2={x + 100} y2="58" stroke="currentColor" strokeWidth="2.5" />
-              <line x1={x + 100} y1="2" x2={x} y2="58" stroke="currentColor" strokeWidth="2.5" />
+              {/* Back Diagonal */}
+              <line x1={x} y1="57" x2={x + 100} y2="3" stroke="#18181b" strokeWidth="4" />
+              <line x1={x} y1="57" x2={x + 100} y2="3" stroke="#52525b" strokeWidth="2.5" />
+              {/* Front Diagonal */}
+              <line x1={x} y1="3" x2={x + 100} y2="57" stroke="#27272a" strokeWidth="4" />
+              <line x1={x} y1="3" x2={x + 100} y2="57" stroke="#a1a1aa" strokeWidth="2.5" />
+              {/* Center Gusset Bolt */}
+              <circle cx={x + 50} cy="30" r="2.5" fill="#d4d4d8" stroke="#18181b" strokeWidth="1" />
             </g>
           ))}
         </svg>
       </div>
 
-      {/* 3. Dual Heavy Steel Cylindrical Columns / Pillars */}
-      <div className="relative w-full flex justify-between px-[12%] sm:px-[15%] -mt-1">
+      {/* 3. Dual Heavy Steel Cylindrical Columns / Monopiles with 3D Radial Lighting */}
+      <div className="relative w-full flex justify-between px-[12%] sm:px-[15%] -mt-1.5">
+        {/* Left Column */}
         <div className="flex flex-col items-center">
-          <div className="w-8 sm:w-11 md:w-13 h-1.5 sm:h-2 bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 border-y border-white/20 rounded-xs shadow-md z-10" />
-          <div className="relative w-6 sm:w-8 md:w-10 h-[65vh] sm:h-[75vh] md:h-[85vh] bg-gradient-to-r from-zinc-950 via-zinc-500 to-zinc-950 border-x border-white/10 shadow-2xl flex flex-col justify-around items-center">
-            <div className="w-[115%] h-1 sm:h-1.5 bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 border-y border-white/20 rounded-xs shadow-sm" />
-            <div className="w-[115%] h-1 sm:h-1.5 bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 border-y border-white/20 rounded-xs shadow-sm" />
+          {/* Top Structural Mounting Flange Plate with Heavy Hex Bolts */}
+          <div className="relative w-9 sm:w-12 md:w-14 h-2 sm:h-2.5 bg-gradient-to-r from-zinc-800 via-zinc-300 to-zinc-900 border-y border-white/30 rounded-xs shadow-[0_4px_8px_rgba(0,0,0,0.95)] z-10 flex justify-around items-center px-1">
+            <div className="w-1 h-1 rounded-full bg-zinc-200 border border-black/80" />
+            <div className="w-1 h-1 rounded-full bg-zinc-200 border border-black/80" />
+            <div className="w-1 h-1 rounded-full bg-zinc-200 border border-black/80" />
+          </div>
+
+          {/* Heavy Steel Cylindrical Column with Specular Light Stripe */}
+          <div className="relative w-6 sm:w-8 md:w-10 h-[65vh] sm:h-[75vh] md:h-[85vh] bg-[linear-gradient(to_right,#09090b_0%,#18181b_15%,#52525b_35%,#e4e4e7_50%,#52525b_65%,#18181b_85%,#09090b_100%)] border-x border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.98),inset_0_0_8px_rgba(0,0,0,0.9)] flex flex-col justify-around items-center">
+            {/* 3D Welded Stiffener Collar Rings with Bolts */}
+            {[0, 1, 2].map((ringIdx) => (
+              <div
+                key={ringIdx}
+                className="relative w-[118%] h-1.5 sm:h-2 bg-gradient-to-r from-zinc-900 via-zinc-300 to-zinc-950 border-y border-white/25 rounded-xs shadow-[0_2px_6px_rgba(0,0,0,0.9)] flex justify-around items-center px-0.5"
+              >
+                <div className="w-0.5 h-0.5 rounded-full bg-white shadow-xs" />
+                <div className="w-0.5 h-0.5 rounded-full bg-white shadow-xs" />
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Right Column */}
         <div className="flex flex-col items-center">
-          <div className="w-8 sm:w-11 md:w-13 h-1.5 sm:h-2 bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 border-y border-white/20 rounded-xs shadow-md z-10" />
-          <div className="relative w-6 sm:w-8 md:w-10 h-[65vh] sm:h-[75vh] md:h-[85vh] bg-gradient-to-r from-zinc-950 via-zinc-500 to-zinc-950 border-x border-white/10 shadow-2xl flex flex-col justify-around items-center">
-            <div className="w-[115%] h-1 sm:h-1.5 bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 border-y border-white/20 rounded-xs shadow-sm" />
-            <div className="w-[115%] h-1 sm:h-1.5 bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 border-y border-white/20 rounded-xs shadow-sm" />
+          {/* Top Structural Mounting Flange Plate with Heavy Hex Bolts */}
+          <div className="relative w-9 sm:w-12 md:w-14 h-2 sm:h-2.5 bg-gradient-to-r from-zinc-800 via-zinc-300 to-zinc-900 border-y border-white/30 rounded-xs shadow-[0_4px_8px_rgba(0,0,0,0.95)] z-10 flex justify-around items-center px-1">
+            <div className="w-1 h-1 rounded-full bg-zinc-200 border border-black/80" />
+            <div className="w-1 h-1 rounded-full bg-zinc-200 border border-black/80" />
+            <div className="w-1 h-1 rounded-full bg-zinc-200 border border-black/80" />
+          </div>
+
+          {/* Heavy Steel Cylindrical Column with Specular Light Stripe */}
+          <div className="relative w-6 sm:w-8 md:w-10 h-[65vh] sm:h-[75vh] md:h-[85vh] bg-[linear-gradient(to_right,#09090b_0%,#18181b_15%,#52525b_35%,#e4e4e7_50%,#52525b_65%,#18181b_85%,#09090b_100%)] border-x border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.98),inset_0_0_8px_rgba(0,0,0,0.9)] flex flex-col justify-around items-center">
+            {/* 3D Welded Stiffener Collar Rings with Bolts */}
+            {[0, 1, 2].map((ringIdx) => (
+              <div
+                key={ringIdx}
+                className="relative w-[118%] h-1.5 sm:h-2 bg-gradient-to-r from-zinc-900 via-zinc-300 to-zinc-950 border-y border-white/25 rounded-xs shadow-[0_2px_6px_rgba(0,0,0,0.9)] flex justify-around items-center px-0.5"
+              >
+                <div className="w-0.5 h-0.5 rounded-full bg-white shadow-xs" />
+                <div className="w-0.5 h-0.5 rounded-full bg-white shadow-xs" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -171,41 +253,51 @@ function BillboardCard({
         className={isHero ? "opacity-0 will-change-[transform,opacity]" : ""}
       />
 
-      {/* Screen Frame with Steel Bezel & Corner Rivets */}
+      {/* 3D Extruded Outer Enclosure / Structural Cabinet */}
       <div
         ref={screenWrapperRef}
-        className={`relative w-full h-full overflow-hidden rounded-[2px] bg-black flex flex-col ${
+        className={`relative w-full h-full rounded-[4px] bg-gradient-to-b from-[#24252a] via-[#141519] to-[#0a0a0c] p-[2px] sm:p-[3px] flex flex-col ${
           isHero
             ? ""
-            : "shadow-[0_25px_80px_-15px_rgba(0,0,0,0.98),0_0_65px_rgba(214,189,130,0.22)]"
+            : "shadow-[0_30px_90px_-15px_rgba(0,0,0,0.98),0_0_65px_rgba(215,184,117,0.22),-8px_8px_24px_rgba(0,0,0,0.85)]"
         }`}
+        style={{
+          boxShadow: isHero
+            ? undefined
+            : "0 30px 90px -15px rgba(0,0,0,0.98), 0 0 65px rgba(215,184,117,0.2), inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.9)",
+        }}
       >
+        {/* Steel Bezel with Heavy Rivets & Recessed Frame */}
         <div
           ref={bezelRef}
-          className={`absolute inset-0 pointer-events-none z-20 rounded-[inherit] border-[3px] sm:border-[5px] border-[#18181b] ring-1 ring-white/15 ${
+          className={`absolute inset-0 pointer-events-none z-20 rounded-[inherit] border-[3px] sm:border-[5px] border-[#18191e] ring-1 ring-white/20 ${
             isHero ? "opacity-0 will-change-[opacity]" : ""
           }`}
           style={{
             boxShadow:
-              "inset 0 2px 3px rgba(255,255,255,0.18), inset 0 -3px 6px rgba(0,0,0,0.9)",
+              "inset 0 4px 10px rgba(0,0,0,0.95), inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -3px 8px rgba(0,0,0,0.95)",
           }}
         >
-          {/* Corner Rivet Fasteners */}
-          <div className="absolute top-1 left-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-zinc-500 border border-zinc-300 shadow-sm" />
-          <div className="absolute top-1 right-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-zinc-500 border border-zinc-300 shadow-sm" />
-          <div className="absolute bottom-1 left-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-zinc-500 border border-zinc-300 shadow-sm" />
-          <div className="absolute bottom-1 right-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-zinc-500 border border-zinc-300 shadow-sm" />
+          {/* Heavy Industrial Hex Bolt Fasteners on Corners */}
+          <div className="absolute top-1 left-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-700 border border-black/80 shadow-sm" />
+          <div className="absolute top-1 right-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-700 border border-black/80 shadow-sm" />
+          <div className="absolute bottom-1 left-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-700 border border-black/80 shadow-sm" />
+          <div className="absolute bottom-1 right-1 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-700 border border-black/80 shadow-sm" />
 
-          {/* Golden LUMERA Brand Plate */}
-          <div className="w-full h-4 sm:h-6 md:h-7 bg-gradient-to-b from-[#18191e] to-[#0d0e12] border-b border-white/10 flex items-center justify-center select-none">
-            <span className="font-heading text-[9px] sm:text-[11px] md:text-xs tracking-[0.45em] text-[#D7B875] font-bold uppercase drop-shadow-[0_0_8px_rgba(215,184,117,0.35)] pl-[0.45em]">
+          {/* Additional Mid-Span Bolting Plates for Industrial Realism */}
+          <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 sm:w-2 h-1 sm:h-1.5 rounded-xs bg-zinc-500 border border-zinc-300/60" />
+          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 sm:w-2 h-1 sm:h-1.5 rounded-xs bg-zinc-500 border border-zinc-300/60" />
+
+          {/* Embossed Metallic Header Plate with Golden LUMERA Emblem */}
+          <div className="w-full h-4.5 sm:h-6 md:h-7 bg-gradient-to-b from-[#22242b] via-[#14151a] to-[#0b0c10] border-b border-white/15 flex items-center justify-center select-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_4px_rgba(0,0,0,0.7)]">
+            <span className="font-heading text-[9px] sm:text-[11px] md:text-xs tracking-[0.45em] text-[#D7B875] font-bold uppercase drop-shadow-[0_0_10px_rgba(215,184,117,0.45)] pl-[0.45em]">
               LUMERA
             </span>
           </div>
         </div>
 
-        {/* Video Player */}
-        <div className="relative w-full flex-1 overflow-hidden">
+        {/* Recessed Video Display Area */}
+        <div className="relative w-full flex-1 overflow-hidden rounded-[1px] bg-black shadow-[inset_0_0_20px_rgba(0,0,0,0.9)]">
           <video
             ref={videoRef}
             src={videoSrc}
@@ -226,18 +318,29 @@ function BillboardCard({
             />
           )}
 
-          {/* Micro-LED Dot Texture */}
+          {/* Micro-LED Modular Tile Grid & Texture (creates real physical display panels) */}
           <div
             ref={overlayRef}
             className={`absolute inset-0 pointer-events-none z-10 bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:4px_4px] ${
-              isHero ? "opacity-0" : "opacity-10"
+              isHero ? "opacity-0" : "opacity-12"
             }`}
             aria-hidden="true"
           />
-
-          {/* Subtle Display Glare Sheen */}
+          {/* Subtle Horizontal & Vertical Panel Seams */}
           <div
-            className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-10"
+            className="absolute inset-0 pointer-events-none z-10 opacity-15 bg-[linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:25%_50%]"
+            aria-hidden="true"
+          />
+
+          {/* 3D Diagonal Specular Glass Reflection Sheen */}
+          <div
+            className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent pointer-events-none z-10"
+            aria-hidden="true"
+          />
+
+          {/* Ambient Inner Shadow along top and edges simulating recessed screen depth */}
+          <div
+            className="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_3px_8px_rgba(0,0,0,0.85),inset_0_-2px_6px_rgba(0,0,0,0.85)]"
             aria-hidden="true"
           />
         </div>
@@ -305,29 +408,25 @@ export function AdsSection() {
           const targetH = isDesktop ? "24.75vw" : "42.75vw";
           const targetMaxW = isDesktop ? "600px" : "350px";
           const targetMaxH = isDesktop ? "337.5px" : "197px";
-          const shift = isDesktop ? 108 : 106;
+          const shift = isDesktop ? 124 : 114;
 
-          // Initial Coordinate and Layer States
-          gsap.set(billboard1Ref.current, { xPercent: 0, zIndex: 30 });
+          // Initial Coordinate and Layer States (No 3D slanting/tilt - straight flat facing)
+          gsap.set(billboard1Ref.current, { xPercent: 0, rotateY: 0, zIndex: 30 });
           if (billboard2Ref.current) {
             gsap.set(billboard2Ref.current, {
-              xPercent: shift + 25,
-              rotateY: isDesktop ? 14 : 10,
-              scale: 0.94,
+              xPercent: shift + 30,
+              rotateY: 0,
+              scale: 0.95,
               opacity: 0,
-              transformPerspective: 1400,
-              transformOrigin: "center center",
               zIndex: 20,
             });
           }
           if (billboard3Ref.current) {
             gsap.set(billboard3Ref.current, {
               xPercent: shift * 2,
-              rotateY: isDesktop ? 18 : 14,
-              scale: 0.88,
+              rotateY: 0,
+              scale: 0.90,
               opacity: 0,
-              transformPerspective: 1400,
-              transformOrigin: "center center",
               zIndex: 10,
             });
           }
@@ -416,9 +515,9 @@ export function AdsSection() {
               billboard2Ref.current,
               {
                 xPercent: shift,
-                rotateY: isDesktop ? 14 : 10,
+                rotateY: 0,
                 opacity: 0.85,
-                scale: 0.94,
+                scale: 0.95,
                 duration: 0.55,
                 ease: "power2.out",
               },
@@ -441,7 +540,7 @@ export function AdsSection() {
           // Billboard 1 glides left to peeking position
           tl.to(
             billboard1Ref.current,
-            { xPercent: -shift, rotateY: isDesktop ? -14 : -10, opacity: 0.85, scale: 0.94, duration: dur1, ease: "power2.inOut" },
+            { xPercent: -shift, rotateY: 0, opacity: 0.85, scale: 0.95, duration: dur1, ease: "power2.inOut" },
             t1
           );
 
@@ -460,7 +559,7 @@ export function AdsSection() {
           if (billboard3Ref.current) {
             tl.to(
               billboard3Ref.current,
-              { xPercent: shift, rotateY: isDesktop ? 14 : 10, opacity: 0.85, scale: 0.94, duration: dur1, ease: "power2.inOut" },
+              { xPercent: shift, rotateY: 0, opacity: 0.85, scale: 0.95, duration: dur1, ease: "power2.inOut" },
               t1
             );
           }
@@ -482,7 +581,7 @@ export function AdsSection() {
           // Billboard 1 exits far left
           tl.to(
             billboard1Ref.current,
-            { xPercent: -shift * 2, rotateY: isDesktop ? -20 : -14, opacity: 0, scale: 0.88, duration: dur2, ease: "power2.inOut" },
+            { xPercent: -shift * 2, rotateY: 0, opacity: 0, scale: 0.90, duration: dur2, ease: "power2.inOut" },
             t2
           );
 
@@ -490,7 +589,7 @@ export function AdsSection() {
           if (billboard2Ref.current) {
             tl.to(
               billboard2Ref.current,
-              { xPercent: -shift, rotateY: isDesktop ? -14 : -10, opacity: 0.85, scale: 0.94, duration: dur2, ease: "power2.inOut" },
+              { xPercent: -shift, rotateY: 0, opacity: 0.85, scale: 0.95, duration: dur2, ease: "power2.inOut" },
               t2
             );
           }
@@ -600,7 +699,7 @@ export function AdsSection() {
         {/* ─── Scroll-Driven Billboard Stage Carousel ─── */}
         <div
           ref={stageRef}
-          className="relative w-full flex items-center justify-center [perspective:1400px] [transform-style:preserve-3d] will-change-transform"
+          className="relative w-full flex items-center justify-center will-change-transform"
         >
           {/* Billboard 1 (Hero Shrink -> Matrix) */}
           <BillboardCard

@@ -83,15 +83,15 @@ export function AboutSection() {
       aria-labelledby="about-heading"
       className="relative z-20 w-full bg-black text-foreground overflow-x-clip select-none"
     >
-      {/* Above Gradient: extends above the section boundary to seamlessly hide and fade out the top border edge */}
+      {/* Above Gradient: subtly feathers the transition from the billboard section */}
       <div
-        className="pointer-events-none absolute -top-32 sm:-top-48 lg:-top-64 inset-x-0 h-32 sm:h-48 lg:h-64 bg-gradient-to-t from-black via-black/85 to-transparent z-30"
+        className="pointer-events-none absolute -top-8 sm:-top-12 lg:-top-16 inset-x-0 h-8 sm:h-12 lg:h-16 bg-gradient-to-t from-black via-black/80 to-transparent z-30"
         aria-hidden="true"
       />
 
-      {/* Top Black Gradient Scrim for seamless blend from Billboard */}
+      {/* Top Black Gradient Scrim for subtle blend */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-28 sm:h-40 bg-gradient-to-b from-black via-black/80 to-transparent z-10"
+        className="pointer-events-none absolute inset-x-0 top-0 h-12 sm:h-16 bg-gradient-to-b from-black/80 to-transparent z-10"
         aria-hidden="true"
       />
 
