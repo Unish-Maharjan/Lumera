@@ -108,7 +108,7 @@
   --font-space-grotesk: var(--font-space), "Space Grotesk", sans-serif;
 }
 
-.font-heading,
+/* .font-heading, */
 .font-corpta {
   font-family: var(--font-corpta), "Corpta DEMO", "corpta-demo", sans-serif !important;
 }
@@ -119,7 +119,7 @@
   font-family: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* .font-heading, */
+.font-heading,
 .font-space,
 .font-space-grotesk {
   font-family: var(--font-space), "Space Grotesk", sans-serif !important;

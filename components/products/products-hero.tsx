@@ -4,36 +4,48 @@ import Container from "@/components/ui/Container";
 
 export function ProductsHero() {
   return (
-    <section className="relative w-full bg-black text-foreground pt-32 sm:pt-40 lg:pt-44 pb-16 sm:pb-24 overflow-hidden">
-      <Container size="xl" className="relative z-10">
-        {/* Editorial Text Block */}
-        <div className="max-w-4xl mb-12 sm:mb-16 lg:mb-20">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent mb-4 sm:mb-6 block">
-            OUR PRODUCTS
-          </span>
+    <section className="relative flex min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh] w-full 
+    items-center justify-center overflow-hidden bg-black text-foreground pt-28 pb-20 sm:pt-36 sm:pb-28">
+      {/* Background Architectural LED Visual */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Image
+          src="/images/products-hero.png"
+          alt="Lumera architectural curved LED display integration"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center brightness-[0.85]"
+        />
 
-          <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase leading-[0.95] tracking-tight text-white mb-6 sm:mb-8">
-            High-performance hardware. Crafted for <span className="text-accent">architecture.</span>
-          </h1>
+        {/* Bottom Vignette for Smooth Transition to the Next Section */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black via-black/80
+           to-transparent"
+          aria-hidden="true"
+        />
+      </div>
 
-          <p className="font-sans text-base sm:text-lg md:text-xl text-zinc-300 font-light leading-relaxed max-w-2xl">
-            From ultra-fine pitch MicroLED surfaces to monumental outdoor media facades, our display architectures are engineered for seamless structural integration, thermal endurance, and optical purity.
-          </p>
-        </div>
+      {/* Content Container */}
+      <div className="relative z-10 w-full">
+        <Container size="xl">
+          <div className="relative max-w-4xl mx-auto text-center flex flex-col items-center">
+            {/* Main Headline matching the editorial design */}
+            <h1 className="font-heading uppercase text-3xl sm:text-5xl md:text-6xl lg:text-7xl 
+            font-medium text-white">
+              High Performance <br />
+              <span className="text-accent font-medium">Hardware.</span>
+            </h1>
 
-        {/* Minimal Wide Cinematic Visual with Generous Breathing Room */}
-        <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] overflow-hidden border border-white/10 bg-zinc-950">
-          <Image
-            src="/images/mall-screen.png"
-            alt="Lumera architectural curved LED display integration"
-            fill
-            priority
-            sizes="(max-width: 1536px) 100vw, 1536px"
-            className="object-cover object-center brightness-95 contrast-[1.05]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-        </div>
-      </Container>
+            {/* Supporting Subtitle */}
+            <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-100 font-light 
+             max-w-2xl mx-auto mt-6 sm:mt-8">
+              From ultra-fine pitch MicroLED surfaces to monumental outdoor media
+              facades, our display architectures are engineered for seamless
+              structural integration, thermal endurance, and optical purity.
+            </p>
+          </div>
+        </Container>
+      </div>
     </section>
   );
 }

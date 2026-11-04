@@ -16,22 +16,6 @@ export interface ProductItem {
 
 export const PRODUCTS: ProductItem[] = [
   {
-    id: "lumera-matrix",
-    series: "01",
-    name: "LUMERA MATRIX",
-    category: "Fine Pitch MicroLED",
-    tagline: "Ultra-fine pitch MicroLED architecture for luxury flagships & corporate studios.",
-    summary:
-      "Engineered with microscopic diode pitch and deep black encapsulation, LUMERA MATRIX delivers true-to-life contrast, flawless color calibration, and zero moiré interference for close-up viewing environments.",
-    imageSrc: "/products/product-1.webp",
-    specs: [
-      { label: "Pixel Pitch", value: "0.9mm – 1.5mm" },
-      { label: "Refresh Rate", value: "7,680 Hz" },
-      { label: "Brightness", value: "1,200 nits" },
-      { label: "Contrast Ratio", value: "10,000:1" },
-    ],
-  },
-  {
     id: "lumera-vortex",
     series: "02",
     name: "LUMERA VORTEX",

@@ -80,7 +80,7 @@ function Counter({ value }: { value: number }) {
 
 export default function TrustCounter() {
   return (
-    <section className="relative bg-[#000000] py-20 text-foreground md:py-28 overflow-hidden">
+    <section className="relative bg-[#000000] py-20 text-foreground md:pt-28 overflow-hidden">
       <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         {/* Centered Heading
         <div className="mx-auto max-w-3xl text-center mb-14 sm:mb-18 lg:mb-20">

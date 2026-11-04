@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 
-export function CtaSection() {
+export function CtaSection({ className = "" }: { className?: string } = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const colorLayerRef = useRef<HTMLDivElement>(null);
 
@@ -65,10 +65,10 @@ export function CtaSection() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full h-screen min-h-screen bg-transparent overflow-hidden flex items-center justify-center select-none border-t border-border/40"
+      className={`relative w-full min-h-screen bg-transparent overflow-hidden flex items-center justify-center border-t border-border/40 ${className}`}
     >
       {/* Background Architectural Photography */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
         {/* Base Layer: Black & White Image */}
         <Image
           src="/images/cta.png"
@@ -110,8 +110,6 @@ export function CtaSection() {
           aria-hidden="true"
         />
       </div>
-
-      
     </section>
   );
 }

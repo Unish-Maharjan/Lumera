@@ -94,21 +94,117 @@ export function FeaturedProductCarousel({
     <section
       aria-roledescription="carousel"
       aria-label="Featured Products Carousel"
-      className="relative w-full bg-black text-foreground py-20 sm:py-28 lg:py-36 border-t border-white/10 overflow-hidden"
+      className="relative w-full bg-black text-foreground py-20 sm:py-28 
+      lg:py-36 overflow-hidden"
     >
       <Container size="xl">
         {/* Section Header with Eyebrow and Carousel Controls */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 sm:mb-16">
-          <div>
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent mb-4 block">
-              FEATURED DISPLAY
-            </span>
-            <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight text-white">
+     
+            <h2 className="font-heading mx-auto text-3xl sm:text-5xl md:text-6xl 
+            font-bold uppercase text-white">
               The Flagship <span className="text-accent">Series.</span>
             </h2>
-          </div>
+        </div>
 
-          {/* Carousel Arrow Controls & Product Counter */}
+        {/* Carousel Showcase Stage */}
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="relative w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[660px] flex items-center"
+        >
+          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Column 1: Dominant Product Image */}
+            <div className="lg:col-span-7 flex items-center justify-center relative">
+              {/* Subtle Atmospheric Backlight */}
+              <div
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
+              />
+
+              <div
+                key={`img-${currentProduct.id}`}
+                className={`relative w-full h-[340px] sm:h-[460px] lg:h-[540px]
+                   flex items-center justify-center transition-all duration-350 ease-out ${
+                  isAnimating
+                    ? direction === "next"
+                      ? "opacity-40 translate-x-3 scale-[0.98]"
+                      : "opacity-40 -translate-x-3 scale-[0.98]"
+                    : "opacity-100 translate-x-0 scale-100"
+                }`}
+              >
+                <Image
+                  src={currentProduct.imageSrc}
+                  alt={currentProduct.name}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Column 2: Product Information & Specs */}
+            <div
+              key={`info-${currentProduct.id}`}
+              className={`lg:col-span-5 flex flex-col justify-center transition-all duration-350 ease-out ${
+                isAnimating
+                  ? "opacity-40 translate-y-2"
+                  : "opacity-100 translate-y-0"
+              }`}
+            >
+            
+              {/* <div className="flex items-center gap-3 mb-3">
+                <span className="font-inter text-xs uppercase text-accent">
+                  {currentProduct.category}
+                </span>
+                <span className="text-zinc-600">/</span>
+                <span className="font-inter text-xs uppercase text-zinc-400">
+                  SERIES {currentProduct.series}
+                </span>
+              </div> */}
+
+              
+              <h3 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-white mb-4 leading-[1.05]">
+                {currentProduct.name}
+              </h3>
+
+            
+              <p className="font-sans text-sm sm:text-base text-zinc-300 font-light leading-relaxed mb-6">
+                {currentProduct.summary}
+              </p>
+
+        
+              {currentProduct.specs && currentProduct.specs.length > 0 && (
+                <div className="border-t border-b border-white/10 py-5 my-2 mb-8">
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                    {currentProduct.specs.map((spec) => (
+                      <div key={spec.label} className="flex flex-col">
+                        <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-500 mb-1">
+                          {spec.label}
+                        </span>
+                        <span className="font-sans text-xs sm:text-sm font-medium text-white">
+                          {spec.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Action Button */}
+              <div>
+                <Link href="/#contact-cta">
+                  <Button variant="gold" size="md">
+                    EXPLORE PRODUCT
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+         {/* Carousel Arrow Controls & Product Counter */}
           <div className="flex items-center gap-4 sm:gap-6 self-start sm:self-end">
             <span
               aria-live="polite"
@@ -163,104 +259,6 @@ export function FeaturedProductCarousel({
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Carousel Showcase Stage */}
-        <div
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          className="relative w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[660px] flex items-center"
-        >
-          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Column 1: Dominant Product Image */}
-            <div className="lg:col-span-7 flex items-center justify-center relative">
-              {/* Subtle Atmospheric Backlight */}
-              <div
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_300px_at_50%_50%,_rgba(215,184,117,0.06)_0%,_transparent_75%)]"
-                aria-hidden="true"
-              />
-
-              <div
-                key={`img-${currentProduct.id}`}
-                className={`relative w-full h-[340px] sm:h-[460px] lg:h-[540px] flex items-center justify-center transition-all duration-350 ease-out ${
-                  isAnimating
-                    ? direction === "next"
-                      ? "opacity-40 translate-x-3 scale-[0.98]"
-                      : "opacity-40 -translate-x-3 scale-[0.98]"
-                    : "opacity-100 translate-x-0 scale-100"
-                }`}
-              >
-                <Image
-                  src={currentProduct.imageSrc}
-                  alt={currentProduct.name}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] select-none pointer-events-none"
-                />
-              </div>
-            </div>
-
-            {/* Column 2: Product Information & Specs */}
-            <div
-              key={`info-${currentProduct.id}`}
-              className={`lg:col-span-5 flex flex-col justify-center transition-all duration-350 ease-out ${
-                isAnimating
-                  ? "opacity-40 translate-y-2"
-                  : "opacity-100 translate-y-0"
-              }`}
-            >
-              {/* Category & Series */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent">
-                  {currentProduct.category}
-                </span>
-                <span className="text-zinc-600">/</span>
-                <span className="font-mono text-xs uppercase tracking-widest text-zinc-400">
-                  SERIES {currentProduct.series}
-                </span>
-              </div>
-
-              {/* Product Name */}
-              <h3 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-white mb-4 leading-[1.05]">
-                {currentProduct.name}
-              </h3>
-
-              {/* Tagline / Summary */}
-              <p className="font-sans text-sm sm:text-base text-zinc-300 font-light leading-relaxed mb-6">
-                {currentProduct.summary}
-              </p>
-
-              {/* Specifications Matrix */}
-              {currentProduct.specs && currentProduct.specs.length > 0 && (
-                <div className="border-t border-b border-white/10 py-5 my-2 mb-8">
-                  <div className="grid grid-cols-2 gap-y-4 gap-x-6">
-                    {currentProduct.specs.map((spec) => (
-                      <div key={spec.label} className="flex flex-col">
-                        <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-500 mb-1">
-                          {spec.label}
-                        </span>
-                        <span className="font-sans text-xs sm:text-sm font-medium text-white">
-                          {spec.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Action Button */}
-              <div>
-                <Link href="/#contact-cta">
-                  <Button variant="gold" size="md">
-                    EXPLORE PRODUCT
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
       </Container>
     </section>
   );

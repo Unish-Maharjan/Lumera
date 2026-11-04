@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import ProductRangeSection from "@/components/products/product-range-section";
+import ProductsHero from "@/components/products/products-hero";
+import ProductGridSection from "@/components/products/product-grid-section";
 import CtaSection from "@/components/home/cta-section";
 
 export const metadata: Metadata = {
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <main className="min-h-screen bg-black text-foreground">
-      <ProductRangeSection />
+      <ProductsHero />
+      <ProductGridSection />
       <CtaSection />
     </main>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
@@ -8,85 +8,104 @@ interface ProductCardProps {
   product: ProductItem;
   priority?: boolean;
   className?: string;
+  isActive?: boolean;
 }
+
+/**
+ * Framing per product asset. The source canvases are portrait with the module
+ * sitting low and centred, so most of the canvas is empty. We crop to a 4:3
+ * stage with `cover` + a tuned vertical position so the product fills the
+ * frame. `lumera-matrix` ships at only 500x600, so it stays `contain` to avoid
+ * being upscaled into blur.
+ */
+interface Framing {
+  fit: "cover" | "contain";
+  position: string;
+  scale: number;
+}
+
+const FRAMING: Record<string, Framing> = {
+  "lumera-matrix": { fit: "contain", position: "50% 50%", scale: 1.04 },
+  "lumera-vortex": { fit: "cover", position: "50% 88%", scale: 1.04 },
+  "lumera-strata": { fit: "cover", position: "50% 82%", scale: 1.08 },
+  "lumera-crystal": { fit: "cover", position: "50% 84%", scale: 1.12 },
+  "lumera-curve": { fit: "cover", position: "50% 82%", scale: 1.04 },
+  "lumera-titan": { fit: "cover", position: "50% 82%", scale: 1.04 },
+};
+
+const DEFAULT_FRAMING: Framing = {
+  fit: "contain",
+  position: "50% 50%",
+  scale: 1,
+};
 
 export function ProductCard({
   product,
   priority = false,
   className = "",
+  isActive = false,
 }: ProductCardProps) {
+  const framing = FRAMING[product.id] ?? DEFAULT_FRAMING;
+
   return (
     <article
-      className={`group relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 bg-zinc-950/60 border border-white/10 transition-colors duration-300 hover:border-white/20 overflow-hidden ${className}`.trim()}
+      className={`group flex flex-col items-center text-center w-full max-w-[480px] mx-auto ${className}`.trim()}
     >
-      {/* Top Header: Series & Category */}
-      <div className="flex items-center justify-between w-full mb-6 z-10">
-        <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent">
-          {product.category}
-        </span>
-        <span className="font-mono text-xs uppercase tracking-widest text-zinc-500">
-          SERIES {product.series}
-        </span>
-      </div>
-
-      {/* Large Dominant Product Image */}
-      <div className="relative w-full h-[280px] sm:h-[340px] lg:h-[380px] flex items-center justify-center my-4">
-        {/* Subtle radial glow behind product */}
+      {/* Stage */}
+      <div
+        data-product-image
+        className="relative h-[26vh] sm:h-[30vh] md:h-[34vh] lg:h-[37vh] max-h-[330px] aspect-[4/3] w-auto max-w-full mx-auto transition-opacity duration-300 ease-out"
+        style={{ opacity: isActive ? 1 : 0.35 }}
+      >
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_220px_at_50%_50%,_rgba(215,184,117,0.04)_0%,_transparent_75%)]"
-          aria-hidden="true"
-        />
-
-        <div className="relative w-full h-full max-w-[500px] flex items-center justify-center">
+          className="absolute inset-0 scale-(--s) transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[calc(var(--s)_*_1.02)]"
+          style={{ "--s": framing.scale } as CSSProperties}
+        >
           <Image
             src={product.imageSrc}
-            alt={`${product.name} display module`}
+            alt={`${product.name} LED display module`}
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(min-width: 1280px) 40vw, (min-width: 768px) 50vw, 75vw"
             priority={priority}
-            className="object-contain select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.85)] transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            draggable={false}
+            style={{ objectPosition: framing.position }}
+            className={`pointer-events-none select-none ${
+              framing.fit === "cover" ? "object-cover" : "object-contain"
+            }`}
           />
         </div>
       </div>
 
-      {/* Product Content & Key Specs */}
-      <div className="flex flex-col mt-6 z-10">
-        <h3 className="font-heading text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white mb-2 leading-tight">
+      {/* Information */}
+      <div className="mt-3 sm:mt-4 flex flex-col items-center">
+        <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-accent">
+          {product.category}
+        </p>
+
+        <h3 className="mt-1 font-heading text-lg sm:text-2xl lg:text-3xl font-bold uppercase leading-[0.98] tracking-tight text-white">
           {product.name}
         </h3>
 
-        <p className="font-sans text-xs sm:text-sm text-zinc-300 font-light leading-relaxed mb-6 line-clamp-2">
+        <p className="mt-1.5 sm:mt-2 max-w-[38ch] font-sans text-xs sm:text-sm font-light leading-relaxed text-zinc-400 line-clamp-2">
           {product.tagline || product.summary}
         </p>
 
-        {/* Essential Specs Row */}
-        {product.specs && product.specs.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mb-6">
-            {product.specs.slice(0, 2).map((spec) => (
-              <div key={spec.label} className="flex flex-col">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mb-0.5">
-                  {spec.label}
-                </span>
-                <span className="font-sans text-xs sm:text-sm font-medium text-white">
-                  {spec.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Action Button */}
-        <div>
-          <Link href="/#contact-cta">
-            <Button variant="outline" size="sm">
-              Explore solution
-            </Button>
-          </Link>
-        </div>
+        <Link
+          href="/#contact-cta"
+          draggable={false}
+          className="mt-3 sm:mt-4"
+        >
+          <Button
+            variant="white"
+            size="sm"
+            aria-label={`Explore solution: ${product.name}`}
+          >
+            Explore solution
+          </Button>
+        </Link>
       </div>
     </article>
   );
 }
 
 export default ProductCard;
-

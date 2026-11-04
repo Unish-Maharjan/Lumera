@@ -197,9 +197,7 @@ export default function WatchInstallation() {
       ref={sectionRef}
       id="process"
       aria-labelledby="process-heading"
-      className="relative h-screen min-h-screen w-full
-       bg-black select-none flex flex-col justify-between mt-20 py-10 sm:py-18 lg:py-20 
-       "
+      className="relative h-screen min-h-screen w-full bg-black select-none flex flex-col justify-between mt-20 py-10 sm:py-18 lg:py-20 overflow-x-clip"
     >
       {/* Top Header */}
       <div className="w-full max-w-7xl mx-auto flex items-center
@@ -247,7 +245,7 @@ export default function WatchInstallation() {
               }}
             >
               {/* Title */}
-              <h3 className="font-heading text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl 2xl:text-3xl font-bold uppercase text-white whitespace-nowrap mb-6 sm:mb-8 lg:mb-10 w-max overflow-visible">
+              <h3 className="font-heading text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl 2xl:text-3xl font-bold uppercase text-white mb-4 sm:mb-6 lg:mb-8">
                 {stage.title.includes("&") ? (
                   <>
                     {stage.title.split("&")[0]}&amp;{" "}

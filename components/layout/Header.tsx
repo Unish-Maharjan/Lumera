@@ -11,16 +11,18 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Products", href: "/products" },
-  { label: "Services", href: "/#spaces" },
-  { label: "Events", href: "/#spaces" },
+  { label: "Services", href: "/services" },
+  { label: "Calculator", href: "/events" },
+  { label: "Events", href: "/events" },
 ];
 
 const mobileNavLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Products", href: "/products" },
-  { label: "Services", href: "/#spaces" },
-  { label: "Contact Us", href: "/#contact-cta" },
+  { label: "Services", href: "/services" },
+  { label: "Events", href: "/events" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 export function Header() {
@@ -58,7 +60,11 @@ export function Header() {
   const handleLinkClick = (e: React.MouseEvent, label: string, href: string) => {
     setIsMobileMenuOpen(false);
     if (
-      (label === "About Us" || label === "Products") &&
+      (label === "About Us" ||
+        label === "Products" ||
+        label === "Services" ||
+        label === "Events" ||
+        label === "Contact Us") &&
       typeof window !== "undefined" &&
       window.location.pathname !== href
     ) {
@@ -91,8 +97,7 @@ export function Header() {
         </Link>
 
         {/* Middle: Centered Navigation Links */}
-        <nav className="hidden md:flex items-center justify-center gap-6 
-        lg:gap-10 absolute left-1/2 -translate-x-1/2">
+        <nav className="hidden md:flex items-center justify-center gap-5 lg:gap-8 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link) => (
             <Link
               key={`${link.label}-${link.href}`}
@@ -107,7 +112,10 @@ export function Header() {
 
         {/* Right: Contact Us CTA Button & Mobile Hamburger */}
         <div className="flex items-center justify-end gap-2.5 sm:gap-3.5 shrink-0">
-          <Link href="/#contact-cta">
+          <Link
+            href="/contact"
+            onClick={(e) => handleLinkClick(e, "Contact Us", "/contact")}
+          >
             <Button
               variant="gold"
               size="sm"

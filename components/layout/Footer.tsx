@@ -49,7 +49,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/#spaces"
+                    href="/services"
                     className="hover:text-white transition-colors duration-200"
                   >
                     Services
