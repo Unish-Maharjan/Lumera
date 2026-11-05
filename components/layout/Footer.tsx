@@ -5,7 +5,8 @@ import Container from "../ui/Container";
 
 export function Footer() {
   return (
-    <footer className="relative w-full bg-black text-zinc-400 font-sans pt-12 sm:pt-16 lg:pt-20 pb-4 sm:pb-6 select-none overflow-hidden">
+    <footer className="relative w-full bg-black text-zinc-400 font-sans 
+    pt-5 sm:pt-10 lg:pt-15 pb-6 sm:pb-8 min-h-[500px] sm:min-h-[660px] lg:min-h-[740px] flex flex-col justify-between select-none overflow-hidden">
       {/* Background Moon Image */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
         <Image
@@ -17,10 +18,10 @@ export function Footer() {
           className="object-cover object-bottom opacity-95"
         />
         {/* Top vignette to seamlessly blend with CTA black */}
-        <div className="absolute inset-x-0 top-0 h-20 sm:h-28 lg:h-36 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 top-0 h-24 sm:h-36 lg:h-48 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
       </div>
 
-      <Container className="relative z-10 w-full flex flex-col justify-between">
+      <Container className="relative z-10 w-full flex-1 flex flex-col justify-between">
         {/* 1. Top Section: Clean Horizontal Links & Contact Bar (Matching Reference) */}
         <div className="w-full flex flex-col lg:flex-row lg:items-start justify-between gap-8 sm:gap-10
          pb-8 sm:pb-12 pt-4">
@@ -153,10 +154,13 @@ export function Footer() {
         </div>
 
 
-        {/* 2. Middle Section: Monumental Lumera Ventures Text */}
-        <div className="w-full flex items-center justify-center pt-8 sm:pt-14 lg:pt-18 pb-4 sm:pb-6 overflow-hidden">
+        {/* 2. Middle Section: Monumental Lumera Ventures Text (Shifted up from the moon) */}
+        <div className="w-full flex items-center justify-center pt-10 sm:pt-16 lg:pt-20 pb-12 sm:pb-20 lg:pb-28 -translate-y-3 sm:-translate-y-6 lg:-translate-y-10 overflow-hidden">
           <h2
-            className="w-full text-center font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7.5rem] 2xl:text-[8.5rem] uppercase text-white/95 select-none leading-none tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
+            className="w-full text-center font-heading text-5xl sm:text-7xl 
+            md:text-8xl lg:text-9xl xl:text-[8.5rem] 2xl:text-[9.5rem] 
+            uppercase text-white/95 select-none leading-none tracking-tight 
+            drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
           >
             LUMERA VENTURES
           </h2>

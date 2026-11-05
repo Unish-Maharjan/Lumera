@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import ServiceHero from "@/components/services/service-hero";
 import ServicesShowcase from "@/components/services/services-showcase";
-import CtaSection from "@/components/home/cta-section";
+import ServicesCta from "@/components/services/services-cta";
 
 export const metadata: Metadata = {
   title: "Services | Lumera Architectural LED & Lighting Engineering",
@@ -14,7 +14,7 @@ export default function ServicesPage() {
     <main className="min-h-screen bg-black text-foreground">
       <ServiceHero />
       <ServicesShowcase />
-      <CtaSection/>
+      <ServicesCta />
     </main>
   );
 }

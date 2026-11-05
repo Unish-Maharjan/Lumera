@@ -12,7 +12,7 @@ const navLinks = [
   { label: "About Us", href: "/about" },
   { label: "Products", href: "/products" },
   { label: "Services", href: "/services" },
-  { label: "Calculator", href: "/events" },
+  { label: "Calculator", href: "/calculator" },
   { label: "Events", href: "/events" },
 ];
 
@@ -21,6 +21,7 @@ const mobileNavLinks = [
   { label: "About Us", href: "/about" },
   { label: "Products", href: "/products" },
   { label: "Services", href: "/services" },
+  { label: "Calculator", href: "/calculator" },
   { label: "Events", href: "/events" },
   { label: "Contact Us", href: "/contact" },
 ];

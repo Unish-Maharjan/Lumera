@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import EventsHero from "@/components/events/events-hero";
 import EventsGridSection from "@/components/events/events-grid-section";
-import CtaSection from "@/components/home/cta-section";
+import EventsCta from "@/components/events/events-cta";
 
 export const metadata: Metadata = {
   title: "Events & Stages | Lumera High-Impact LED Displays",
@@ -14,7 +14,7 @@ export default function EventsPage() {
     <main className="min-h-screen bg-black text-foreground">
       <EventsHero />
       <EventsGridSection />
-      <CtaSection />
+      <EventsCta />
     </main>
   );
 }
