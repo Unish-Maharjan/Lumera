@@ -1,19 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import { AspectRatioLock, LedPitchVariant, CalculationMode, UnitSystem } from "./types";
-import { snapResolutionToCabinets } from "./utils/calculations";
+import React from "react";
+import { AspectRatioLock, LedPitchVariant } from "./types";
 
 export interface DimensionConfiguratorProps {
   cols: number;
-  rows: number;
+  rows?: number;
   onChangeCols: (cols: number) => void;
   onChangeRows: (rows: number) => void;
   selectedVariant: LedPitchVariant;
   aspectLock?: AspectRatioLock;
   onAspectLockChange?: (lock: AspectRatioLock) => void;
-  mode?: CalculationMode;
-  unit?: UnitSystem;
+  unit?: string;
   className?: string;
 }
 
@@ -22,106 +20,71 @@ export function DimensionConfigurator({
   onChangeCols,
   onChangeRows,
   selectedVariant,
-  aspectLock: externalAspectLock,
+  aspectLock = "free",
   onAspectLockChange,
   className = "",
 }: DimensionConfiguratorProps) {
-  const [internalAspectLock, setInternalAspectLock] = useState<AspectRatioLock>("free");
-
-  const aspectLock = externalAspectLock !== undefined ? externalAspectLock : internalAspectLock;
-  const setAspectLock = (newLock: AspectRatioLock) => {
-    if (onAspectLockChange) {
-      onAspectLockChange(newLock);
-    } else {
-      setInternalAspectLock(newLock);
-    }
-  };
-
-  // Apply Aspect Ratio Constraint to Grid
   const applyAspectLock = (lock: AspectRatioLock, baseCols: number) => {
-    setAspectLock(lock);
+    if (onAspectLockChange) {
+      onAspectLockChange(lock);
+    }
     if (lock === "free") return;
 
     let targetRatio = 16 / 9;
     if (lock === "16:10") targetRatio = 16 / 10;
     if (lock === "4:3") targetRatio = 4 / 3;
     if (lock === "21:9") targetRatio = 21 / 9;
-    if (lock === "1:1") targetRatio = 1.0;
 
     const cabRatio = selectedVariant.cabWidthMm / selectedVariant.cabHeightMm;
-    const calcRows = Math.max(1, Math.min(40, Math.round(baseCols / (targetRatio / cabRatio))));
+    const calcRows = Math.max(1, Math.min(30, Math.round(baseCols / (targetRatio / cabRatio))));
     onChangeCols(baseCols);
     onChangeRows(calcRows);
   };
 
-  // Quick Target Resolution Presets
-  const handleResolutionPreset = (targetW: number, targetH: number) => {
-    const snapped = snapResolutionToCabinets(targetW, targetH, selectedVariant);
-    onChangeCols(snapped.cols);
-    onChangeRows(snapped.rows);
-  };
+  const ratios: { label: string; value: AspectRatioLock }[] = [
+    { label: "Free", value: "free" },
+    { label: "16:9", value: "16:9" },
+    { label: "16:10", value: "16:10" },
+    { label: "4:3", value: "4:3" },
+    { label: "21:9", value: "21:9" },
+  ];
 
   return (
-    <div className={`w-full select-none ${className}`.trim()}>
-      {/* Aspect Ratio & Resolution Preset Buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border border-white/10 bg-black/70">
-        {/* Aspect Ratio Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono text-zinc-400 mr-1 uppercase">
-            Aspect Ratio:
-          </span>
-          {(["free", "16:9", "16:10", "4:3", "21:9", "1:1"] as AspectRatioLock[]).map(
-            (lock) => (
+    <div className={`w-full flex flex-wrap items-center justify-center gap-3 sm:gap-6 py-2 select-none ${className}`.trim()}>
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-zinc-400">Ratio:</span>
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-white/10">
+          {ratios.map((item) => {
+            const isActive = aspectLock === item.value;
+            return (
               <button
-                key={lock}
+                key={item.value}
                 type="button"
-                onClick={() => applyAspectLock(lock, cols)}
-                className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
-                  aspectLock === lock
-                    ? "bg-accent text-black font-semibold shadow-xs"
-                    : "bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10"
+                onClick={() => applyAspectLock(item.value, cols)}
+                className={`px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? "bg-[#D7B875] text-black font-semibold shadow-sm"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 }`}
               >
-                {lock === "free" ? "Free" : lock}
+                {item.label}
               </button>
-            )
-          )}
-        </div>
-
-        {/* Resolution Preset Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono text-zinc-400 mr-1 uppercase">
-            Target Res:
-          </span>
-          {[
-            { label: "1080p", w: 1920, h: 1080 },
-            { label: "2K", w: 2560, h: 1440 },
-            { label: "4K UHD", w: 3840, h: 2160 },
-            { label: "8K", w: 7680, h: 4320 },
-          ].map((res) => (
-            <button
-              key={res.label}
-              type="button"
-              onClick={() => handleResolutionPreset(res.w, res.h)}
-              className="px-3 py-1 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-xs font-mono text-zinc-300 hover:text-accent border border-white/10 transition-colors cursor-pointer"
-            >
-              {res.label}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={() => {
-              setAspectLock("free");
-              onChangeCols(6);
-              onChangeRows(6);
-            }}
-            className="ml-1 sm:ml-2 px-2.5 py-1 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-xs font-mono text-zinc-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
-            title="Reset Grid to 6x6"
-          >
-            Reset 6x6
-          </button>
+            );
+          })}
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={() => {
+          if (onAspectLockChange) onAspectLockChange("free");
+          onChangeCols(6);
+          onChangeRows(6);
+        }}
+        className="px-4 py-1.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 transition-colors cursor-pointer"
+      >
+        Reset (6 × 6)
+      </button>
     </div>
   );
 }

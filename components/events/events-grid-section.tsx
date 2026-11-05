@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
 
 export interface EventItem {
   id: string;
@@ -84,27 +85,31 @@ export function EventsGridSection() {
       : EVENTS.filter((event) => event.categories.includes(activeTab));
 
   return (
-    <section className="relative w-full bg-black py-12 sm:py-16 lg:py-20 text-white select-none">
+    <section className="relative w-full bg-[#F5F5F2] py-10 sm:py-18 text-[#0A0A0A] select-none">
       <Container size="xl">
-        {/* Category Tabs */}
-        <div className="flex flex-wrap items-center gap-6 sm:gap-8 mb-8 sm:mb-12">
-          {CATEGORIES.map((tab) => {
-            const isActive = activeTab === tab;
+        {/* Section Header matching Product Grid */}
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-[#0A0A0A] mb-3">
+            OUR <span className="text-[#D7B875]">EVENTS</span>
+          </h2>
+        </div>
+
+        {/* Category Filters Bar matching Product Grid */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-14">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeTab === cat;
             return (
               <button
-                key={tab}
+                key={cat}
                 type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`text-sm font-medium transition-colors cursor-pointer pb-2 relative ${
+                onClick={() => setActiveTab(cat)}
+                className={`text-xs sm:text-sm px-4 py-2 rounded-full transition-colors cursor-pointer ${
                   isActive
-                    ? "text-accent"
-                    : "text-zinc-400 hover:text-white"
+                    ? "bg-black text-white font-medium shadow-xs"
+                    : "text-[#555555] hover:text-black font-medium"
                 }`}
               >
-                <span>{tab}</span>
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" />
-                )}
+                {cat}
               </button>
             );
           })}
@@ -113,50 +118,61 @@ export function EventsGridSection() {
         {/* 2-Column Event Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {filteredEvents.map((event) => (
-            <Link
+            <article
               key={event.id}
-              href="/contact"
-              className="group relative aspect-[16/10] min-h-[260px] sm:min-h-[320px] md:min-h-[360px] 
-              rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 hover:border-accent/40 bg-zinc-950 transition-colors duration-300"
+              className="group flex flex-col justify-between bg-white rounded-xl sm:rounded-2xl border border-[#E5E5E0] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
             >
-              {/* Background Image */}
-              <Image
-                src={event.image}
-                alt={event.title}
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover object-center brightness-[0.88] contrast-[1.05] transition-transform duration-500 ease-out group-hover:scale-105"
-              />
-
-              {/* Gradient Vignettes for optimal text readability */}
-              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
-
-              {/* Date Badge (Top Left) */}
-              <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
-                <span className="text-xs sm:text-sm text-zinc-300 font-light">
-                  {event.date}
-                </span>
+              {/* Image Stage */}
+              <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-zinc-100">
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                />
+                {/* Category Badge */}
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="inline-block bg-black/80 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full shadow-xs">
+                    {event.categories[0]}
+                  </span>
+                </div>
               </div>
 
-              {/* Event Info (Bottom Row) */}
-              <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 z-10 flex items-end justify-between gap-4">
+              {/* Event Info & Action Area */}
+              <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                 <div>
-                  <h3 className="font-heading text-lg sm:text-xl font-medium text-white group-hover:text-zinc-100 transition-colors">
+                  <h3 className="font-heading text-xl font-bold uppercase text-black">
                     {event.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 font-light mt-1">
+                  <p className="text-xs sm:text-sm text-[#777777] font-normal mt-1">
                     {event.location}
                   </p>
                 </div>
 
-                {/* View Details Link */}
-                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-accent shrink-0 whitespace-nowrap group-hover:text-accent-light transition-colors">
-                  <span>View Details</span>
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                {/* Divider and Bottom Action Row */}
+                <div className="mt-6 pt-4 border-t border-[#E5E5E0] flex items-center justify-between">
+                  <div>
+                    <span className="block text-[10px] uppercase text-[#777777] font-medium tracking-wider">
+                      Date
+                    </span>
+                    <span className="text-sm font-semibold text-black">
+                      {event.date}
+                    </span>
+                  </div>
+
+                  <Link href="/contact" draggable={false}>
+                    <Button
+                      size="sm"
+                      rounded="full"
+                      className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200 whitespace-nowrap"
+                    >
+                      View Detail
+                    </Button>
+                  </Link>
                 </div>
               </div>
-            </Link>
+            </article>
           ))}
         </div>
       </Container>

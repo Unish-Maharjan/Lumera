@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 
 interface ProductItem {
   id: string;
@@ -21,7 +21,7 @@ const PRODUCTS: ProductItem[] = [
     name: "LUMERA MATRIX",
     category: "Fine Pitch",
     summary: "Ultra-fine pitch MicroLED displays for flagships & studios.",
-    imageSrc: "/products/product-1.webp",
+    imageSrc: "/products/product-5.webp",
   },
   {
     id: "lumera-vortex",
@@ -65,97 +65,86 @@ export function OurProductSection() {
     <section
       id="products"
       aria-labelledby="products-heading"
-      className="relative bg-black pt-10 sm:pt-14 lg:pt-20 text-foreground select-none overflow-hidden"
+      className="relative bg-[#F7F7F5] pt-16 sm:pt-24 lg:pt-32 select-none overflow-hidden"
     >
-      <Container className="w-full">
-        {/* Section Header: Top-Left */}
+      <Container size="xl">
+        {/* Section Header */}
         <div className="max-w-5xl mx-auto mb-12 sm:mb-16 lg:mb-20 text-center">
           <h2
             id="products-heading"
-            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold 
-            text-foreground uppercase mb-4 sm:mb-5"
+            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold text-zinc-950 uppercase mb-4 sm:mb-5 tracking-tight"
           >
-            Displays for <span className="text-accent">every</span> space.
+            Displays for <span className="text-[#D7B875]">every</span> space.
           </h2>
         </div>
-      </Container>
 
-      {/* Minimal Two-Column Product Grid - Spanning Full Viewport Width (100vw) */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 border-t border-b border-white/20">
-          {PRODUCTS.map((product, idx) => {
-            const isLeftCol = idx % 2 === 0;
-            const borderBottomClass =
-              idx < 2
-                ? "border-b md:border-b"
-                : idx === 2
-                ? "border-b md:border-b-0"
-                : "border-b-0";
-            const borderRightClass = isLeftCol ? "md:border-r" : "";
+        {/* Two-Column Product Grid with Clean Gaps & Proportional Sizing */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
+          {PRODUCTS.map((product, idx) => (
+            <article
+              key={product.id}
+              className="group relative flex flex-col justify-between min-h-[420px] sm:min-h-[480px] lg:min-h-[540px] p-6 sm:p-8 
+                 rounded-2xl bg-white border border-[#E5E5E0] shadow-sm hover:shadow-md 
+                 transition-all duration-300 overflow-hidden"
+            >
+              {/* Cell Header: Clean Product Name at Top (Fades Out on Hover) */}
+              <div className="flex items-center justify-center w-full z-10 transition-opacity duration-300 group-hover:opacity-0">
+                <span className="text-xs sm:text-sm font-sans text-zinc-700 text-center uppercase tracking-widest font-semibold">
+                  {product.name}
+                </span>
+              </div>
 
-            return (
-              <article
-                key={product.id}
-                className={`group relative flex flex-col justify-between min-h-[580px] sm:min-h-[680px] lg:min-h-[780px] xl:min-h-[850px] p-6 sm:p-10 lg:p-12 xl:p-14
-                   bg-black border-white/20 ${borderBottomClass} ${borderRightClass} transition-colors duration-300 hover:bg-zinc-950/60 overflow-hidden`}
-              >
-                {/* Cell Header: Clean Product Name at Top (Fades Out on Hover) */}
-                <div className="flex items-center justify-center w-full  z-10 transition-opacity duration-300 group-hover:opacity-0">
-                  <span className="text-xs sm:text-sm font-inter text-white text-center uppercase font-medium">
-                    {product.name}
-                  </span>
-                </div>
+              {/* Dominant Product Image with Hover-Revealed Text & Action Buttons */}
+              <div className="relative w-full flex-1 flex items-center justify-center my-2 sm:my-3 min-h-[320px] sm:min-h-[380px] lg:min-h-[420px]">
+                <div className="relative w-full h-full max-w-[640px] flex items-center justify-center">
+                  {/* Background Product Image (Remains fully visible on hover) */}
+                  <Image
+                    src={product.imageSrc}
+                    alt={`${product.name} LED display panel`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.12)] scale-110 sm:scale-115 transition-all duration-500 group-hover:scale-[1.18] group-hover:translate-y-8 sm:group-hover:translate-y-12"
+                    priority={idx < 2}
+                  />
 
-                {/* Dominant Product Image with Hover-Revealed Text & Action Buttons */}
-                <div className="relative w-full flex-1 flex items-center justify-center my-4 sm:my-6 min-h-[420px] sm:min-h-[520px] lg:min-h-[620px] xl:min-h-[680px]">
-                  <div className="relative w-full h-full min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] xl:min-h-[660px] max-w-[850px] xl:max-w-[960px] flex items-center justify-center">
-                    {/* Background Product Image */}
-                    <Image
-                      src={product.imageSrc}
-                      alt={`${product.name} LED display panel`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-contain select-none pointer-events-none drop-shadow-[0_25px_60px_rgba(0,0,0,0.85)] scale-105 sm:scale-110 lg:scale-115 transition-all duration-500 group-hover:scale-[1.18] group-hover:opacity-50"
-                      priority={idx < 2}
-                    />
+                  {/* Content Revealed on Hover: Shifted to Top so it doesn't block the product image */}
+                  <div className="absolute top-0 inset-x-0 flex flex-col items-center justify-start text-center z-20 opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto px-4 pt-1">
+                    {/* Product Headline */}
+                    <h3 className="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-zinc-950 uppercase mb-1.5">
+                      {product.name}
+                    </h3>
 
-                    {/* Content Revealed on Hover: Title, Narrative Text & Pill Buttons */}
-                    <div className="absolute inset-4 sm:inset-8 lg:inset-5 flex flex-col items-center 
-                    justify-start text-center z-20 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto">
-                      {/* Product Headline */}
-                      <h3 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-bold text-white uppercase mb-2 sm:mb-3 drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)]">
-                        {product.name}
-                      </h3>
+                    {/* Summary Copy */}
+                    <p className="font-sans text-xs sm:text-sm text-zinc-700 font-normal max-w-md mb-3 sm:mb-4 leading-relaxed">
+                      {product.summary}
+                    </p>
 
-                      {/* Summary Copy */}
-                      <p className="font-sans text-xs sm:text-sm md:text-base text-zinc-300 font-light max-w-md mb-6 sm:mb-8 leading-relaxed drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
-                        {product.summary}
-                      </p>
-
-                      {/* Action Buttons using Lumera Button component */}
-                      <div className="flex items-center justify-center gap-3 sm:gap-4">
-                        <Button
-                          variant="white"
-                          size="sm"
-                          onClick={handleScrollToCta}
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-center gap-3 sm:gap-4">
+                      <Link href="/products">
+                        <button
+                          type="button"
+                          className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase tracking-widest font-semibold rounded-full bg-black text-[#F7F7F5] hover:bg-zinc-800 transition-all cursor-pointer shadow-sm active:scale-95"
                         >
                           Learn more
-                        </Button>
+                        </button>
+                      </Link>
 
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleScrollToCta}
-                        >
-                          Inquire
-                        </Button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={handleScrollToCta}
+                        className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase tracking-widest font-semibold rounded-full border border-black/30 text-black hover:bg-black hover:text-[#F7F7F5] transition-all cursor-pointer active:scale-95"
+                      >
+                        Inquire
+                      </button>
                     </div>
                   </div>
                 </div>
-              </article>
-            );
-          })}
+              </div>
+            </article>
+          ))}
         </div>
+      </Container>
     </section>
   );
 }

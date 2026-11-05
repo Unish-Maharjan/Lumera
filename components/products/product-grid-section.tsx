@@ -1,412 +1,235 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  priceOrSpec: string;
-  imageSrc: string;
-}
+const GAP = 24;
 
-const PRODUCTS_DATA: Product[] = [
-  {
-    id: "lumera-vortex",
-    name: "LUMERA VORTEX",
-    category: "Stage & Rental",
-    description: "High-refresh virtual production & modular stage video panels.",
-    priceOrSpec: "7,680 Hz",
-    imageSrc: "/products/product-2.webp",
-  },
-  {
-    id: "lumera-strata",
-    name: "LUMERA STRATA",
-    category: "Outdoor Commercial",
-    description: "High-brightness architectural facade and digital billboard display.",
-    priceOrSpec: "10,000 Nits",
-    imageSrc: "/products/product-3.webp",
-  },
-  {
-    id: "lumera-crystal",
-    name: "LUMERA CRYSTAL",
-    category: "Transparent Glass",
-    description: "82% high-transparency architectural glass LED wall.",
-    priceOrSpec: "82% Clarity",
-    imageSrc: "/products/product-4.webp",
-  },
-  {
-    id: "lumera-curve",
-    name: "LUMERA CURVE",
-    category: "3D & Creative",
-    description: "Flexible modules for 90° seamless anamorphic building corners.",
-    priceOrSpec: "90° Chamfer",
-    imageSrc: "/products/product-5.webp",
-  },
-  {
-    id: "lumera-titan",
-    name: "LUMERA TITAN",
-    category: "DOOH Display",
-    description: "Heavy-duty dual-service access commercial DOOH billboard screens.",
-    priceOrSpec: "24/7 Duty",
-    imageSrc: "/products/product-6.webp",
-  },
-  {
-    id: "lumera-matrix",
-    name: "LUMERA MATRIX",
-    category: "MicroLED",
-    description: "Ultra-fine pitch MicroLED surface for flagship corporate spaces.",
-    priceOrSpec: "0.9mm Pitch",
-    imageSrc: "/products/product-1.webp",
-  },
+const PRODUCTS = [
+  { id: "lumera-vortex", name: "LUMERA VORTEX", category: "Stage & Rental", spec: "7,680 Hz", img: "product-2" },
+  { id: "lumera-strata", name: "LUMERA STRATA", category: "Outdoor Commercial", spec: "10,000 Nits", img: "product-3" },
+  { id: "lumera-crystal", name: "LUMERA CRYSTAL", category: "Transparent Glass", spec: "82% Clarity", img: "product-4" },
+  { id: "lumera-curve", name: "LUMERA CURVE", category: "3D & Creative", spec: "90° Chamfer", img: "product-5" },
+  { id: "lumera-titan", name: "LUMERA TITAN", category: "DOOH Display", spec: "24/7 Duty", img: "product-6" },
+  { id: "lumera-matrix", name: "LUMERA MATRIX", category: "MicroLED", spec: "0.9mm Pitch", img: "product-1" },
 ];
 
-const CATEGORIES = [
-  "All Products",
-  "Stage & Rental",
-  "Outdoor Commercial",
-  "Transparent Glass",
-  "3D & Creative",
-  "DOOH Display",
-];
+const CATEGORIES = ["All Products", "Stage & Rental", "Outdoor Commercial", "Transparent Glass", "3D & Creative", "DOOH Display"];
+
+const getStride = (track: HTMLDivElement) =>
+  ((track.children[0] as HTMLElement)?.offsetWidth ?? track.clientWidth * 0.5) + GAP;
 
 export function ProductGridSection() {
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [currentPage, setCurrentPage] = useState(0);
 
-  // Mouse & Touch drag refs
   const trackRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const startScrollLeft = useRef(0);
-  const hasDragged = useRef(false);
-  const lastXRef = useRef(0);
-  const lastTimeRef = useRef(0);
-  const velocityRef = useRef(0);
-  const animationFrameRef = useRef<number | null>(null);
+  const animRef = useRef<number | null>(null);
+  const drag = useRef({ active: false, moved: false, startX: 0, lastX: 0, lastT: 0, v: 0, startScroll: 0 });
 
-  // Filter items by category
   const filteredProducts =
     selectedCategory === "All Products"
-      ? PRODUCTS_DATA
-      : PRODUCTS_DATA.filter((item) => item.category === selectedCategory);
+      ? PRODUCTS
+      : PRODUCTS.filter((p) => p.category === selectedCategory);
 
   const dotsCount = Math.min(Math.max(filteredProducts.length, 1), 4);
 
-  // Custom slow, luxurious easing scroll animation (800ms)
-  const smoothScrollTo = useCallback((targetLeft: number, duration = 850) => {
-    if (!trackRef.current) return;
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
+  const cancelAnim = () => {
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+  };
 
-    const start = trackRef.current.scrollLeft;
-    const change = targetLeft - start;
-    const startTime = performance.now();
+  // Slow cubic ease-out scroll
+  const smoothScrollTo = (target: number, duration = 850) => {
+    const track = trackRef.current;
+    if (!track) return;
+    cancelAnim();
+    const start = track.scrollLeft;
+    const change = target - start;
+    const t0 = performance.now();
 
-    // Cubic ease-out for slow, cinematic deceleration
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
-    const animate = (currentTime: number) => {
-      if (!trackRef.current) return;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = easeOutCubic(progress);
-
-      trackRef.current.scrollLeft = start + change * eased;
-
-      if (progress < 1) {
-        animationFrameRef.current = requestAnimationFrame(animate);
+    const animate = (now: number) => {
+      const p = Math.min((now - t0) / duration, 1);
+      track.scrollLeft = start + change * (1 - Math.pow(1 - p, 3));
+      if (p < 1) {
+        animRef.current = requestAnimationFrame(animate);
       } else {
-        animationFrameRef.current = null;
-        if (trackRef.current) {
-          trackRef.current.style.scrollSnapType = "x mandatory";
-        }
+        animRef.current = null;
+        track.style.scrollSnapType = "x mandatory";
       }
     };
 
-    trackRef.current.style.scrollSnapType = "none";
-    animationFrameRef.current = requestAnimationFrame(animate);
-  }, []);
-
-  // Mouse drag handlers
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!trackRef.current) return;
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-    isDragging.current = true;
-    hasDragged.current = false;
-    startX.current = e.pageX;
-    lastXRef.current = e.pageX;
-    lastTimeRef.current = performance.now();
-    velocityRef.current = 0;
-    startScrollLeft.current = trackRef.current.scrollLeft;
-    trackRef.current.style.scrollSnapType = "none";
+    track.style.scrollSnapType = "none";
+    animRef.current = requestAnimationFrame(animate);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current || !trackRef.current) return;
-    const currentX = e.pageX;
-    const dx = currentX - startX.current;
-    if (Math.abs(dx) > 4) {
-      hasDragged.current = true;
-    }
+  // Shared drag logic (mouse + touch)
+  const startDrag = (x: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    cancelAnim();
+    drag.current = { active: true, moved: false, startX: x, lastX: x, lastT: performance.now(), v: 0, startScroll: track.scrollLeft };
+    track.style.scrollSnapType = "none";
+  };
+
+  const moveDrag = (x: number) => {
+    const d = drag.current;
+    const track = trackRef.current;
+    if (!d.active || !track) return;
+    const dx = x - d.startX;
+    if (Math.abs(dx) > 4) d.moved = true;
 
     const now = performance.now();
-    const dt = now - lastTimeRef.current;
+    const dt = now - d.lastT;
     if (dt > 0) {
-      const instantVelocity = (currentX - lastXRef.current) / dt;
-      velocityRef.current = 0.7 * instantVelocity + 0.3 * velocityRef.current;
-      lastXRef.current = currentX;
-      lastTimeRef.current = now;
+      d.v = 0.7 * ((x - d.lastX) / dt) + 0.3 * d.v;
+      d.lastX = x;
+      d.lastT = now;
     }
-
-    trackRef.current.scrollLeft = startScrollLeft.current - dx;
+    track.scrollLeft = d.startScroll - dx;
   };
 
-  const handleMouseUp = () => {
-    if (!isDragging.current || !trackRef.current) return;
-    isDragging.current = false;
+  const endDrag = () => {
+    const d = drag.current;
+    const track = trackRef.current;
+    if (!d.active || !track) return;
+    d.active = false;
 
-    if (!hasDragged.current) {
-      if (trackRef.current) {
-        trackRef.current.style.scrollSnapType = "x mandatory";
-      }
+    if (!d.moved) {
+      track.style.scrollSnapType = "x mandatory";
       return;
     }
 
-    // Momentum glide with slow deceleration to nearest snap card
-    const track = trackRef.current;
-    const currentScroll = track.scrollLeft;
-    const momentum = -velocityRef.current * 320;
-    const projectedScroll = currentScroll + momentum;
-
-    const cards = Array.from(track.children) as HTMLElement[];
-    if (cards.length === 0) return;
-
-    const cardWidth = cards[0].offsetWidth;
-    const gap = 24;
-    const stride = cardWidth + gap;
-
-    const targetIndex = Math.max(
-      0,
-      Math.min(cards.length - 1, Math.round(projectedScroll / stride))
-    );
+    // Momentum glide to nearest card
+    const stride = getStride(track);
     const maxScroll = track.scrollWidth - track.clientWidth;
-    const targetLeft = Math.max(0, Math.min(maxScroll, targetIndex * stride));
-
-    // Smooth slow transition to the snap target
-    smoothScrollTo(targetLeft, 850);
+    const index = Math.max(0, Math.min(track.children.length - 1, Math.round((track.scrollLeft - d.v * 320) / stride)));
+    smoothScrollTo(Math.max(0, Math.min(maxScroll, index * stride)));
   };
 
-  const handleMouseLeave = () => {
-    if (isDragging.current) {
-      handleMouseUp();
-    }
-  };
-
-  // Touch handlers for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (!trackRef.current) return;
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-    isDragging.current = true;
-    hasDragged.current = false;
-    startX.current = e.touches[0].pageX;
-    lastXRef.current = e.touches[0].pageX;
-    lastTimeRef.current = performance.now();
-    velocityRef.current = 0;
-    startScrollLeft.current = trackRef.current.scrollLeft;
-    trackRef.current.style.scrollSnapType = "none";
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging.current || !trackRef.current) return;
-    const currentX = e.touches[0].pageX;
-    const dx = currentX - startX.current;
-    if (Math.abs(dx) > 4) {
-      hasDragged.current = true;
-    }
-
-    const now = performance.now();
-    const dt = now - lastTimeRef.current;
-    if (dt > 0) {
-      const instantVelocity = (currentX - lastXRef.current) / dt;
-      velocityRef.current = 0.7 * instantVelocity + 0.3 * velocityRef.current;
-      lastXRef.current = currentX;
-      lastTimeRef.current = now;
-    }
-
-    trackRef.current.scrollLeft = startScrollLeft.current - dx;
-  };
-
-  const handleTouchEnd = () => {
-    handleMouseUp();
-  };
-
+  // Block link clicks right after a drag
   const handleClickCapture = (e: React.MouseEvent) => {
-    if (hasDragged.current) {
+    if (drag.current.moved) {
       e.preventDefault();
       e.stopPropagation();
-      hasDragged.current = false;
+      drag.current.moved = false;
     }
   };
 
-  const handleMouseUpRef = useRef<() => void>(() => {});
-  handleMouseUpRef.current = handleMouseUp;
-
+  // Global mouseup (release outside the track)
+  const endRef = useRef(endDrag);
   useEffect(() => {
-    const onGlobalMouseUp = () => {
-      if (isDragging.current) {
-        handleMouseUpRef.current();
-      }
-    };
-    window.addEventListener("mouseup", onGlobalMouseUp);
+    endRef.current = endDrag;
+  });
+  useEffect(() => {
+    const up = () => endRef.current();
+    window.addEventListener("mouseup", up);
     return () => {
-      window.removeEventListener("mouseup", onGlobalMouseUp);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      window.removeEventListener("mouseup", up);
+      if (animRef.current) cancelAnimationFrame(animRef.current);
     };
   }, []);
 
-  // Update dots indicator on scroll
+  // Update dots on scroll
   const handleScroll = () => {
-    if (!trackRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = trackRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 2) {
-      setCurrentPage(0);
-      return;
-    }
-    const ratio = Math.min(Math.max(scrollLeft / maxScroll, 0), 1);
-    const dot = Math.round(ratio * (dotsCount - 1));
-    setCurrentPage(dot);
-  };
-
-  // Navigation handlers (Left & Right flanking buttons)
-  const scrollPrev = () => {
-    if (!trackRef.current) return;
     const track = trackRef.current;
-    const cards = Array.from(track.children) as HTMLElement[];
-    const cardWidth = cards[0]?.offsetWidth ?? track.clientWidth * 0.5;
-    const gap = 24;
-    const stride = cardWidth + gap;
+    if (!track) return;
     const maxScroll = track.scrollWidth - track.clientWidth;
-    const scrollAmount = window.innerWidth >= 1024 ? stride * 2 : stride;
-
-    if (track.scrollLeft <= 5) {
-      smoothScrollTo(maxScroll, 850);
-    } else {
-      const target = Math.max(0, track.scrollLeft - scrollAmount);
-      smoothScrollTo(target, 800);
-    }
+    if (maxScroll <= 2) return setCurrentPage(0);
+    const ratio = Math.min(Math.max(track.scrollLeft / maxScroll, 0), 1);
+    setCurrentPage(Math.round(ratio * (dotsCount - 1)));
   };
 
-  const scrollNext = () => {
-    if (!trackRef.current) return;
+  // dir: -1 = previous, 1 = next (wraps around at the ends)
+  const scrollBy = (dir: -1 | 1) => {
     const track = trackRef.current;
-    const cards = Array.from(track.children) as HTMLElement[];
-    const cardWidth = cards[0]?.offsetWidth ?? track.clientWidth * 0.5;
-    const gap = 24;
-    const stride = cardWidth + gap;
+    if (!track) return;
     const maxScroll = track.scrollWidth - track.clientWidth;
-    const scrollAmount = window.innerWidth >= 1024 ? stride * 2 : stride;
+    const step = getStride(track) * (window.innerWidth >= 1024 ? 2 : 1);
+    const atEdge = dir > 0 ? track.scrollLeft >= maxScroll - 5 : track.scrollLeft <= 5;
 
-    if (track.scrollLeft >= maxScroll - 5) {
-      smoothScrollTo(0, 850);
-    } else {
-      const target = Math.min(maxScroll, track.scrollLeft + scrollAmount);
-      smoothScrollTo(target, 800);
-    }
+    if (atEdge) smoothScrollTo(dir > 0 ? 0 : maxScroll);
+    else smoothScrollTo(Math.min(maxScroll, Math.max(0, track.scrollLeft + dir * step)), 800);
   };
 
-  const scrollToDot = (dotIndex: number) => {
-    if (!trackRef.current) return;
-    const { scrollWidth, clientWidth } = trackRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll <= 0) return;
-    const targetLeft = (dotIndex / (dotsCount - 1)) * maxScroll;
-    smoothScrollTo(targetLeft, 850);
+  const scrollToDot = (i: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    if (maxScroll > 0) smoothScrollTo((i / (dotsCount - 1)) * maxScroll);
   };
 
   const handleCategorySelect = (cat: string) => {
     setSelectedCategory(cat);
     setCurrentPage(0);
-    if (trackRef.current) {
-      smoothScrollTo(0, 600);
-    }
+    smoothScrollTo(0, 600);
   };
 
   return (
-    <section className="bg-black text-white py-20 sm:py-28 select-none">
+    <section className="bg-[#F5F5F2] text-[#0A0A0A] py-10 sm:py-18 select-none">
       <Container size="xl">
-        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-white mb-3">
-            Our <span className="text-accent">Products</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-[#0A0A0A] mb-3">
+            OUR <span className="text-[#D7B875]">PRODUCTS</span>
           </h2>
         </div>
 
-        {/* Category Filters Bar */}
+        {/* Category filters */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-14">
-          {CATEGORIES.map((cat) => {
-            const isActive = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => handleCategorySelect(cat)}
-                className={`text-xs sm:text-sm px-4 py-2 rounded-full transition-colors cursor-pointer ${
-                  isActive
-                    ? "bg-white text-black font-medium"
-                    : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => handleCategorySelect(cat)}
+              className={`text-xs sm:text-sm px-4 py-2 rounded-full transition-colors cursor-pointer font-medium ${
+                selectedCategory === cat
+                  ? "bg-black text-white shadow-xs"
+                  : "text-[#555555] hover:text-black"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
-        {/* Carousel Container with Flanking Left & Right Buttons */}
+        {/* Carousel */}
         <div className="relative group/carousel">
-          {/* Left Navigation Button */}
-          <button
-            type="button"
-            onClick={scrollPrev}
-            aria-label="Previous products"
-            className="absolute -left-2 sm:-left-4 lg:-left-6 top-[40%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-zinc-950/90 sm:bg-black/85 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white flex items-center justify-center transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.85)] backdrop-blur-md cursor-pointer hover:scale-105 active:scale-95"
-            title="Previous products"
-          >
-            <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/carousel:-translate-x-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+          {([-1, 1] as const).map((dir) => (
+            <button
+              key={dir}
+              type="button"
+              onClick={() => scrollBy(dir)}
+              aria-label={dir < 0 ? "Previous products" : "Next products"}
+              title={dir < 0 ? "Previous products" : "Next products"}
+              className={`absolute ${
+                dir < 0 ? "-left-2 sm:-left-4 lg:-left-6" : "-right-2 sm:-right-4 lg:-right-6"
+              } top-[40%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-zinc-50 text-black border border-[#E5E5E0] flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer hover:scale-105 active:scale-95`}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+              <svg
+                className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${
+                  dir < 0 ? "group-hover/carousel:-translate-x-0.5" : "group-hover/carousel:translate-x-0.5"
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={dir < 0 ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} />
+              </svg>
+            </button>
+          ))}
 
-          {/* Mouse & Touch Draggable Carousel Track */}
           <div
             ref={trackRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            onMouseDown={(e) => startDrag(e.pageX)}
+            onMouseMove={(e) => moveDrag(e.pageX)}
+            onMouseUp={endDrag}
+            onMouseLeave={endDrag}
+            onTouchStart={(e) => startDrag(e.touches[0].pageX)}
+            onTouchMove={(e) => moveDrag(e.touches[0].pageX)}
+            onTouchEnd={endDrag}
             onClickCapture={handleClickCapture}
             onScroll={handleScroll}
             className="flex gap-6 overflow-x-auto select-none snap-x snap-mandatory cursor-grab active:cursor-grabbing pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -414,13 +237,12 @@ export function ProductGridSection() {
             {filteredProducts.map((product) => (
               <article
                 key={product.id}
-                className="w-[85%] sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-72px)/4)] shrink-0 snap-start flex flex-col justify-between bg-zinc-950 rounded-sm p-6 transition-all duration-300 hover:border-white/20 border border-transparent"
+                className="w-[85%] sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-72px)/4)] shrink-0 snap-start flex flex-col justify-between bg-white rounded-sm pt-3.5 px-6 pb-6 border border-[#E5E5E0] shadow-sm hover:shadow-md transition-all duration-300"
               >
-                {/* Image Stage */}
                 <div>
-                  <div className="relative aspect-square w-full rounded-sm p-4 mb-5 flex items-center justify-center overflow-hidden">
+                  <div className="relative aspect-square w-full rounded-sm pt-2 px-4 pb-4 mb-5 flex items-center justify-center overflow-hidden">
                     <Image
-                      src={product.imageSrc}
+                      src={`/products/${product.img}.webp`}
                       alt={product.name}
                       fill
                       draggable={false}
@@ -428,26 +250,23 @@ export function ProductGridSection() {
                       className="object-cover pb-10 pointer-events-none"
                     />
                   </div>
-
-                  {/* Title */}
-                  <h3 className="text-xl font-bold uppercase text-white">
-                    {product.name}
-                  </h3>
+                  <h3 className="text-xl font-bold uppercase text-black">{product.name}</h3>
                 </div>
 
-                {/* Divider and Bottom Action Row */}
-                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                <div className="mt-6 pt-4 border-t border-[#E5E5E0] flex items-center justify-between">
                   <div>
-                    <span className="block text-[10px] uppercase text-zinc-500">
+                    <span className="block text-[10px] uppercase text-[#777777] font-medium tracking-wider">
                       Specification
                     </span>
-                    <span className="text-sm font-semibold text-white">
-                      {product.priceOrSpec}
-                    </span>
+                    <span className="text-sm font-semibold text-black">{product.spec}</span>
                   </div>
 
                   <Link href="/contact" draggable={false}>
-                    <Button variant="gold" size="sm" rounded="full">
+                    <Button
+                      size="sm"
+                      rounded="full"
+                      className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200"
+                    >
                       Inquire
                     </Button>
                   </Link>
@@ -455,28 +274,9 @@ export function ProductGridSection() {
               </article>
             ))}
           </div>
-
-          {/* Right Navigation Button */}
-          <button
-            type="button"
-            onClick={scrollNext}
-            aria-label="Next products"
-            className="absolute -right-2 sm:-right-4 lg:-right-6 top-[40%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-zinc-950/90 sm:bg-black/85 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white flex items-center justify-center transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.85)] backdrop-blur-md cursor-pointer hover:scale-105 active:scale-95"
-            title="Next products"
-          >
-            <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/carousel:translate-x-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
 
-        {/* Centered Pagination Dots */}
+        {/* Pagination dots */}
         <div className="flex items-center justify-center gap-2 mt-10 w-full select-none">
           {Array.from({ length: dotsCount }).map((_, i) => (
             <button
@@ -485,9 +285,7 @@ export function ProductGridSection() {
               onClick={() => scrollToDot(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`size-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                currentPage === i
-                  ? "bg-[#D7B875] w-7"
-                  : "bg-white/20 hover:bg-white/40"
+                currentPage === i ? "bg-[#D7B875] w-7" : "bg-[#D1D1CD] hover:bg-zinc-400"
               }`}
             />
           ))}

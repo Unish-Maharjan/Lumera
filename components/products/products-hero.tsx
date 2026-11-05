@@ -4,7 +4,7 @@ import Container from "@/components/ui/Container";
 
 export function ProductsHero() {
   return (
-    <section className="relative flex min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh] w-full 
+    <section className="relative flex min-h-dvh sm:min-h-dvh lg:min-h-dvh w-full 
     items-center justify-center overflow-hidden bg-black text-foreground pt-28 pb-20 sm:pt-36 sm:pb-28">
       {/* Background Architectural LED Visual */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -40,8 +40,7 @@ export function ProductsHero() {
             <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-100 font-light 
              max-w-2xl mx-auto mt-6 sm:mt-8">
               From ultra-fine pitch MicroLED surfaces to monumental outdoor media
-              facades, our display architectures are engineered for seamless
-              structural integration, thermal endurance, and optical purity.
+              facades, thermal endurance, and optical purity.
             </p>
           </div>
         </Container>

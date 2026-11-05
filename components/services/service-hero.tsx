@@ -4,7 +4,7 @@ import Container from "@/components/ui/Container";
 
 export function ServiceHero() {
   return (
-    <section className="relative flex min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh] w-full items-center justify-center overflow-hidden bg-black text-foreground select-none pt-28 pb-20 sm:pt-36 sm:pb-28">
+    <section className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-black text-foreground select-none pt-28 pb-20 sm:pt-36 sm:pb-28">
       {/* Background Architectural LED Visual */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
         <Image

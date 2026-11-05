@@ -14,7 +14,7 @@ import { DimensionConfigurator } from "./dimension-configurator";
 export interface ScreenVisualizerProps {
   calc: CalculationResult;
   variant: LedPitchVariant;
-  controller: ControllerSpec;
+  controller?: ControllerSpec;
   unit: UnitSystem;
   cols?: number;
   rows?: number;
@@ -22,70 +22,31 @@ export interface ScreenVisualizerProps {
   onChangeRows?: (rows: number) => void;
 }
 
-const PORT_COLORS = [
-  "#398BFF", // Electric Blue
-  "#10B981", // Emerald
-  "#D7B875", // Champagne Gold
-  "#EC4899", // Pink
-  "#8B5CF6", // Violet
-  "#F59E0B", // Amber
-  "#06B6D4", // Cyan
-  "#F97316", // Orange
-  "#6366F1", // Indigo
-  "#14B8A6", // Teal
-  "#E11D48", // Rose
-  "#84CC16", // Lime
-];
-
 export function ScreenVisualizer({
   calc,
   variant,
-  controller,
   unit,
   cols,
   rows,
   onChangeCols,
   onChangeRows,
 }: ScreenVisualizerProps) {
-  const [showHuman, setShowHuman] = useState<boolean>(true);
-  const [showPortRouting, setShowPortRouting] = useState<boolean>(false);
-  const [showAspectGuide, setShowAspectGuide] = useState<boolean>(false);
   const [aspectLock, setAspectLock] = useState<AspectRatioLock>("free");
+  const [showImage, setShowImage] = useState<boolean>(true);
 
   const currentCols = cols ?? calc.cols;
   const currentRows = rows ?? calc.rows;
-  const { widthM, heightM, widthFt, heightFt } = calc;
 
-  // Visual aspect ratio
-  const screenAspect = widthM / Math.max(0.1, heightM);
+  const widthM = ((currentCols * variant.cabWidthMm) / 1000).toFixed(2);
+  const heightM = ((currentRows * variant.cabHeightMm) / 1000).toFixed(2);
+  const widthFt = (((currentCols * variant.cabWidthMm) / 1000) * 3.28084).toFixed(1);
+  const heightFt = (((currentRows * variant.cabHeightMm) / 1000) * 3.28084).toFixed(1);
 
-  // Human height standard: 1.75 meters (5'9")
-  const humanHeightM = 1.75;
-  // Normalized screen width inside container
-  const svgHeight = 400;
-  const svgWidth = Math.max(300, Math.min(1000, svgHeight * screenAspect));
+  const screenAspect = (currentCols * variant.cabWidthMm) / (currentRows * variant.cabHeightMm);
+  const humanHeightM = 1.75; // Standard 5'9"
 
-  // Calculate Port Assignment for each cabinet (serpentine bottom-to-top or left-to-right)
-  const maxCabsPerPort = calc.maxCabinetsPerPort;
-
-  const getCabinetPortIndex = (c: number, r: number): number => {
-    // Serpentine column-based routing
-    const cabIndex = c * currentRows + (c % 2 === 0 ? currentRows - 1 - r : r);
-    return Math.floor(cabIndex / maxCabsPerPort);
-  };
-
-  // Aspect ratio helper calculations
-  const calculateRowsForCols = (targetCols: number, lock: AspectRatioLock): number => {
-    if (lock === "free") return currentRows;
-    let targetRatio = 16 / 9;
-    if (lock === "16:10") targetRatio = 16 / 10;
-    if (lock === "4:3") targetRatio = 4 / 3;
-    if (lock === "21:9") targetRatio = 21 / 9;
-    if (lock === "1:1") targetRatio = 1.0;
-
-    const cabRatio = variant.cabWidthMm / variant.cabHeightMm;
-    return Math.max(1, Math.min(40, Math.round(targetCols / (targetRatio / cabRatio))));
-  };
+  const svgHeight = 360;
+  const svgWidth = Math.max(260, Math.min(680, svgHeight * screenAspect));
 
   const calculateColsForRows = (targetRows: number, lock: AspectRatioLock): number => {
     if (lock === "free") return currentCols;
@@ -93,15 +54,25 @@ export function ScreenVisualizer({
     if (lock === "16:10") targetRatio = 16 / 10;
     if (lock === "4:3") targetRatio = 4 / 3;
     if (lock === "21:9") targetRatio = 21 / 9;
-    if (lock === "1:1") targetRatio = 1.0;
 
     const cabRatio = variant.cabWidthMm / variant.cabHeightMm;
-    return Math.max(1, Math.min(60, Math.round(targetRows * (targetRatio / cabRatio))));
+    return Math.max(1, Math.min(40, Math.round(targetRows * (targetRatio / cabRatio))));
+  };
+
+  const calculateRowsForCols = (targetCols: number, lock: AspectRatioLock): number => {
+    if (lock === "free") return currentRows;
+    let targetRatio = 16 / 9;
+    if (lock === "16:10") targetRatio = 16 / 10;
+    if (lock === "4:3") targetRatio = 4 / 3;
+    if (lock === "21:9") targetRatio = 21 / 9;
+
+    const cabRatio = variant.cabWidthMm / variant.cabHeightMm;
+    return Math.max(1, Math.min(30, Math.round(targetCols / (targetRatio / cabRatio))));
   };
 
   const handleColDecrement = () => {
     if (!onChangeCols || currentCols <= 1) return;
-    const nextCols = Math.max(1, currentCols - 1);
+    const nextCols = currentCols - 1;
     if (aspectLock !== "free" && onChangeRows) {
       const nextRows = calculateRowsForCols(nextCols, aspectLock);
       onChangeCols(nextCols);
@@ -112,8 +83,8 @@ export function ScreenVisualizer({
   };
 
   const handleColIncrement = () => {
-    if (!onChangeCols || currentCols >= 60) return;
-    const nextCols = Math.min(60, currentCols + 1);
+    if (!onChangeCols || currentCols >= 40) return;
+    const nextCols = currentCols + 1;
     if (aspectLock !== "free" && onChangeRows) {
       const nextRows = calculateRowsForCols(nextCols, aspectLock);
       onChangeCols(nextCols);
@@ -125,7 +96,7 @@ export function ScreenVisualizer({
 
   const handleRowDecrement = () => {
     if (!onChangeRows || currentRows <= 1) return;
-    const nextRows = Math.max(1, currentRows - 1);
+    const nextRows = currentRows - 1;
     if (aspectLock !== "free" && onChangeCols) {
       const nextCols = calculateColsForRows(nextRows, aspectLock);
       onChangeRows(nextRows);
@@ -136,8 +107,8 @@ export function ScreenVisualizer({
   };
 
   const handleRowIncrement = () => {
-    if (!onChangeRows || currentRows >= 40) return;
-    const nextRows = Math.min(40, currentRows + 1);
+    if (!onChangeRows || currentRows >= 30) return;
+    const nextRows = currentRows + 1;
     if (aspectLock !== "free" && onChangeCols) {
       const nextCols = calculateColsForRows(nextRows, aspectLock);
       onChangeRows(nextRows);
@@ -148,318 +119,275 @@ export function ScreenVisualizer({
   };
 
   return (
-    <div className="w-full rounded-2xl p-4 sm:p-6 mb-8 select-none overflow-hidden">
-      {/* Visualizer Top Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-inter text-accent uppercase font-medium">
-              LIVE 2D CAD PREVIEW
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 font-inter">
-              {calc.resWidth} x {calc.resHeight} px
-            </span>
-          </div>
-          <h3 className="text-lg sm:text-xl font-heading font-medium text-white uppercase">
-            Architectural Elevation & Cabinet Layout
-          </h3>
-        </div>
-
-        {/* Interactive View Layer Toggles */}
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setShowHuman(!showHuman)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-              showHuman
-                ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
-                : "bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white"
-            }`}
-          >
-            <span>🧍</span>
-            <span>Human Scale (1.75m)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setShowPortRouting(!showPortRouting)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-              showPortRouting
-                ? "bg-electric-blue/20 border border-[#398BFF]/60 text-[#398BFF] font-semibold"
-                : "bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white"
-            }`}
-          >
-            <span>🔌</span>
-            <span>Data Ports Map</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setShowAspectGuide(!showAspectGuide)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-              showAspectGuide
-                ? "bg-white/20 border border-white/50 text-white font-semibold"
-                : "bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white"
-            }`}
-          >
-            <span>📐</span>
-            <span>16:9 Content Guide</span>
-          </button>
-        </div>
+    <div className="w-full mb-16 sm:mb-24 lg:mb-32 mt-6 sm:mt-10 select-none">
+      {/* Header Bar */}
+      <div className="flex flex-col items-center text-center mb-8 sm:mb-12">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-white tracking-wide">
+          Display Elevation & <span className="text-accent">Scale</span>
+        </h2>
       </div>
 
-      {/* Main CAD Visualizer Stage */}
-      <div className="relative w-full min-h-[380px] sm:min-h-[460px] bg-gradient-to-b from-black via-zinc-950 to-[#08090b] rounded-xl border border-white/10 p-6 flex flex-col items-center justify-center overflow-x-auto shadow-inner">
-        {/* Subtle Room Wall Grid Background */}
+      {/* Main Architectural Stage with Background Grid */}
+      <div className="relative w-full rounded-2xl bg-zinc-950/90 border border-white/10 p-6 sm:p-10 flex flex-col items-center justify-center shadow-2xl overflow-hidden min-h-[460px] sm:min-h-[520px]">
+        {/* Architectural CAD Background Grids (High-Visibility Graph) */}
         <div
-          className="absolute inset-0 opacity-[0.08] pointer-events-none"
-          style={{
-            backgroundImage: `linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)`,
-            backgroundSize: "32px 32px",
-          }}
+          className="absolute inset-0 pointer-events-none select-none z-0"
           aria-hidden="true"
-        />
+        >
+          {/* Fine Precision Grid (32px) */}
+          <div
+            className="absolute inset-0 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_98%)]"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 1px, transparent 1px)
+              `,
+              backgroundSize: "32px 32px",
+            }}
+          />
 
-        {/* Ambient Display Glow behind video wall */}
-        <div
-          className="absolute pointer-events-none blur-3xl opacity-25"
-          style={{
-            width: `${Math.min(600, svgWidth)}px`,
-            height: "260px",
-            background:
-              "radial-gradient(circle, rgba(215,184,117,0.3) 0%, rgba(57,139,255,0.15) 50%, transparent 80%)",
-          }}
-          aria-hidden="true"
-        />
+          {/* Major Coordinate Grid Lines (128px) in Crisp White */}
+          <div
+            className="absolute inset-0 opacity-75 [mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_98%)]"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(255, 255, 255, 0.35) 1.5px, transparent 1.5px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.35) 1.5px, transparent 1.5px)
+              `,
+              backgroundSize: "128px 128px",
+            }}
+          />
 
-        {/* Stage Elevation Floor Line */}
-        {/* <div className="absolute bottom-6 inset-x-8 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none flex justify-center">
-          <span className="text-[10px] font-inter text-zinc-500 uppercase -mt-4 bg-black px-2">
-            FINISHED FLOOR LEVEL (FFL)
-          </span>
-        </div> */}
+          {/* Center Coordinate Axis Crosshairs */}
+          <div className="absolute top-1/2 inset-x-0 h-[1px] bg-white/40 opacity-70" />
+          <div className="absolute left-1/2 inset-y-0 w-[1px] bg-white/40 opacity-70" />
 
-        {/* CAD Dimension Wrapper */}
-        <div className="relative z-10 flex flex-col items-center my-4">
-          {/* Top Width Dimension Arrow with Stepper Buttons */}
-          <div className="flex items-center justify-between w-full mb-3 px-1 gap-2">
-            <div className="h-[1px] flex-1 bg-white/60 relative min-w-[12px]">
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 border-y-4 border-y-transparent border-r-6 border-r-white" />
-            </div>
+          {/* Center Radial Luminescence */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none blur-3xl opacity-35"
+            style={{
+              width: "600px",
+              height: "320px",
+              background: "radial-gradient(circle, rgba(215,184,117,0.4) 0%, transparent 70%)",
+            }}
+          />
+        </div>
 
-            {/* Decrement Column Button */}
+        {/* Stage Toolbar (Top Right: Remove / Show Image Toggle Button) */}
+        <div className="absolute top-4 right-4 sm:top-5 sm:right-6 z-20 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowImage((prev) => !prev)}
+            aria-label={showImage ? "Remove image from LED screen" : "Show image on LED screen"}
+            className="px-3.5 py-1.5 rounded-full bg-zinc-900/95 hover:bg-white text-zinc-300 hover:text-black border border-white/20 hover:border-white text-xs font-inter flex items-center gap-2 transition-all cursor-pointer shadow-lg backdrop-blur-md active:scale-95"
+          >
+            {showImage ? (
+              <>
+                <svg className="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Remove Image</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-3.5 h-3.5 text-[#D7B875]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>Show Image</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Content Container (Layered above grid) */}
+        <div className="relative z-10 w-full flex flex-col items-center">
+          {/* Top Width Stepper (Centered exactly over the screen) */}
+          <div className="flex items-center justify-center gap-3 mb-6">
             {onChangeCols && (
               <button
                 type="button"
                 onClick={handleColDecrement}
                 disabled={currentCols <= 1}
-                aria-label="Decrease columns"
-                className="w-7 h-7 rounded-md bg-zinc-900/90 hover:bg-white hover:text-black disabled:opacity-30 disabled:hover:bg-zinc-900 disabled:hover:text-white border border-white/30 text-white font-bold text-sm flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0 shadow-sm"
-                title="Decrease 1 Column (Width)"
+                aria-label="Decrease width"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-900/90 hover:bg-white text-zinc-300 hover:text-black border border-white/20 text-sm sm:text-base font-bold flex items-center justify-center transition-all cursor-pointer disabled:opacity-20 disabled:hover:bg-zinc-900 disabled:hover:text-zinc-300 active:scale-95"
               >
-                -
+                −
               </button>
             )}
 
-            {/* Width Dimension Badge */}
-            <div className="px-3.5 py-1 rounded-full bg-black/95 border border-white text-[11px] font-inter text-white font-semibold shrink-0 flex items-center gap-2 shadow-lg">
-              <span>WIDTH: {unit === "metric" ? `${widthM} m` : `${widthFt} ft`}</span>
-              <span className="text-zinc-400 font-mono text-[10px]">
+            <div className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-black/95 border border-white/20 text-xs sm:text-sm font-medium text-white flex items-center gap-2 shadow-lg backdrop-blur-sm">
+              <span>Width: {unit === "metric" ? `${widthM} m` : `${widthFt} ft`}</span>
+              <span className="text-zinc-400">
                 ({currentCols} {currentCols === 1 ? "panel" : "panels"})
               </span>
             </div>
 
-            {/* Increment Column Button */}
             {onChangeCols && (
               <button
                 type="button"
                 onClick={handleColIncrement}
-                disabled={currentCols >= 60}
-                aria-label="Increase columns"
-                className="w-7 h-7 rounded-md bg-zinc-900/90 hover:bg-white hover:text-black disabled:opacity-30 disabled:hover:bg-zinc-900 disabled:hover:text-white border border-white/30 text-white font-bold text-sm flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0 shadow-sm"
-                title="Increase 1 Column (Width)"
+                disabled={currentCols >= 40}
+                aria-label="Increase width"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-900/90 hover:bg-white text-zinc-300 hover:text-black border border-white/20 text-sm sm:text-base font-bold flex items-center justify-center transition-all cursor-pointer disabled:opacity-20 disabled:hover:bg-zinc-900 disabled:hover:text-zinc-300 active:scale-95"
               >
                 +
               </button>
             )}
-
-            <div className="h-[1px] flex-1 bg-white/60 relative min-w-[12px]">
-              <span className="absolute right-0 top-1/2 -translate-y-1/2 border-y-4 border-y-transparent border-l-6 border-l-white" />
-            </div>
           </div>
 
-          {/* Screen Elevation + Right Height Dimension Arrow + Human Figure */}
-          <div className="flex items-center gap-4">
-            {/* The SVG Screen Matrix */}
-            <div
-              className="relative rounded-sm overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.95)] border-2 border-zinc-700 bg-zinc-950 transition-all duration-300"
-              style={{
-                width: `${Math.min(760, Math.max(260, svgWidth))}px`,
-                aspectRatio: `${widthM} / ${heightM}`,
-              }}
-            >
-              {/* LED Panel Matrix Grid */}
-              <div
-                className="w-full h-full grid"
-                style={{
-                  gridTemplateColumns: `repeat(${currentCols}, minmax(0, 1fr))`,
-                  gridTemplateRows: `repeat(${currentRows}, minmax(0, 1fr))`,
-                }}
-              >
-                {Array.from({ length: currentRows }).map((_, rIdx) =>
-                  Array.from({ length: currentCols }).map((_, cIdx) => {
-                    const portIdx = getCabinetPortIndex(cIdx, rIdx);
-                    const portColor = PORT_COLORS[portIdx % PORT_COLORS.length];
-
-                    return (
-                      <div
-                        key={`${rIdx}-${cIdx}`}
-                        className={`relative border-[0.5px] border-black/80 flex items-center justify-center transition-all ${
-                          showPortRouting
-                            ? "hover:brightness-125"
-                            : "bg-gradient-to-br from-zinc-900 to-zinc-950 hover:bg-zinc-800"
-                        }`}
-                        style={{
-                          backgroundColor: showPortRouting
-                            ? `${portColor}25`
-                            : undefined,
-                          borderColor: showPortRouting
-                            ? `${portColor}80`
-                            : "rgba(0,0,0,0.9)",
-                        }}
-                      >
-                        {/* Micro-LED Module Tile Seams (if large enough) */}
-                        <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:8px_8px]" />
-
-                        {/* Port Label overlay */}
-                        {showPortRouting && (
-                          <div className="flex flex-col items-center pointer-events-none">
-                            <span
-                              className="text-[9px] font-inter font-bold px-1 py-0.2 rounded"
-                              style={{
-                                color: portColor,
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                              }}
-                            >
-                              P{portIdx + 1}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-
-              {/* 16:9 Aspect Ratio Guide Overlay */}
-              {showAspectGuide && (
-                <div
-                  className="absolute inset-0 pointer-events-none border-2 border-dashed border-amber-400/80 z-20 flex items-center justify-center"
-                  style={{
-                    margin:
-                      screenAspect > 16 / 9
-                        ? `0 ${(1 - (16 / 9) / screenAspect) * 50}%`
-                        : `${(1 - screenAspect / (16 / 9)) * 50}% 0`,
-                  }}
-                >
-                  <span className="bg-black/80 px-2 py-0.5 rounded text-[10px] font-inter text-amber-300 font-semibold">
-                    16:9 Content Safe Zone
-                  </span>
-                </div>
-              )}
-
-              {/* Watermark in center */}
-              {!showPortRouting && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-4 text-center z-10">
-                  <span className="font-heading text-sm sm:text-base md:text-lg font-bold text-white uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                    {variant.name}
-                  </span>
-                  <span className="font-inter text-[10px] sm:text-xs text-accent mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                    {calc.resWidth} x {calc.resHeight} px • {calc.closestStandardAspect}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Right Height Dimension Arrow with Stepper Buttons */}
-            <div className="flex flex-col items-center justify-between self-stretch py-1 gap-2">
-              <div className="w-[1px] flex-1 bg-accent/60 relative min-h-[16px]">
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 border-x-4 border-x-transparent border-b-6 border-b-accent" />
-              </div>
-
-              {/* Increment Row Button */}
+          {/* Balanced 3-Column Stage: [Height Controls] [Screen Centered] [Human Scale] */}
+          <div className="w-full flex items-center justify-center gap-3 sm:gap-6 lg:gap-8 max-w-5xl">
+            {/* Left Flank: Height Stepper Controls */}
+            <div className="w-20 sm:w-28 flex flex-col items-center justify-center gap-2 shrink-0">
               {onChangeRows && (
                 <button
                   type="button"
                   onClick={handleRowIncrement}
-                  disabled={currentRows >= 40}
-                  aria-label="Increase rows"
-                  className="w-7 h-7 rounded-md bg-zinc-900/90 hover:bg-accent hover:text-black disabled:opacity-30 disabled:hover:bg-zinc-900 disabled:hover:text-accent border border-accent/40 text-accent font-bold text-sm flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0 shadow-sm"
-                  title="Increase 1 Row (Height)"
+                  disabled={currentRows >= 30}
+                  aria-label="Increase height"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-900/90 hover:bg-white text-zinc-300 hover:text-black border border-white/20 text-sm sm:text-base font-bold flex items-center justify-center transition-all cursor-pointer disabled:opacity-20 disabled:hover:bg-zinc-900 disabled:hover:text-zinc-300 active:scale-95"
                 >
                   +
                 </button>
               )}
 
-              {/* Height Dimension Badge */}
-              <div className="my-1 px-2.5 py-2 rounded-full bg-black/95 border border-accent text-[11px] font-inter text-accent font-semibold whitespace-nowrap [writing-mode:vertical-rl] rotate-180 flex items-center gap-1.5 shadow-lg">
-                <span>HEIGHT: {unit === "metric" ? `${heightM} m` : `${heightFt} ft`}</span>
-                <span className="text-zinc-400 font-mono text-[9px]">
-                  ({currentRows} {currentRows === 1 ? "panel" : "panels"})
+              <div className="px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-black/95 border border-white/20 text-center shadow-lg backdrop-blur-sm w-full">
+                <span className="block text-[11px] sm:text-xs text-zinc-400 font-medium">Height</span>
+                <span className="block text-xs sm:text-sm lg:text-base font-bold text-white whitespace-nowrap">
+                  {unit === "metric" ? `${heightM} m` : `${heightFt} ft`}
+                </span>
+                <span className="block text-[11px] sm:text-xs text-zinc-400">
+                  {currentRows} {currentRows === 1 ? "panel" : "panels"}
                 </span>
               </div>
 
-              {/* Decrement Row Button */}
               {onChangeRows && (
                 <button
                   type="button"
                   onClick={handleRowDecrement}
                   disabled={currentRows <= 1}
-                  aria-label="Decrease rows"
-                  className="w-7 h-7 rounded-md bg-zinc-900/90 hover:bg-accent hover:text-black disabled:opacity-30 disabled:hover:bg-zinc-900 disabled:hover:text-accent border border-accent/40 text-accent font-bold text-sm flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0 shadow-sm"
-                  title="Decrease 1 Row (Height)"
+                  aria-label="Decrease height"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-900/90 hover:bg-white text-zinc-300 hover:text-black border border-white/20 text-sm sm:text-base font-bold flex items-center justify-center transition-all cursor-pointer disabled:opacity-20 disabled:hover:bg-zinc-900 disabled:hover:text-zinc-300 active:scale-95"
                 >
-                  -
+                  −
                 </button>
               )}
+            </div>
 
-              <div className="w-[1px] flex-1 bg-accent/60 relative min-h-[16px]">
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 border-x-4 border-x-transparent border-t-6 border-t-accent" />
+            {/* Center: The LED Video Wall Screen (Dead Center) */}
+            <div className="flex-1 flex items-center justify-center">
+              <div
+                className="group/screen relative rounded-lg overflow-hidden shadow-2xl border-2 border-zinc-700/80 bg-zinc-950 transition-all duration-300 shrink-0"
+                style={{
+                  width: `${Math.min(680, Math.max(220, svgWidth))}px`,
+                  aspectRatio: `${widthM} / ${heightM}`,
+                }}
+              >
+                {/* Visual Media Content / Unpowered Diode Surface */}
+                {showImage ? (
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src="/images/download.webp"
+                      alt="Active LED video wall content"
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 680px"
+                      className="object-cover object-center"
+                    />
+                    <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+
+                    {/* Quick remove button on screen hover */}
+                    <button
+                      type="button"
+                      onClick={() => setShowImage(false)}
+                      title="Remove image from screen"
+                      className="absolute top-2 right-2 z-20 w-7 h-7 rounded-full bg-black/70 hover:bg-black text-white/70 hover:text-white border border-white/20 flex items-center justify-center transition-all opacity-0 group-hover/screen:opacity-100 cursor-pointer shadow-md"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 z-0 bg-[#070709] flex flex-col items-center justify-center select-none overflow-hidden">
+                    {/* MicroLED Diode Pitch Texture */}
+                    <div
+                      className="absolute inset-0 opacity-50 pointer-events-none"
+                      style={{
+                        backgroundImage: "radial-gradient(rgba(215, 184, 117, 0.45) 0.75px, transparent 0.75px)",
+                        backgroundSize: "6px 6px",
+                      }}
+                    />
+                    {/* Standby Technical Readout */}
+                    <div className="relative z-10 flex flex-col items-center justify-center p-3 sm:p-4 text-center pointer-events-none">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#D7B875]/40 bg-[#D7B875]/10 flex items-center justify-center mb-1.5 text-[#D7B875]">
+                        <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
+                        </svg>
+                      </div>
+                      <span className="text-[10px] sm:text-xs font-inter tracking-widest uppercase text-[#D7B875] font-semibold">
+                        LUMERA {variant.name} MATRIX
+                      </span>
+                      <span className="text-[9px] sm:text-[10px] font-inter text-zinc-400 mt-0.5">
+                        {currentCols} × {currentRows} ({currentCols * currentRows} Panels) • {currentCols * variant.resWidth} × {currentRows * variant.resHeight} px
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Cabinet Matrix Seams Grid */}
+                <div
+                  className="absolute inset-0 z-10 grid pointer-events-none"
+                  style={{
+                    gridTemplateColumns: `repeat(${currentCols}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${currentRows}, minmax(0, 1fr))`,
+                  }}
+                >
+                  {Array.from({ length: currentRows }).map((_, rIdx) =>
+                    Array.from({ length: currentCols }).map((_, cIdx) => (
+                      <div
+                        key={`${rIdx}-${cIdx}`}
+                        className={`border-[0.5px] ${
+                          showImage
+                            ? "border-white/50 shadow-[inset_0_0_1px_rgba(255,255,255,0.2)]"
+                            : "border-white/60 shadow-[inset_0_0_1px_rgba(255,255,255,0.25)]"
+                        }`}
+                      />
+                    ))
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Human Silhouette Comparison */}
-            {showHuman && (
-              <div className="flex flex-col items-center shrink-0 self-end mb-1">
-                {/* Scaled Human Reference Image */}
-                <div
-                  className="relative flex flex-col items-center justify-end"
-                  style={{
-                    height: `${Math.max(48, Math.min(280, (humanHeightM / heightM) * 220))}px`,
-                    aspectRatio: "341 / 1024",
-                  }}
-                  title="Average Human Height: 1.75m (5'9'') for physical scale reference"
-                >
-                  <Image
-                    src="/images/calculator/human-scale.png"
-                    alt="Human scale reference (1.75m / 5'9'')"
-                    fill
-                    sizes="120px"
-                    className="object-contain object-bottom drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] filter brightness-95 contrast-105"
-                  />
-                </div>
-                <span className="text-[10px] font-inter text-zinc-400 mt-1 font-medium">
-                  1.75m (5&apos;9&quot;)
-                </span>
+            {/* Right Flank: Human Scale Reference (Matching Left Flank Width) */}
+            <div className="w-20 sm:w-28 flex flex-col items-center justify-end self-end shrink-0">
+              <div
+                className="relative flex flex-col items-center justify-end"
+                style={{
+                  height: `${Math.max(60, Math.min(260, (humanHeightM / Number(heightM)) * 200))}px`,
+                  aspectRatio: "341 / 1024",
+                }}
+                title="Standard Human Scale: 1.75 m (5'9'')"
+              >
+                <Image
+                  src="/images/calculator/human-scale.png"
+                  alt="Human scale reference (1.75m / 5'9'')"
+                  fill
+                  sizes="120px"
+                  className="object-contain object-bottom drop-shadow-xl"
+                />
               </div>
-            )}
+              <span className="text-xs text-zinc-400 mt-2 font-medium whitespace-nowrap">
+                1.75 m (5&apos;9&quot;)
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Embedded Dimension & Aspect Buttons directly inside Visualizer */}
+      {/* Aspect Ratio Selector */}
       {onChangeCols && onChangeRows && (
-        <div className="mt-5 w-full">
+        <div className="mt-6 w-full">
           <DimensionConfigurator
             cols={currentCols}
             rows={currentRows}
@@ -468,38 +396,11 @@ export function ScreenVisualizer({
             selectedVariant={variant}
             aspectLock={aspectLock}
             onAspectLockChange={setAspectLock}
-            unit={unit}
           />
         </div>
       )}
-
-      {/* Legend & Quick Optical Indicators */}
-      <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-4 text-xs">
-        <div className="flex flex-wrap items-center gap-4 text-zinc-400 font-inter text-[11px]">
-          {/* <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-zinc-800 border border-white/20" />
-            Panel: {variant.cabWidthMm}x{variant.cabHeightMm}mm
-          </span> */}
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-accent/80" />
-            Aspect Ratio: {calc.aspectRatioExact} ({calc.closestStandardAspect})
-          </span>
-          {showPortRouting && (
-            <span className="flex items-center gap-1.5 text-electric-blue font-semibold">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#398BFF]" />
-              {controller.name}: {calc.minEthernetPorts} Gigabit Data Ports Assigned
-            </span>
-          )}
-        </div>
-
-        <div className="text-[11px] font-inter text-zinc-500">
-          Diagonal: <strong className="text-white">{calc.diagonalInches}&quot;</strong> (
-          {unit === "metric" ? `${calc.diagonalM}m` : `${calc.diagonalFt}ft`}) • Area:{" "}
-          <strong className="text-white">
-            {unit === "metric" ? `${calc.areaSqm} m²` : `${calc.areaSqft} sq ft`}
-          </strong>
-        </div>
-      </div>
     </div>
   );
 }
+
+export default ScreenVisualizer;

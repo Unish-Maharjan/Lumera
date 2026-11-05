@@ -12,7 +12,7 @@ export default function CalculatorPage() {
   return (
     <main className="min-h-screen bg-black text-foreground">
       <CalculatorContainer />
-      <CtaSection />
+      {/* <CtaSection /> */}
     </main>
   );
 }

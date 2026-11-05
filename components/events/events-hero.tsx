@@ -4,7 +4,7 @@ import Container from "@/components/ui/Container";
 
 export function EventsHero() {
   return (
-    <section className="relative flex min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh]
+    <section className="relative flex min-h-dvh sm:min-h-dvh lg:min-h-dvh
      w-full items-center justify-center overflow-hidden bg-black text-foreground 
       pt-28 pb-20 sm:pt-36 sm:pb-28">
       {/* Background Architectural LED Visual */}
@@ -40,8 +40,7 @@ export function EventsHero() {
             {/* Supporting Subtitle */}
             <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-100 
             font-light max-w-2xl mx-auto mt-6 sm:mt-8">
-              High-refresh broadcast virtual production stages, arena touring video canvases, and
-              immersive live event display architectures engineered for flawless visual impact.
+              High-refresh broadcast virtual production stages, arena touring video canvases.
             </p>
           </div>
         </Container>

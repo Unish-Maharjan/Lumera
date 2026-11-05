@@ -47,7 +47,7 @@ export function AboutCta() {
 
           <p className="font-sans text-center text-xs sm:text-sm md:text-base text-zinc-300 font-light mx-auto max-w-lg mb-6 sm:mb-8 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
             Whether you are conceptualizing a monumental architectural facade or specifying high-resolution
-            interior displays, our engineering team is ready to collaborate from concept to final commission.
+            interior displays.
           </p>
 
           <div>

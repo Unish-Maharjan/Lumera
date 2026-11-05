@@ -92,7 +92,7 @@ export function CalculatorContainer() {
       /> */}
 
       {/* Main Calculator Workflow Container */}
-      <section className="py-10 sm:py-14 bg-black">
+      <section className="pt-10 sm:pt-14 bg-black">
         <Container size="xl">
           {/* Quick Real-World Presets */}
           {/* <PresetTemplates
