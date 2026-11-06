@@ -63,11 +63,15 @@ export function AboutSection() {
       ref={sectionRef}
       id="about"
       aria-label="About Lumera"
-      className="relative z-20 w-full bg-black text-[#F7F7F5] overflow-x-clip select-none py-24 sm:py-32 md:py-40 lg:py-48"
+      className="relative z-20 w-full bg-black text-[#F7F7F5] overflow-x-clip select-none py-24 sm:py-32 md:py-40 lg:py-48 shadow-[0_-20px_50px_rgba(0,0,0,0.4)]"
     >
-      {/* Top Black Gradient Scrim for seamless section blend */}
+      {/* Top Transition Gradient: ultra-smooth eased scrim feathering extending above the section boundary */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-16 sm:h-24 bg-gradient-to-b from-black via-black/80 to-transparent z-10"
+        className="pointer-events-none absolute -top-20 sm:-top-28 lg:-top-36 inset-x-0 h-20 sm:h-28 lg:h-36 z-30"
+        style={{
+          background:
+            "linear-gradient(to top, #000000 0%, rgba(0,0,0,0.985) 12%, rgba(0,0,0,0.93) 24%, rgba(0,0,0,0.83) 36%, rgba(0,0,0,0.68) 48%, rgba(0,0,0,0.50) 60%, rgba(0,0,0,0.32) 71%, rgba(0,0,0,0.18) 81%, rgba(0,0,0,0.08) 89%, rgba(0,0,0,0.02) 95%, transparent 100%)",
+        }}
         aria-hidden="true"
       />
 

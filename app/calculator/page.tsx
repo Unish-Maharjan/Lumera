@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import CalculatorContainer from "@/components/calculator";
-import CtaSection from "@/components/home/cta-section";
+
+import AboutHero from "@/components/about/about-hero";
 
 export const metadata: Metadata = {
   title: "LED Video Wall Calculator & Power Estimator | Lumera Pro Architect",
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function CalculatorPage() {
   return (
     <main className="min-h-screen bg-black text-foreground">
+      <AboutHero/>
       <CalculatorContainer />
       {/* <CtaSection /> */}
     </main>

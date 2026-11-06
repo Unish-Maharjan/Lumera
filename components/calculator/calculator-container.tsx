@@ -82,7 +82,7 @@ export function CalculatorContainer() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-black text-foreground">
+    <div className="w-full min-h-screen bg-[#F7F7F5] text-zinc-950">
       {/* Hero Header */}
       {/* <CalculatorHero
         mode={mode}
@@ -92,7 +92,7 @@ export function CalculatorContainer() {
       /> */}
 
       {/* Main Calculator Workflow Container */}
-      <section className="pt-10 sm:pt-14 bg-black">
+      <section className="pt-10 sm:pt-14 bg-[#F7F7F5]">
         <Container size="xl">
           {/* Quick Real-World Presets */}
           {/* <PresetTemplates

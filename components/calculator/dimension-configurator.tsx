@@ -36,8 +36,9 @@ export function DimensionConfigurator({
     if (lock === "21:9") targetRatio = 21 / 9;
 
     const cabRatio = selectedVariant.cabWidthMm / selectedVariant.cabHeightMm;
-    const calcRows = Math.max(1, Math.min(30, Math.round(baseCols / (targetRatio / cabRatio))));
-    onChangeCols(baseCols);
+    const clampedCols = Math.max(1, Math.min(11, baseCols));
+    const calcRows = Math.max(1, Math.min(11, Math.round(clampedCols / (targetRatio / cabRatio))));
+    onChangeCols(clampedCols);
     onChangeRows(calcRows);
   };
 
@@ -50,10 +51,10 @@ export function DimensionConfigurator({
   ];
 
   return (
-    <div className={`w-full flex flex-wrap items-center justify-center gap-3 sm:gap-6 py-2 select-none ${className}`.trim()}>
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-zinc-400">Ratio:</span>
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-white/10">
+    <div className={`flex flex-wrap items-center justify-center gap-2 sm:gap-3 select-none ${className}`.trim()}>
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <span className="text-xs sm:text-sm font-semibold text-zinc-600 hidden xs:inline">Ratio:</span>
+        <div className="flex items-center gap-1 p-1 rounded-full bg-white/95 border border-[#E5E5E0] shadow-sm backdrop-blur-md">
           {ratios.map((item) => {
             const isActive = aspectLock === item.value;
             return (
@@ -61,10 +62,10 @@ export function DimensionConfigurator({
                 key={item.value}
                 type="button"
                 onClick={() => applyAspectLock(item.value, cols)}
-                className={`px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                className={`px-2.5 sm:px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
                   isActive
-                    ? "bg-[#D7B875] text-black font-semibold shadow-sm"
-                    : "text-zinc-400 hover:text-white hover:bg-white/5"
+                    ? "bg-[#D7B875] text-black font-semibold shadow-xs"
+                    : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100"
                 }`}
               >
                 {item.label}
@@ -81,7 +82,7 @@ export function DimensionConfigurator({
           onChangeCols(6);
           onChangeRows(6);
         }}
-        className="px-4 py-1.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-white/10 transition-colors cursor-pointer"
+        className="px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium text-zinc-700 hover:text-zinc-950 bg-white/95 hover:bg-zinc-100 border border-[#E5E5E0] transition-colors cursor-pointer shadow-sm backdrop-blur-md"
       >
         Reset (6 × 6)
       </button>

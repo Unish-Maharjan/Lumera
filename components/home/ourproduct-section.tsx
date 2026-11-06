@@ -103,7 +103,8 @@ export function OurProductSection() {
                     alt={`${product.name} LED display panel`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-contain select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.12)] scale-110 sm:scale-115 transition-all duration-500 group-hover:scale-[1.18] group-hover:translate-y-8 sm:group-hover:translate-y-12"
+                    className="object-contain select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.12)] scale-110 sm:scale-115 
+                    transition-all duration-500 group-hover:scale-[1.18] group-hover:translate-y-2 sm:group-hover:translate-y-4"
                     priority={idx < 2}
                   />
 
@@ -124,7 +125,7 @@ export function OurProductSection() {
                       <Link href="/products">
                         <button
                           type="button"
-                          className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase tracking-widest font-semibold rounded-full bg-black text-[#F7F7F5] hover:bg-zinc-800 transition-all cursor-pointer shadow-sm active:scale-95"
+                          className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase font-semibold rounded-full bg-black text-[#F7F7F5] hover:bg-zinc-800 transition-all cursor-pointer shadow-sm active:scale-95"
                         >
                           Learn more
                         </button>
@@ -133,7 +134,7 @@ export function OurProductSection() {
                       <button
                         type="button"
                         onClick={handleScrollToCta}
-                        className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase tracking-widest font-semibold rounded-full border border-black/30 text-black hover:bg-black hover:text-[#F7F7F5] transition-all cursor-pointer active:scale-95"
+                        className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase font-semibold rounded-full border border-black/30 text-black hover:bg-black hover:text-[#F7F7F5] transition-all cursor-pointer active:scale-95"
                       >
                         Inquire
                       </button>
