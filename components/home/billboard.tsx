@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { Heading } from "@/components/ui/Heading";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 ScrollTrigger.config({ ignoreMobileResize: true }); // stops jumps when mobile address bar hides/shows
@@ -204,37 +205,29 @@ export function AdsSection() {
         />
 
         {/* Hero content (fades out on scroll) */}
-        <div className="js-hero absolute inset-0 z-40 pointer-events-none flex flex-col justify-between pt-24 sm:pt-28 pb-8 sm:pb-10 will-change-[transform,opacity]">
-          <Container size="xl" className="w-full flex-1 flex flex-col justify-between pointer-events-auto">
+        <div className="js-hero absolute inset-0 z-40 pointer-events-none flex flex-col 
+        justify-between pt-24 sm:pt-28 pb-8 
+        sm:pb-10 will-change-[transform,opacity]">
+
+          <Container size="xl" className="w-full flex-1 flex flex-col justify-center pointer-events-auto">
             <div aria-hidden="true" />
 
-            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start mt-34 py-4 sm:py-6">
-              <div className="flex flex-col items-start text-left">
-                <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold text-white uppercase leading-[0.95]">
+            <div className="w-full flex flex-col items-center justify-end text-center mt-90 ">
+              <div className="flex flex-col items-center justify-center text-center">
+                <Heading as="h1" size="xl" align="center">
                   Illuminating<br />
-                  Spaces
-                </h1>
-                <div className="pt-6 sm:pt-8">
-                  <Link href="#products">
+                  New Dimensions
+                </Heading>
+                <div className="flex justify-center items-center mt-6">
+                  <Link href="/products">
                     <Button variant="gold" size="md">
                       Explore Collection
                     </Button>
                   </Link>
                 </div>
               </div>
-
-              <div className="flex flex-col items-start text-left ml-0 lg:ml-12 xl:ml-20">
-                <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold uppercase leading-[0.95] tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] mb-5 sm:mb-7">
-                  <span className="text-white block">with</span>
-                  <span className="text-accent block">Precision.</span>
-                </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-zinc-300 font-light leading-relaxed max-w-md drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                  We assist our clients in integrating architectural microLED and advanced display systems into visionary environments.
-                </p>
-              </div>
             </div>
-
-            <div className="w-full flex items-center justify-between pt-3 pb-1">
+            {/* <div className="w-full flex items-center justify-between pt-3 pb-1">
               <div className="flex items-center gap-2.5 font-mono text-xs text-zinc-400 tracking-wider">
                 <span className="text-accent font-bold text-sm">+</span>
                 <span>Scroll to explore</span>
@@ -243,7 +236,7 @@ export function AdsSection() {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Commercial Grade Display</span>
               </div>
-            </div>
+            </div> */}
           </Container>
         </div>
 
@@ -260,7 +253,7 @@ export function AdsSection() {
           {/* Screen */}
           <div className="relative w-full h-full rounded-[2px] overflow-hidden bg-black">
             <video
-              src="/video/1_1.mp4"
+              src="/video/hero2.mp4"
               autoPlay
               loop
               muted
@@ -269,16 +262,16 @@ export function AdsSection() {
               className="w-full h-full object-cover object-center pointer-events-none"
             />
 
-            {/* Initial dark scrim */}
-            <div className={`js-scrim ${OVERLAY} bg-black/25 bg-gradient-to-t from-black/0 via-black/20 to-black/55`} aria-hidden="true" />
-            {/* Micro-LED dot texture */}
+          
+            {/* <div className={`js-scrim ${OVERLAY} bg-black/25 bg-gradient-to-t from-black/0 via-black/20 to-black/55`} aria-hidden="true" />
+       
             <div className={`js-dots ${OVERLAY} opacity-0 bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:4px_4px]`} aria-hidden="true" />
-            {/* Panel seams */}
+       
             <div className={`${OVERLAY} opacity-15 bg-[linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:25%_50%]`} aria-hidden="true" />
-            {/* Glass sheen */}
+       
             <div className={`${OVERLAY} bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent`} aria-hidden="true" />
-            {/* Inner shadow */}
-            <div className={`${OVERLAY} shadow-[inset_0_3px_8px_rgba(0,0,0,0.85),inset_0_-2px_6px_rgba(0,0,0,0.85)]`} aria-hidden="true" />
+          
+            <div className={`${OVERLAY} shadow-[inset_0_3px_8px_rgba(0,0,0,0.85),inset_0_-2px_6px_rgba(0,0,0,0.85)]`} aria-hidden="true" /> */}
 
             {/* Bezel + rivets */}
             <div
@@ -295,11 +288,11 @@ export function AdsSection() {
         </div>
 
         {/* Caption */}
-        <div className="js-caption absolute bottom-6 sm:bottom-8 md:bottom-10 left-0 right-0 max-w-xl mx-auto text-center pointer-events-none opacity-0 z-30 px-4 will-change-[transform,opacity] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+        {/* <div className="js-caption absolute bottom-6 sm:bottom-8 md:bottom-10 left-0 right-0 max-w-xl mx-auto text-center pointer-events-none opacity-0 z-30 px-4 will-change-[transform,opacity] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
           <h3 className="font-heading text-lg sm:text-xl md:text-2xl text-accent font-bold uppercase leading-snug">
             Engineered to Stand Out
           </h3>
-        </div>
+        </div> */}
       </div>
     </section>
   );

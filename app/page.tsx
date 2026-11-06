@@ -5,6 +5,7 @@ import RentingSection from "@/components/home/renting";
 import CtaSection from "@/components/home/cta-section";
 import AdsSection from "@/components/home/billboard";
 import WatchInstallation from "@/components/home/installation-section";
+import AboutCta from "@/components/about/about-cta";
 
 export default function Home() {
   return (
@@ -15,7 +16,8 @@ export default function Home() {
       <OurProductSection />
       <WatchInstallation/>
       <RentingSection />
-      <CtaSection />
+      <AboutCta/>
+      {/* <CtaSection /> */}
     </main>
   );
 }

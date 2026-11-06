@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Container from "@/components/ui/Container";
 import TrustCounter from "../home/trust-counter";
+import { Heading } from "../ui";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -86,14 +87,9 @@ export function OurStory() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Narrative Column */}
             <div className="lg:col-span-6 flex flex-col justify-center">
-              <h2
-                id="story-heading"
-                className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight text-zinc-950 mb-6 sm:mb-8"
-              >
-                The force behind the <span className="text-[#D7B875]">light.</span>
-              </h2>
+             <Heading size="2xl" variant="dark">The force behind the light</Heading>
 
-              <p className="font-inter text-base sm:text-lg text-zinc-600 font-medium leading-relaxed max-w-xl">
+              <p className="font-inter text-base sm:text-lg text-zinc-600 mt-10 font-medium leading-relaxed max-w-xl">
                 Founded on the belief that digital illumination should integrate 
                 seamlessly with architectural form, Lumera bridges structural
                 engineering with spatial artistry. 

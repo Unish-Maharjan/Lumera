@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Container from "@/components/ui/Container";
+import { Heading } from "../ui";
 
 export interface TeamMember {
   id: string;
@@ -59,14 +60,10 @@ export function TeamSection() {
       className="relative w-full bg-[#F7F7F5] text-zinc-950 py-10 sm:py-18 lg:py-26 overflow-hidden select-none"
     >
       <Container size="xl">
+        
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16 lg:mb-20">
-          <h2
-            id="team-heading"
-            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight text-zinc-950 mb-4"
-          >
-            Meet Our <span className="text-[#D7B875]">Team</span>
-          </h2>
+        <div className="max-w-3xl mx-auto flex justify-center text-center mb-12 sm:mb-16 lg:mb-20">
+        <Heading size="2xl" variant="dark">Meet out team</Heading>
         </div>
 
         {/* 4-Card Team Grid */}

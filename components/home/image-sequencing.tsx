@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const TOTAL_FRAMES = 151;
+const TOTAL_FRAMES = 90;
 
 export function ImageSequencing() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -149,7 +149,7 @@ export function ImageSequencing() {
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: "+=2600",
+          end: "+=2200",
           pin: true,
           scrub: 0.6,
           onUpdate: render,
@@ -181,11 +181,7 @@ export function ImageSequencing() {
         className="absolute inset-0 w-full h-full block pointer-events-none bg-black"
       />
 
-      {/* Subtle Soft Vignettes for Seamless Section Blending */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/50 to-transparent z-10"
-        aria-hidden="true"
-      />
+      {/* Bottom Soft Vignette for Seamless Section Blending */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/50 to-transparent z-10"
         aria-hidden="true"

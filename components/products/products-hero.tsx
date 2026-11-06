@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Container from "@/components/ui/Container";
+import { Heading } from "../ui";
 
 export function ProductsHero() {
   return (
@@ -28,13 +29,18 @@ export function ProductsHero() {
       {/* Content Container */}
       <div className="relative z-10 w-full">
         <Container size="xl">
-          <div className="relative max-w-4xl mx-auto text-center flex flex-col items-center">
+          <div className="relative max-w-4xl mx-auto text-center translate-y-45 flex
+           flex-col items-center">
             {/* Main Headline matching the editorial design */}
-            <h1 className="font-heading uppercase text-3xl sm:text-5xl md:text-6xl lg:text-7xl 
-            font-medium text-white">
-              High Performance <br />
-              <span className="text-accent font-medium">Hardware.</span>
-            </h1>
+              <Heading
+                as="h1"
+                size="2xl"
+                align="center"
+                className="w-full text-center">
+                  High Performance <br />
+                  <span className="block text-center">Hardware</span>
+                </Heading>
+                         
 
             {/* Supporting Subtitle */}
             <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-100 font-light 

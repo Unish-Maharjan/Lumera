@@ -27,7 +27,7 @@ const stages: StageItem[] = [
     ],
   },
   {
-    src: "/images/installation/2_2.png",
+    src: "/images/installation/image-2.jfif",
     step: "STEP 02",
     title: "Install & Assemble",
     points: [
@@ -48,176 +48,50 @@ const stages: StageItem[] = [
   },
 ];
 
+const HIDDEN = "inset(100% 0% 0% 0%)"; // fully clipped (wipe starts at the bottom)
+const SHOWN = "inset(0% 0% 0% 0%)";
+
 export default function WatchInstallation() {
   const sectionRef = useRef<HTMLElement>(null);
-  const pinnedViewportRef = useRef<HTMLDivElement>(null);
-  const imageRefs = useRef<HTMLImageElement[]>([]);
-  const textRefs = useRef<HTMLDivElement[]>([]);
+  const pinRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      const section = sectionRef.current;
-      const pinned = pinnedViewportRef.current;
-      const images = imageRefs.current;
-      const texts = textRefs.current;
+      const pin = pinRef.current;
+      const layers = gsap.utils.toArray<HTMLElement>(".js-layer");
+      if (!pin || layers.length !== stages.length) return;
 
-      if (!section || !pinned || images.length !== stages.length) return;
-
-      // Initial image clipPath states
-      gsap.set(images, {
-        opacity: 1,
-        clipPath: "inset(100% 0% 0% 0%)",
-        WebkitClipPath: "inset(100% 0% 0% 0%)",
-      });
-
-      // First image is fully visible
-      gsap.set(images[0], {
-        clipPath: "inset(0% 0% 0% 0%)",
-        WebkitClipPath: "inset(0% 0% 0% 0%)",
-      });
-
-      // Initial text clipPath states (allow horizontal overflow to stay visible while doing vertical wipe)
-      if (texts.length === stages.length) {
-        gsap.set(texts, {
-          opacity: 1,
-          clipPath: "inset(100% -50% 0% -50%)",
-          WebkitClipPath: "inset(100% -50% 0% -50%)",
-        });
-
-        // First text is fully visible
-        gsap.set(texts[0], {
-          clipPath: "inset(0% -50% 0% -50%)",
-          WebkitClipPath: "inset(0% -50% 0% -50%)",
-        });
-      }
-
-      // 1. Pin the installation section without pinSpacing so subsequent section appears from the bottom
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: "bottom top",
-        pin: pinned,
-        pinSpacing: false,
-        anticipatePin: 1,
-        fastScrollEnd: true,
-      });
-
-      // 2. Timeline for the 3 stages
+      // One ScrollTrigger: pin + scrub with natural pinSpacing
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: section,
+          trigger: sectionRef.current,
           start: "top top",
-          end: "bottom top",
+          end: "bottom bottom",
           scrub: 1,
+          pin,
+          pinSpacing: true, // natural document flow without overlapping next section
+          anticipatePin: 1,
+          fastScrollEnd: true,
           invalidateOnRefresh: true,
         },
       });
 
-      // Stage 1 → Stage 2 (Images & Centered Titles animate in exact lockstep)
-      tl.to(
-        images[0],
-        {
-          clipPath: "inset(0% 0% 100% 0%)",
-          WebkitClipPath: "inset(0% 0% 100% 0%)",
-          duration: 1,
-          ease: "none",
-        },
-        0.05
-      );
-
-      tl.to(
-        images[1],
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          WebkitClipPath: "inset(0% 0% 0% 0%)",
-          duration: 1,
-          ease: "none",
-        },
-        0.05
-      );
-
-      if (texts.length === stages.length) {
-        tl.to(
-          texts[0],
-          {
-            clipPath: "inset(0% -50% 100% -50%)",
-            WebkitClipPath: "inset(0% -50% 100% -50%)",
-            duration: 1,
-            ease: "none",
-          },
-          0.05
+      // Reveals layer i from the bottom
+      const wipe = (i: number, at?: number) => {
+        tl.fromTo(
+          layers[i],
+          { clipPath: HIDDEN },
+          { clipPath: SHOWN, duration: 1, ease: "none" },
+          at
         );
-
-        tl.to(
-          texts[1],
-          {
-            clipPath: "inset(0% -50% 0% -50%)",
-            WebkitClipPath: "inset(0% -50% 0% -50%)",
-            duration: 1,
-            ease: "none",
-          },
-          0.05
-        );
-      }
-
-      // Hold stage 2
-      tl.to({}, { duration: 0.5 });
-
-      // Stage 2 → Stage 3
-      tl.to(images[1], {
-        clipPath: "inset(0% 0% 100% 0%)",
-        WebkitClipPath: "inset(0% 0% 100% 0%)",
-        duration: 1,
-        ease: "none",
-      });
-
-      tl.to(
-        images[2],
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          WebkitClipPath: "inset(0% 0% 0% 0%)",
-          duration: 1,
-          ease: "none",
-        },
-        "<"
-      );
-
-      if (texts.length === stages.length) {
-        tl.to(
-          texts[1],
-          {
-            clipPath: "inset(0% -50% 100% -50%)",
-            WebkitClipPath: "inset(0% -50% 100% -50%)",
-            duration: 1,
-            ease: "none",
-          },
-          "<"
-        );
-
-        tl.to(
-          texts[2],
-          {
-            clipPath: "inset(0% -50% 0% -50%)",
-            WebkitClipPath: "inset(0% -50% 0% -50%)",
-            duration: 1,
-            ease: "none",
-          },
-          "<"
-        );
-      }
-
-      // Hold stage 3 runway while RentingSection slides up over it
-      tl.to({}, { duration: 1.5 });
-
-      return () => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
       };
+
+      wipe(1, 0.05); // Stage 1 → 2
+      tl.to({}, { duration: 0.5 }); // hold stage 2
+      wipe(2); // Stage 2 → 3
+      tl.to({}, { duration: 0.5 }); // brief hold stage 3 before natural scroll continues
     },
-    {
-      scope: sectionRef,
-      dependencies: [],
-    }
+    { scope: sectionRef }
   );
 
   return (
@@ -227,73 +101,65 @@ export default function WatchInstallation() {
       aria-labelledby="process-heading"
       className="relative w-full h-[320vh] bg-[#F7F7F5] select-none overflow-x-clip z-10"
     >
-      {/* Pinned Viewport Stage (Stays pinned while next section appears from the bottom) */}
+      {/* Pinned viewport */}
       <div
-        ref={pinnedViewportRef}
-        className="relative h-screen min-h-screen w-full bg-[#F7F7F5] select-none flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 overflow-hidden z-10"
-        style={{ transform: "translate3d(0, 0, 0)" }}
+        ref={pinRef}
+        className="relative h-screen w-full bg-[#F7F7F5] select-none overflow-hidden z-10 transform-gpu"
       >
-        {/* Top Header */}
-        <div className="w-full max-w-7xl mx-auto flex items-center justify-center shrink-0 pt-2 sm:pt-4 z-20">
-          <h2
-            id="process-heading"
-            className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-zinc-950 uppercase tracking-tight text-center"
-          >
-            Our <span className="text-[#D7B875]">process</span>.
-          </h2>
-        </div>
+        {/* Each stage is a FULL-SCREEN layer (background + header + image + title),
+            so one clip-path moves all of it together */}
+        {stages.map((stage, i) => {
+          const dark = i === 1;
+          const [first, second] = stage.title.split(" & ");
+          const Heading = i === 0 ? "h2" : "p";
 
-        {/* Middle: Centered Large Image Stage */}
-        <div className="flex-1 w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto flex items-center
-         justify-center my-auto py-2 sm:py-4 z-20">
-          <div className="relative w-full aspect-[16/9] max-h-[58vh] sm:max-h-[64vh]
-           lg:max-h-[68vh] rounded-xl sm:rounded-2xl overflow-hidden flex items-center justify-center">
-            {stages.map((stage, index) => (
-              <img
-                key={stage.src}
-                ref={(el) => {
-                  if (el) imageRefs.current[index] = el;
-                }}
-                src={stage.src}
-                alt={stage.title}
-                className="absolute inset-0 h-full w-full object-contain object-center will-change-[clip-path]"
-                draggable={false}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom: Centered Stage Title */}
-        <div className="w-full max-w-2xl mx-auto shrink-0 pb-2 sm:pb-4 z-20">
-          <div className="relative w-full h-14 sm:h-16 flex items-center justify-center overflow-visible">
-            {stages.map((stage, index) => (
-              <div
-                key={stage.src}
-                ref={(el) => {
-                  if (el) textRefs.current[index] = el;
-                }}
-                className="absolute inset-0 flex flex-col items-center justify-center text-center will-change-[clip-path] overflow-visible"
-                style={{
-                  clipPath: index === 0 ? "inset(0% -50% 0% -50%)" : "inset(100% -50% 0% -50%)",
-                  WebkitClipPath: index === 0 ? "inset(0% -50% 0% -50%)" : "inset(100% -50% 0% -50%)",
-                }}
-              >
-                <h3 className="font-heading text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold uppercase text-zinc-950 tracking-tight">
-                  {stage.title.includes("&") ? (
-                    <>
-                      {stage.title.split("&")[0]}&amp;{" "}
-                      <span className="text-[#D7B875]">
-                        {stage.title.split("&")[1].trim()}
-                      </span>
-                    </>
-                  ) : (
-                    stage.title
-                  )}
-                </h3>
+          return (
+            <div
+              key={stage.src}
+              className={`js-layer absolute inset-0 flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 will-change-[clip-path] ${
+                dark ? "bg-black text-white" : "bg-[#F7F7F5] text-zinc-950"
+              }`}
+              style={i > 0 ? { clipPath: HIDDEN } : undefined}
+            >
+              {/* Header */}
+              <div className="w-full max-w-7xl mx-auto flex justify-center shrink-0 pt-2 sm:pt-4">
+                <Heading
+                  id={i === 0 ? "process-heading" : undefined}
+                  className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-center"
+                >
+                  Our process.
+                </Heading>
               </div>
-            ))}
-          </div>
-        </div>
+
+              {/* Image */}
+              <div className="flex-1 w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto flex items-center justify-center my-auto py-2 sm:py-4">
+                <div className="relative w-full aspect-[16/9] max-h-[58vh] sm:max-h-[64vh] lg:max-h-[68vh] rounded-xl sm:rounded-2xl overflow-hidden">
+                  <img
+                    src={stage.src}
+                    alt={stage.title}
+                    draggable={false}
+                    className="absolute inset-0 h-full w-full object-contain object-center"
+                  />
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="w-full max-w-2xl mx-auto shrink-0 pb-2 sm:pb-4">
+                <div className="h-14 sm:h-16 flex items-center justify-center">
+                  <h3 className="font-heading text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-tight text-center">
+                    {second ? (
+                      <>
+                        {first} &amp;{" "} {second}
+                      </>
+                    ) : (
+                      stage.title
+                    )}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

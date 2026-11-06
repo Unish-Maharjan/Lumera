@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import { Heading } from "../ui";
 
 const GAP = 24;
 
@@ -17,7 +18,7 @@ const PRODUCTS = [
   { id: "lumera-matrix", name: "LUMERA MATRIX", category: "MicroLED", spec: "0.9mm Pitch", img: "product-1" },
 ];
 
-const CATEGORIES = ["All Products", "Stage & Rental", "Outdoor Commercial", "Transparent Glass", "3D & Creative", "DOOH Display"];
+const CATEGORIES = ["All Products", "Commercial Indoor", "Stage & Rental", "Outdoor Commercial", "Transparent Glass", "3D & Creative", "DOOH Display"];
 
 const getStride = (track: HTMLDivElement) =>
   ((track.children[0] as HTMLElement)?.offsetWidth ?? track.clientWidth * 0.5) + GAP;
@@ -171,9 +172,9 @@ export function ProductGridSection() {
     <section className="bg-[#F5F5F2] text-[#0A0A0A] py-10 sm:py-18 select-none">
       <Container size="xl">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-[#0A0A0A] mb-3">
-            OUR <span className="text-[#D7B875]">PRODUCTS</span>
-          </h2>
+          <Heading align="center" size="2xl" variant="dark">
+            Our Products
+          </Heading>
         </div>
 
         {/* Category filters */}
@@ -261,15 +262,28 @@ export function ProductGridSection() {
                     <span className="text-sm font-semibold text-black">{product.spec}</span>
                   </div>
 
-                  <Link href="/contact" draggable={false}>
-                    <Button
-                      size="sm"
-                      rounded="full"
-                      className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200"
-                    >
-                      Inquire
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-1.5">
+                    {product.id === "k-v4-series" ? (
+                      <Link href="/products/k-v4-series" draggable={false}>
+                        <Button
+                          size="sm"
+                          rounded="full"
+                          className="!bg-[#D7B875] !text-black !border !border-[#D7B875] hover:!bg-black hover:!text-white hover:!border-black transition-colors duration-200"
+                        >
+                          Specs
+                        </Button>
+                      </Link>
+                    ) : null}
+                    <Link href="/contact" draggable={false}>
+                      <Button
+                        size="sm"
+                        rounded="full"
+                        className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200"
+                      >
+                        Inquire
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}
@@ -285,7 +299,7 @@ export function ProductGridSection() {
               onClick={() => scrollToDot(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`size-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                currentPage === i ? "bg-[#D7B875] w-7" : "bg-[#D1D1CD] hover:bg-zinc-400"
+                currentPage === i ? "bg-black w-7" : "bg-[#D1D1CD] hover:bg-black"
               }`}
             />
           ))}

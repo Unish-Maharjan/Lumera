@@ -51,15 +51,15 @@ export function ProductCta() {
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/calculator">
-              <Button variant="white" size="sm">
+              <Button variant="gold" size="sm">
                 LAUNCH LED CALCULATOR
               </Button>
             </Link>
-            <Link href="/#contact-cta">
+            {/* <Link href="/#contact-cta">
               <Button variant="outline" size="sm">
                 REQUEST SPECIFICATION
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </Container>

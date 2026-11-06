@@ -4,6 +4,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { Heading } from "@/components/ui/Heading";
+import { Button } from "../ui";
 
 interface ProductItem {
   id: string;
@@ -65,17 +67,20 @@ export function OurProductSection() {
     <section
       id="products"
       aria-labelledby="products-heading"
-      className="relative bg-[#F7F7F5] pt-16 sm:pt-24 lg:pt-32 select-none overflow-hidden"
+      className="relative bg-[#F7F7F5] pt-16 sm:pt-24 lg:pt-32 pb-20 select-none overflow-hidden"
     >
       <Container size="xl">
         {/* Section Header */}
         <div className="max-w-5xl mx-auto mb-12 sm:mb-16 lg:mb-20 text-center">
-          <h2
+          <Heading
+            as="h2"
             id="products-heading"
-            className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold text-zinc-950 uppercase mb-4 sm:mb-5 tracking-tight"
+            size="xl"
+            align="center"
+            variant="dark"
           >
-            Displays for <span className="text-[#D7B875]">every</span> space.
-          </h2>
+            Displays for every space.
+          </Heading>
         </div>
 
         {/* Two-Column Product Grid with Clean Gaps & Proportional Sizing */}
@@ -84,36 +89,29 @@ export function OurProductSection() {
             <article
               key={product.id}
               className="group relative flex flex-col justify-between min-h-[420px] sm:min-h-[480px] lg:min-h-[540px] p-6 sm:p-8 
-                 rounded-2xl bg-white border border-[#E5E5E0] shadow-sm hover:shadow-md 
+                 rounded-2xl bg-zinc-200/50 border border-[#E5E5E0] 
                  transition-all duration-300 overflow-hidden"
             >
-              {/* Cell Header: Clean Product Name at Top (Fades Out on Hover) */}
-              <div className="flex items-center justify-center w-full z-10 transition-opacity duration-300 group-hover:opacity-0">
-                <span className="text-xs sm:text-sm font-sans text-zinc-700 text-center uppercase tracking-widest font-semibold">
-                  {product.name}
-                </span>
-              </div>
-
-              {/* Dominant Product Image with Hover-Revealed Text & Action Buttons */}
+              {/* Dominant Product Image with Active Text & Action Buttons */}
               <div className="relative w-full flex-1 flex items-center justify-center my-2 sm:my-3 min-h-[320px] sm:min-h-[380px] lg:min-h-[420px]">
                 <div className="relative w-full h-full max-w-[640px] flex items-center justify-center">
-                  {/* Background Product Image (Remains fully visible on hover) */}
+                  {/* Background Product Image */}
                   <Image
                     src={product.imageSrc}
                     alt={`${product.name} LED display panel`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-contain select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.12)] scale-110 sm:scale-115 
+                    className="object-contain select-none pointer-events-none scale-110 sm:scale-115 
                     transition-all duration-500 group-hover:scale-[1.18] group-hover:translate-y-2 sm:group-hover:translate-y-4"
                     priority={idx < 2}
                   />
 
-                  {/* Content Revealed on Hover: Shifted to Top so it doesn't block the product image */}
-                  <div className="absolute top-0 inset-x-0 flex flex-col items-center justify-start text-center z-20 opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto px-4 pt-1">
+                  {/* Active Content: Headline, Summary & Action Buttons */}
+                  <div className="absolute top-0 inset-x-0 flex flex-col items-center justify-start text-center z-20 px-4 pt-1">
                     {/* Product Headline */}
-                    <h3 className="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-zinc-950 uppercase mb-1.5">
+                    <Heading as="h3" size="lg" variant="dark" align="center" className="mb-1.5">
                       {product.name}
-                    </h3>
+                    </Heading>
 
                     {/* Summary Copy */}
                     <p className="font-sans text-xs sm:text-sm text-zinc-700 font-normal max-w-md mb-3 sm:mb-4 leading-relaxed">
@@ -122,22 +120,12 @@ export function OurProductSection() {
 
                     {/* Action Buttons */}
                     <div className="flex items-center justify-center gap-3 sm:gap-4">
-                      <Link href="/products">
-                        <button
-                          type="button"
-                          className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase font-semibold rounded-full bg-black text-[#F7F7F5] hover:bg-zinc-800 transition-all cursor-pointer shadow-sm active:scale-95"
-                        >
-                          Learn more
-                        </button>
-                      </Link>
-
-                      <button
-                        type="button"
-                        onClick={handleScrollToCta}
-                        className="h-8 sm:h-9 px-5 sm:px-6 text-xs uppercase font-semibold rounded-full border border-black/30 text-black hover:bg-black hover:text-[#F7F7F5] transition-all cursor-pointer active:scale-95"
-                      >
+                      <Button size="sm" variant="gold">
+                        Learn more
+                      </Button>
+                      <Button size="sm" variant="white" className="border-2 border-black">
                         Inquire
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

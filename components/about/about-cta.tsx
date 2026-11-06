@@ -6,7 +6,8 @@ import Button from "@/components/ui/Button";
 
 export function AboutCta() {
   return (
-    <section className="relative w-full min-h-[50vh] sm:min-h-[60vh] flex flex-col items-center justify-center bg-black text-foreground py-20 sm:py-28 lg:py-32 border-t border-white/10 overflow-hidden select-none">
+    <section className="relative w-full min-h-[50vh] sm:min-h-[60vh] flex flex-col 
+    items-center justify-center bg-black text-foreground py-20 sm:py-28 lg:py-32 overflow-hidden select-none">
       {/* Background Architectural Moon LED Visual */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
         <Image
@@ -38,27 +39,34 @@ export function AboutCta() {
       </div>
 
       <Container size="xl" className="relative z-10 w-full">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto mt-50 text-center">
          
 
-          <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold uppercase text-white mb-4 sm:mb-5 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
-            Ready to illuminate your <span className="text-accent">vision?</span>
+          <h2 className="font-heading text-2xl sm:text-4xl md:text-7xl 
+          font-bold uppercase text-white mb-4 sm:mb-8 leading-widest">
+            Ready to illuminate your vision?
           </h2>
-
+{/* 
           <p className="font-sans text-center text-xs sm:text-sm md:text-base text-zinc-300 font-light mx-auto max-w-lg mb-6 sm:mb-8 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
             Whether you are conceptualizing a monumental architectural facade or specifying high-resolution
             interior displays.
-          </p>
+          </p> */}
 
           <div>
-            <Link href="/#contact-cta">
+            <Link href="/contact">
               <Button variant="gold" size="sm">
                 START A CONVERSATION
               </Button>
             </Link>
           </div>
+
+
         </div>
       </Container>
+      <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-48 sm:h-64 lg:h-96 bg-linear-to-t from-black via-black/80 to-transparent "
+            aria-hidden
+            />
     </section>
   );
 }

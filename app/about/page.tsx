@@ -21,7 +21,7 @@ export default function AboutPage() {
       <TeamSection />
       {/* <SectionDivider /> */}
       {/* <CtaSection className="border-t-0" /> */}
-      <AboutCta/>
+      <AboutCta />
     </main>
   );
 }
