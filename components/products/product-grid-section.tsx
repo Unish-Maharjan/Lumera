@@ -43,7 +43,7 @@ export function ProductGridSection() {
   };
 
   // Slow cubic ease-out scroll
-  const smoothScrollTo = (target: number, duration = 850) => {
+  const smoothScrollTo = React.useCallback((target: number, duration = 850) => {
     const track = trackRef.current;
     if (!track) return;
     cancelAnim();
@@ -64,7 +64,7 @@ export function ProductGridSection() {
 
     track.style.scrollSnapType = "none";
     animRef.current = requestAnimationFrame(animate);
-  };
+  }, []);
 
   // Shared drag logic (mouse + touch)
   const startDrag = (x: number) => {
@@ -144,7 +144,7 @@ export function ProductGridSection() {
   };
 
   // dir: -1 = previous, 1 = next (wraps around at the ends)
-  const scrollBy = (dir: -1 | 1) => {
+  const scrollBy = React.useCallback((dir: -1 | 1) => {
     const track = trackRef.current;
     if (!track) return;
     const maxScroll = track.scrollWidth - track.clientWidth;
@@ -153,7 +153,7 @@ export function ProductGridSection() {
 
     if (atEdge) smoothScrollTo(dir > 0 ? 0 : maxScroll);
     else smoothScrollTo(Math.min(maxScroll, Math.max(0, track.scrollLeft + dir * step)), 800);
-  };
+  }, [smoothScrollTo]);
 
   const scrollToDot = (i: number) => {
     const track = trackRef.current;
@@ -205,8 +205,12 @@ export function ProductGridSection() {
               aria-label={dir < 0 ? "Previous products" : "Next products"}
               title={dir < 0 ? "Previous products" : "Next products"}
               className={`absolute ${
-                dir < 0 ? "-left-2 sm:-left-4 lg:-left-6" : "-right-2 sm:-right-4 lg:-right-6"
-              } top-[40%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-zinc-50 text-black border border-[#E5E5E0] flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer hover:scale-105 active:scale-95`}
+                dir < 0 ? "-left-2 sm:-left-4 lg:-left-15" : "-right-2 sm:-right-4 lg:-right-15"
+              } top-[40%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full
+              bg-white hover:bg-zinc-50 text-black border
+               border-[#E5E5E0] flex items-center justify-center 
+               transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer 
+               hover:scale-105 active:scale-95`}
             >
               <svg
                 className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${
@@ -238,21 +242,27 @@ export function ProductGridSection() {
             {filteredProducts.map((product) => (
               <article
                 key={product.id}
-                className="w-[85%] sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-72px)/4)] shrink-0 snap-start flex flex-col justify-between bg-white rounded-sm pt-3.5 px-6 pb-6 border border-[#E5E5E0] shadow-sm hover:shadow-md transition-all duration-300"
+                className="w-[85%] sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-72px)/4)] shrink-0 snap-start flex flex-col justify-between bg-white rounded-sm pt-3.5 px-6 pb-6 border border-[#E5E5E0] shadow-sm hover:shadow-md transition-all duration-300 group"
               >
-                <div>
-                  <div className="relative aspect-square w-full rounded-sm pt-2 px-4 pb-4 mb-5 flex items-center justify-center overflow-hidden">
+                <Link
+                  href={`/products/${product.id}`}
+                  draggable={false}
+                  className="block cursor-pointer"
+                >
+                  <div className="relative aspect-square w-full rounded-sm pt-2 px-4 pb-4 mb-5 flex items-center justify-center overflow-hidden bg-zinc-50">
                     <Image
                       src={`/products/${product.img}.webp`}
                       alt={product.name}
                       fill
                       draggable={false}
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover pb-10 pointer-events-none"
+                      className="object-cover pb-10 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-105"
                     />
                   </div>
-                  <h3 className="text-xl font-bold uppercase text-black">{product.name}</h3>
-                </div>
+                  <h3 className="text-xl font-bold uppercase text-black group-hover:text-[#D7B875] transition-colors">
+                    {product.name}
+                  </h3>
+                </Link>
 
                 <div className="mt-6 pt-4 border-t border-[#E5E5E0] flex items-center justify-between">
                   <div>
@@ -263,24 +273,12 @@ export function ProductGridSection() {
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    {product.id === "k-v4-series" ? (
-                      <Link href="/products/k-v4-series" draggable={false}>
-                        <Button
-                          size="sm"
-                          rounded="full"
-                          className="!bg-[#D7B875] !text-black !border !border-[#D7B875] hover:!bg-black hover:!text-white hover:!border-black transition-colors duration-200"
-                        >
-                          Specs
-                        </Button>
-                      </Link>
-                    ) : null}
-                    <Link href="/contact" draggable={false}>
+                    <Link href={`/products/${product.id}`} draggable={false}>
                       <Button
                         size="sm"
                         rounded="full"
-                        className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200"
                       >
-                        Inquire
+                        Detail
                       </Button>
                     </Link>
                   </div>

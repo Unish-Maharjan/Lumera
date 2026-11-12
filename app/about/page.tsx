@@ -3,6 +3,7 @@ import AboutHero from "@/components/about/about-hero";
 import OurStory from "@/components/about/our-story";
 import TeamSection from "@/components/about/team-section";
 import AboutCta from "@/components/about/about-cta";
+import OurApproach from "@/components/about/our-philosophy";
 // import SectionDivider from "@/components/ui/section-divider";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function AboutPage() {
       {/* <SectionDivider /> */}
       <OurStory />
       {/* <SectionDivider /> */}
+      <OurApproach />
       <TeamSection />
       {/* <SectionDivider /> */}
       {/* <CtaSection className="border-t-0" /> */}

@@ -16,6 +16,22 @@ export interface ProductItem {
 
 export const PRODUCTS: ProductItem[] = [
   {
+    id: "lumera-matrix",
+    series: "01",
+    name: "LUMERA MATRIX",
+    category: "Fine Pitch",
+    tagline: "Ultra-fine pitch MicroLED displays for flagships & studios.",
+    summary:
+      "Ultra-fine pitch MicroLED displays for flagships & studios with Flip-Chip COB technology and native 16:9 aspect ratios.",
+    imageSrc: "/products/product-1.webp",
+    specs: [
+      { label: "Pixel Pitch", value: "0.93mm – 1.87mm" },
+      { label: "Contrast Ratio", value: "1,000,000 : 1" },
+      { label: "Refresh Rate", value: "7,680 Hz" },
+      { label: "Cabinet Geometry", value: "16 : 9 Native" },
+    ],
+  },
+  {
     id: "lumera-vortex",
     series: "02",
     name: "LUMERA VORTEX",

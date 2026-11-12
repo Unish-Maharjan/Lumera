@@ -41,4 +41,4 @@ export function OurPhilosophy() {
 }
 
 export default OurPhilosophy;
-
+export { OurPhilosophy as OurApproach };

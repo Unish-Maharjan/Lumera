@@ -124,43 +124,6 @@ export function OurStory() {
           {/* Integrated Trust Counter */}
           <TrustCounter />
         </Container>
-
-        {/* Container 2: Our Philosophy (Optional Secondary Container) */}
-        {/* <Container size="xl" className="mt-32 sm:mt-40 lg:mt-48 xl:mt-56">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-6 order-2 lg:order-1">
-              <div
-                ref={frame2Ref}
-                className="relative w-full aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-xl sm:rounded-2xl border border-black/10 bg-zinc-100 shadow-sm"
-              >
-                <div
-                  ref={image2Ref}
-                  className="relative w-full h-[130%] -top-[15%] will-change-transform"
-                >
-                  <Image
-                    src="/images/event-screen.png"
-                    alt="Architectural structure harmonizing with precision lighting"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover object-center"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col justify-center">
-              <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight text-zinc-950 mb-6 sm:mb-8">
-                Precision is the <span className="text-[#D7B875]">foundation.</span>
-              </h2>
-
-              <p className="font-sans text-base sm:text-lg text-zinc-600 font-light leading-relaxed max-w-xl">
-                We approach light not as superficial decoration, but as an architectural
-                discipline. By calibrating diode pitch, thermal performance, 
-                and chromatic purity at the micron level.
-              </p>
-            </div>
-          </div>
-        </Container> */}
       </section>
     </>
   );

@@ -3,73 +3,50 @@
 import { useEffect, useRef, useState } from "react";
 
 const stats = [
-  {
-    value: 150,
-    suffix: "+",
-    label: "Projects Delivered",
-  },
-  {
-    value: 500,
-    suffix: "+",
-    label: "Displays Installed",
-  },
-  {
-    value: 50,
-    suffix: "+",
-    label: "Trusted Clients",
-  },
-  {
-    value: 10,
-    suffix: "+",
-    label: "Number of Products",
-  },
+  { value: 150, suffix: "+", label: "Projects delivered" },
+  { value: 500, suffix: "+", label: "Displays installed" },
+  { value: 50, suffix: "+", label: "Trusted clients" },
+  { value: 10, suffix: "+", label: "Products" },
 ];
 
 function Counter({ value }: { value: number }) {
-  const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const [started, setStarted] = useState(false);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    const el = ref.current;
+    if (!el) return;
 
+    // Skip the animation for people who ask for less motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCount(value);
+      return;
+    }
+
+    let frameId = 0;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setStarted(true);
-          observer.disconnect();
-        }
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+
+        const start = performance.now();
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / 1800, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          setCount(Math.round(value * eased));
+          if (progress < 1) frameId = requestAnimationFrame(tick);
+        };
+        frameId = requestAnimationFrame(tick);
       },
       { threshold: 0.3 }
     );
 
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-
-    let frameId: number;
-    const duration = 1800;
-    const startTime = performance.now();
-
-    const animate = (time: number) => {
-      const progress = Math.min((time - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      setCount(Math.floor(value * eased));
-
-      if (progress < 1) {
-        frameId = requestAnimationFrame(animate);
-      }
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frameId);
     };
-
-    frameId = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(frameId);
-  }, [started, value]);
+  }, [value]);
 
   return (
     <span ref={ref} className="tabular-nums">
@@ -80,34 +57,26 @@ function Counter({ value }: { value: number }) {
 
 export default function TrustCounter({ className = "" }: { className?: string }) {
   return (
-    <section className={`relative bg-transparent py-16 sm:py-20 text-zinc-950 overflow-hidden ${className}`.trim()}>
-      <div className="relative mx-auto max-w-7xl">
-        {/* 4-Column Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 border-y border-black/10">
-          {stats.map((stat, index) => (
+    <section
+      className={`py-16 text-zinc-950 sm:py-20 ${className}`.trim()}
+    >
+      <div className="mx-auto max-w-7xl">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-10">
+          {stats.map((stat) => (
             <div
               key={stat.label}
-              className={`border-black/10 py-8 md:py-12 flex flex-col items-center text-center px-4 ${
-                index % 2 === 0 ? "border-r" : ""
-              } ${
-                index < 2 ? "border-b md:border-b-0" : ""
-              } md:border-r md:last:border-r-0`}
+              className="flex flex-col-reverse border-t border-zinc-300 pt-5"
             >
-              {/* Number Counter */}
-              <div className="font-heading mb-2 text-4xl font-bold tracking-tight text-zinc-950 md:text-5xl lg:text-6xl flex items-center justify-center leading-none">
-                <Counter value={stat.value} />
-                <span className="text-[#D7B875] ml-0.5 font-light">
-                  {stat.suffix}
-                </span>
-              </div>
-
-              {/* Label */}
-              <p className="font-sans text-xs sm:text-sm font-medium uppercase tracking-wider text-zinc-600">
+              <dt className="mt-2 font-sans text-sm text-zinc-600">
                 {stat.label}
-              </p>
+              </dt>
+              <dd className="font-heading text-5xl font-semibold leading-none tracking-tight md:text-6xl">
+                <Counter value={stat.value} />
+                <span className="text-[#B89240]">{stat.suffix}</span>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

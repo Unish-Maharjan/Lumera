@@ -52,17 +52,6 @@ const PRODUCTS: ProductItem[] = [
 ];
 
 export function OurProductSection() {
-  const handleScrollToCta = () => {
-    const target =
-      document.getElementById("contact-cta") ||
-      document.getElementById("cta");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    } else {
-      window.location.hash = "#contact-cta";
-    }
-  };
-
   return (
     <section
       id="products"
@@ -120,12 +109,16 @@ export function OurProductSection() {
 
                     {/* Action Buttons */}
                     <div className="flex items-center justify-center gap-3 sm:gap-4">
-                      <Button size="sm" variant="gold">
-                        Learn more
-                      </Button>
-                      <Button size="sm" variant="white" className="border-2 border-black">
-                        Inquire
-                      </Button>
+                      <Link href={`/products/${product.id}`} draggable={false}>
+                        <Button size="sm" variant="gold">
+                          Learn more
+                        </Button>
+                      </Link>
+                      <Link href="/contact" draggable={false}>
+                        <Button size="sm" variant="white" className="border-2 border-black">
+                          Inquire
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import CalculatorContainer from "@/components/calculator";
 
 import AboutHero from "@/components/about/about-hero";
+import AboutCta from "@/components/about/about-cta";
 
 export const metadata: Metadata = {
   title: "LED Video Wall Calculator & Power Estimator | Lumera Pro Architect",
@@ -12,9 +13,9 @@ export const metadata: Metadata = {
 export default function CalculatorPage() {
   return (
     <main className="min-h-screen bg-black text-foreground">
-      <AboutHero/>
-      <CalculatorContainer />
-      {/* <CtaSection /> */}
+      <AboutHero />
+      <CalculatorContainer className="py-16 sm:py-24 lg:py-28" />
+      <AboutCta />
     </main>
   );
 }

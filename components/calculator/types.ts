@@ -42,6 +42,14 @@ export interface LedProduct {
   variants: LedPitchVariant[];
 }
 
+export interface PresetTemplate {
+  id: string;
+  productId: string;
+  pitch: number;
+  cols: number;
+  rows: number;
+}
+
 export interface ControllerSpec {
   id: string;
   name: string;

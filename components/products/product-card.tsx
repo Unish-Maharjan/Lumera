@@ -52,29 +52,36 @@ export function ProductCard({
       className={`group flex flex-col items-center text-center w-full max-w-[480px] mx-auto ${className}`.trim()}
     >
       {/* Stage */}
-      <div
-        data-product-image
-        className="relative h-[26vh] sm:h-[30vh] md:h-[34vh] lg:h-[37vh] max-h-[330px] aspect-[4/3] w-auto max-w-full mx-auto transition-opacity duration-300 ease-out"
-        style={{ opacity: isActive ? 1 : 0.35 }}
+      <Link
+        href={`/products/${product.id}`}
+        draggable={false}
+        className="block w-full cursor-pointer"
+        aria-label={`View details for ${product.name}`}
       >
         <div
-          className="absolute inset-0 scale-(--s) transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[calc(var(--s)_*_1.02)]"
-          style={{ "--s": framing.scale } as CSSProperties}
+          data-product-image
+          className="relative h-[26vh] sm:h-[30vh] md:h-[34vh] lg:h-[37vh] max-h-[330px] aspect-[4/3] w-auto max-w-full mx-auto transition-opacity duration-300 ease-out"
+          style={{ opacity: isActive ? 1 : 0.35 }}
         >
-          <Image
-            src={product.imageSrc}
-            alt={`${product.name} LED display module`}
-            fill
-            sizes="(min-width: 1280px) 40vw, (min-width: 768px) 50vw, 75vw"
-            priority={priority}
-            draggable={false}
-            style={{ objectPosition: framing.position }}
-            className={`pointer-events-none select-none ${
-              framing.fit === "cover" ? "object-cover" : "object-contain"
-            }`}
-          />
+          <div
+            className="absolute inset-0 scale-(--s) transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[calc(var(--s)_*_1.02)]"
+            style={{ "--s": framing.scale } as CSSProperties}
+          >
+            <Image
+              src={product.imageSrc}
+              alt={`${product.name} LED display module`}
+              fill
+              sizes="(min-width: 1280px) 40vw, (min-width: 768px) 50vw, 75vw"
+              priority={priority}
+              draggable={false}
+              style={{ objectPosition: framing.position }}
+              className={`pointer-events-none select-none ${
+                framing.fit === "cover" ? "object-cover" : "object-contain"
+              }`}
+            />
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Information */}
       <div className="mt-3 sm:mt-4 flex flex-col items-center">
@@ -82,16 +89,22 @@ export function ProductCard({
           {product.category}
         </p>
 
-        <h3 className="mt-1 font-heading text-lg sm:text-2xl lg:text-3xl font-bold uppercase leading-[0.98] tracking-tight text-white">
-          {product.name}
-        </h3>
+        <Link
+          href={`/products/${product.id}`}
+          draggable={false}
+          className="hover:text-[#D7B875] transition-colors"
+        >
+          <h3 className="mt-1 font-heading text-lg sm:text-2xl lg:text-3xl font-bold uppercase leading-[0.98] tracking-tight text-white hover:text-[#D7B875] transition-colors">
+            {product.name}
+          </h3>
+        </Link>
 
         <p className="mt-1.5 sm:mt-2 max-w-[38ch] font-sans text-xs sm:text-sm font-light leading-relaxed text-zinc-400 line-clamp-2">
           {product.tagline || product.summary}
         </p>
 
         <Link
-          href="/#contact-cta"
+          href={`/products/${product.id}`}
           draggable={false}
           className="mt-3 sm:mt-4"
         >

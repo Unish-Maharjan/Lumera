@@ -68,14 +68,16 @@ export function AboutSection() {
     >
       {/* Top Transition Gradient: ultra-smooth eased scrim feathering extending above the section boundary */}
       <div
-        className="pointer-events-none absolute -top-48 sm:-top-64 lg:-top-96 inset-x-0 h-48 sm:h-64 lg:h-96 bg-gradient-to-t 
-        from-black via-black/80 to-transparent z-10"
+        className="pointer-events-none absolute -top-38 sm:-top-54 lg:-top-86 
+        inset-x-0 h-38 sm:h-54 lg:h-86 bg-gradient-to-t 
+        from-black via-black to-transparent z-10"
         aria-hidden="true"
       />
 
       {/* Top Interior Gradient */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-32 sm:h-48 lg:h-64 bg-gradient-to-b from-black 
+        className="pointer-events-none absolute inset-x-0 top-0 h-32 sm:h-48 lg:h-64
+         bg-gradient-to-b from-black 
         via-black/80 to-transparent z-10"
         aria-hidden="true"
       />
@@ -84,7 +86,8 @@ export function AboutSection() {
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-2 sm:px-4">
           <p
             ref={textRef}
-            className="font-sans text-xl sm:text-2xl md:text-3xl z-20 mt-10 lg:text-[2.25rem] xl:text-[2.65rem] font-normal 
+            className="font-sans text-xl sm:text-2xl md:text-3xl z-20 mt-10 lg:text-[2.25rem]
+             xl:text-[2.65rem] font-normal 
             text-white leading-[1.22] sm:leading-[1.18] tracking-[-0.015em] select-none text-left"
           >
             {/* Editorial Flowing Manifesto Words */}
