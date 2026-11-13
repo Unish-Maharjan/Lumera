@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Inter, Geist } from "next/font/google";
 import localFont from "next/font/local";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -8,13 +8,20 @@ import SmoothScroll from "@/components/providers/smooth-scroll";
 import { Preloader } from "@/components/ui/Preloader";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { cn } from "@/lib/utils";
 
 // Prevent Font Awesome from adding its CSS since it's imported above
 config.autoAddCss = false;
 
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  display: "swap",
+});
+
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -76,7 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${geistMono.variable} ${corpta.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", geistMono.variable, corpta.variable, spaceGrotesk.variable, inter.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col relative bg-black text-foreground font-sans">
         <Preloader>

@@ -34,7 +34,7 @@ export function ProductsHero() {
             {/* Main Headline matching the editorial design */}
               <Heading
                 as="h1"
-                size="2xl"
+                size="xl"
                 align="center"
                 className="w-full text-center">
                   High Performance <br />

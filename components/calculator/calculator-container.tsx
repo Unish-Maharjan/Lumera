@@ -49,9 +49,9 @@ export function CalculatorContainer({
   return (
     <div className={`w-full bg-[#F7F7F5] text-zinc-950 ${className}`.trim()}>
       {/* Main Calculator Workflow Container - Exact 100vh / 100dvh */}
-      <section className="h-screen h-[100dvh] max-h-screen max-h-[100dvh] w-full bg-[#F7F7F5] py-4 sm:py-6 px-2 sm:px-4 flex flex-col justify-between overflow-hidden">
+      <section className="h-screen h-[100dvh] max-h-screen max-h-[100dvh] 
+      w-full bg-[#F7F7F5] sm:py-6 px-2 sm:px-4 flex flex-col justify-between overflow-hidden">
         <Container size="xl" className="h-full flex flex-col justify-between overflow-hidden">
-          {/* Interactive 2D Visualizer, Dimension Steppers, Aspect Presets & Human Scale CAD */}
           <ScreenVisualizer
             calc={calc}
             variant={selectedVariant}

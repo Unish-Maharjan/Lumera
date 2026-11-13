@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import EventsHero from "@/components/events/events-hero";
 import EventsGridSection from "@/components/events/events-grid-section";
-import EventsCta from "@/components/events/events-cta";
 import AboutCta from "@/components/about/about-cta";
 
 export const metadata: Metadata = {

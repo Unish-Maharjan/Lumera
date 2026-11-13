@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { usePreloader } from "@/components/ui/Preloader";
@@ -27,10 +28,13 @@ const mobileNavLinks = [
 ];
 
 export function Header() {
+  const pathname = usePathname();
   const { triggerPreloader } = usePreloader();
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isCalculatorPage = pathname === "/calculator" || pathname?.startsWith("/calculator");
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -79,8 +83,8 @@ export function Header() {
       className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       } ${
-        isScrolled || isMobileMenuOpen
-          ? "bg-black/90 backdrop-blur-md border-b border-white/10 shadow-2xl"
+        isScrolled || isMobileMenuOpen || isCalculatorPage
+          ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-2xl"
           : "bg-transparent border-b border-transparent shadow-none"
       }`}
     >

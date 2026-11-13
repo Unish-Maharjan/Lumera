@@ -1,60 +1,65 @@
+import React from "react";
 import Image from "next/image";
 import Container from "@/components/ui/Container";
-import { Heading } from "../ui";
 
 export interface GridItem {
   id: string;
   title: string;
-  image?: string; // path in /public; a plain placeholder shows without one
+  description?: string;
+  image: string;
 }
 
 const DEFAULT_ITEMS: GridItem[] = [
   { id: "side", title: "Side Profile", image: "/images/productdetails/closeup.jpg" },
-  { id: "connections", title: "Connections & Interface", image: "/images/productdetails/back.jpg" },
+  { id: "connections", title: "Interface & Ports", image: "/images/productdetails/back.jpg" },
   { id: "front", title: "Full Front View", image: "/images/productdetails/wideview.jpg" },
-  { id: "build", title: "Chassis Construction", image: "/images/productdetails/hero.jpg" },
+  { id: "build", title: "Chassis Build", image: "/images/productdetails/hero.jpg" },
 ];
 
 interface ProductGridProps {
   items?: GridItem[];
+  title?: string;
 }
 
-export function ProductGrid({ items = DEFAULT_ITEMS }: ProductGridProps) {
+export function ProductGrid({
+  items = DEFAULT_ITEMS,
+  title,
+}: ProductGridProps) {
   return (
     <section
-      id="gallery"
-      className="w-full overflow-hidden bg-white pb-24 text-zinc-950 sm:pb-32 lg:pb-40"
+      id="parts"
+      aria-label="Product Gallery Grid"
+      className="w-full bg-black text-white py-10 sm:py-14 select-none overflow-hidden"
     >
       <Container size="xl">
-        <Heading size="2xl" variant="dark" align="center" className="mb-12 lg:mb-16">
-          Take a closer look
-        </Heading>
+        {title && (
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-white font-sans text-center mb-8">
+            {title}
+          </h2>
+        )}
 
-        <div className="mx-auto grid max-w-7xl gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-12">
+        {/* Compact Grid of 4 */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {items.map((item) => (
-            <article
-              key={item.id}
-              className="group overflow-hidden rounded-3xl bg-[#F4F4F6] p-8 sm:p-10 lg:p-12"
-            >
-              <h3 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
-                {item.title}
-              </h3>
-
-              {/* A fixed ratio keeps every card the same size */}
-              <div className="relative mt-8 aspect-[4/3] w-full">
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 700px"
-                    className="object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="absolute inset-0 rounded-2xl bg-black/5" />
-                )}
+            <figure key={item.id} className="group flex flex-col">
+              {/* Image Frame */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-zinc-900 shadow-md">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
               </div>
-            </article>
+
+              {/* Minimal caption */}
+              <figcaption className="mt-2.5 sm:mt-3 text-center sm:text-left">
+                <span className="font-sans text-xs sm:text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
+                  {item.title}
+                </span>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </Container>

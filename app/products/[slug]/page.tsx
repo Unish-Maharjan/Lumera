@@ -6,14 +6,17 @@ import {
 } from "@/data/product-details";
 import {
   ProductHero,
+  ProductAbout,
   ProductPerformance,
-  ProductSpecs,
+  ProductRefreshRate,
+  ProductEyeCare,
   ProductGallery,
   ProductRelated,
   ProductProtection,
 } from "@/components/product-detail";
-import AboutCta from "@/components/about/about-cta";
 import ProductParts from "@/components/product-detail/product-parts";
+import ProductDivider from "@/components/product-detail/product-divider";
+import AboutCta from "@/components/about/about-cta";
 
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -65,27 +68,41 @@ export default async function ProductDetailPage({
       {/* 1. Product Hero */}
       <ProductHero product={product} />
 
-      {/* 3. Comprehensive Technical Specifications */}
-      <ProductSpecs product={product} /> 
+      {/* 2. Small Product About Section */}
+      <ProductAbout product={product} />
 
-      <ProductProtection/>
+      {/* 3. Product Closer Look Grid */}
+      <ProductParts />
 
-      {/* 2. Core Performance Benchmarks */}
-      <ProductPerformance imageSrc={product.heroImage} productName={product.name} />
+      {/* 4. Core Visual Performance (Ultimate Visuals & True Color) */}
+      <ProductPerformance product={product} />
+
+  
+      {/* 5. Precise Low-Grayscale Color Reproduction Unified Card */}
+      <ProductDivider />
+
+      {/* 4. Health & Safety Standards (Healthy Eye Care & EMC Safety) */}
+      <ProductEyeCare product={product} />
+
+          
+      {/* 4. 120Hz High Frame Rate Motion Capture */}
+      <ProductRefreshRate product={product} />
 
 
-      <ProductParts/>
 
-      {/* 8. Photographic Product Gallery */}
+      {/* 6. Protection Features */}
+      <ProductProtection />
+
+        {/* 4. Photographic Product Gallery (Application Scenario) */}
       <ProductGallery product={product} />
 
-      {/* 9. Documentation & Engineering Downloads
-      <ProductDownloads product={product} /> */}
-
-      {/* 10. Related Architectural Displays */}
+      {/* 8. Related Architectural Displays */}
       <ProductRelated currentProductId={product.id} />
 
       <AboutCta/>
+
+      {/* 9. Contact CTA */}
+      {/* <AboutCta /> */}
     </main>
   );
 }

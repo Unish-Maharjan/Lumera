@@ -19,7 +19,6 @@ const RIVETS = [
   "bottom-1 left-1 sm:bottom-1.5 sm:left-1.5",
   "bottom-1 right-1 sm:bottom-1.5 sm:right-1.5",
 ];
-const OVERLAY = "absolute inset-0 pointer-events-none z-10";
 const RING =
   "w-[115%] h-1 sm:h-1.5 bg-gradient-to-r from-zinc-800 via-zinc-500 to-zinc-800 border-y border-white/20 rounded-xs shadow-sm";
 

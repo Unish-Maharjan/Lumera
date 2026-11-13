@@ -11,7 +11,12 @@ const stats = [
 
 function Counter({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return value;
+    }
+    return 0;
+  });
 
   useEffect(() => {
     const el = ref.current;
@@ -19,7 +24,6 @@ function Counter({ value }: { value: number }) {
 
     // Skip the animation for people who ask for less motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setCount(value);
       return;
     }
 

@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 
 export type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "div" | "p";
-export type HeadingSize = "display" | "2xl" | "xl" | "lg" | "md" | "sm" | "xs";
+export type HeadingSize = "display" | "xl" | "lg" | "md" | "sm" | "xs";
 export type HeadingAlign = "left" | "center" | "right";
 export type HeadingVariant = "white" | "dark" | "black" | "gold" | "muted";
 
@@ -32,10 +32,7 @@ const sizeStyles: Record<HeadingSize, string> = {
   // Monumental Hero / Stage headline
   display:
     "text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold uppercase leading-[0.92] tracking-tight font-heading",
-  // Primary Page / Hero H1
-  "2xl":
-    "text-4xl sm:text-6xl md:text-7xl font-bold uppercase leading-none sm:leading-[0.95] tracking-tight font-heading",
-  // Flagship Section H2
+  // Flagship Section H2 / Page Hero H1
   xl:
     "text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight font-heading",
   // Standard Architectural Section H2

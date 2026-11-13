@@ -1,7 +1,8 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Container from "@/components/ui/Container";
-import { Heading } from "@/components/ui";
 import { ProductDetailData } from "@/data/product-details";
 
 interface ProductHeroProps {
@@ -9,55 +10,46 @@ interface ProductHeroProps {
 }
 
 export function ProductHero({ product }: ProductHeroProps) {
-  // Split product name into two balanced lines matching the editorial hero typography
-  const nameParts = product.name ? product.name.trim().split(/\s+/) : ["LUMERA", "MATRIX"];
-  const firstName = nameParts[0];
-  const secondName = nameParts.slice(1).join(" ");
-
   return (
     <section
       id="overview"
-      className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-black text-foreground select-none pt-28 pb-20 sm:pt-36 sm:pb-28"
+      className="relative flex min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh] w-full select-none items-center justify-center overflow-hidden bg-black text-foreground"
     >
-      {/* Background Architectural LED Visual */}
-      <div className="absolute inset-0 z-0 pointer-events-none select-none">
+      {/* Cosmic Horizon Background Image */}
+      <div className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden select-none">
         <Image
-          src="/images/product-detail-hero.jpg"
-          alt={`${product.name} architectural LED display integration`}
+          src="/images/productdetails/hero-cosmic-bg.jpg"
+          alt="Cosmic horizon cinematic landscape"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center brightness-[0.85]"
+          className="object-cover object-center"
         />
-
-        {/* Bottom Vignette for Smooth Transition to the Next Section */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black via-black/70 to-transparent"
-          aria-hidden="true"
-        />
+        {/* Gradients to seamlessly blend into deep black at top & bottom */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/60 pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-32 sm:h-44 bg-gradient-to-b from-transparent to-black pointer-events-none" />
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 w-full">
+      {/* Centered Product Module Render (Smaller sized image) */}
+      <div className="relative z-10 flex w-full items-center justify-center py-12 sm:py-16">
         <Container size="xl">
-          <div className="relative max-w-4xl mx-auto text-center translate-y-45 flex flex-col items-center">
-            {/* Main Headline matching the editorial design */}
-            <Heading
-              as="h1"
-              size="2xl"
-              align="center"
-              className="w-full text-center"
-            >
-              {firstName} <br />
-              {secondName && <span className="block text-center">{secondName}</span>}
-            </Heading>
+          <div className="flex items-center justify-center">
+            <div className="relative flex aspect-[810/554] w-full max-w-[380px] sm:max-w-[460px] md:max-w-[540px] lg:max-w-[620px] items-center justify-center">
+              {/* Backlight Glow matching cosmic blue horizon tones */}
+              <div
+                className="pointer-events-none absolute -inset-6 sm:-inset-8 rounded-full bg-gradient-to-tr from-blue-600/30 via-[#398BFF]/20 to-cyan-300/20 opacity-75 blur-[70px] sm:blur-[90px]"
+                aria-hidden="true"
+              />
 
-            {/* Supporting Subtitle */}
-            <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-100 font-light leading-relaxed max-w-2xl mx-auto mt-6 sm:mt-8">
-              {product.subheadline ||
-                product.headline ||
-                "Lumera engineers bespoke LED lighting systems and monumental digital canvases that transform physical spaces into enduring visual landmarks."}
-            </p>
+              <Image
+                src="/images/productdetails/hero-panel.webp"
+                alt={`${product.name} 3D architectural LED module render`}
+                fill
+                priority
+                sizes="(max-width: 640px) 380px, (max-width: 768px) 460px, (max-width: 1024px) 540px, 620px"
+                className="object-contain drop-shadow-2xl"
+              />
+            </div>
           </div>
         </Container>
       </div>

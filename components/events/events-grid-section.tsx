@@ -68,11 +68,11 @@ const EVENTS: EventItem[] = [
   },
   {
     id: "lumera-architecture-forum",
-    date: "Sep 25, 2024",
+    date: "Sep 05, 2024",
     title: "Lumera Architecture Forum",
     location: "Hyatt Regency, Kathmandu",
-    image: "/images/buildspace/outdoor.avif",
-    categories: ["Corporate", "Installations"],
+    image: "/images/colorful.jpg",
+    categories: ["Corporate", "Exhibitions"],
   },
 ];
 
@@ -87,14 +87,14 @@ export function EventsGridSection() {
   return (
     <section className="relative w-full bg-[#F5F5F2] py-10 sm:py-18 text-[#0A0A0A] select-none">
       <Container size="xl">
-        {/* Section Header matching Product Grid */}
+        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-[#0A0A0A] mb-3">
-            OUR <span className="text-[#D7B875]">EVENTS</span>
+            Bringing Visions to Life
           </h2>
         </div>
 
-        {/* Category Filters Bar matching Product Grid */}
+        {/* Category Filters Bar */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-14">
           {CATEGORIES.map((cat) => {
             const isActive = activeTab === cat;
@@ -123,7 +123,10 @@ export function EventsGridSection() {
               className="group flex flex-col justify-between bg-white rounded-xl sm:rounded-2xl border border-[#E5E5E0] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
             >
               {/* Image Stage */}
-              <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-zinc-100">
+              <Link
+                href={`/events/${event.id}`}
+                className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-zinc-100 block cursor-pointer"
+              >
                 <Image
                   src={event.image}
                   alt={event.title}
@@ -132,19 +135,26 @@ export function EventsGridSection() {
                   className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                 />
                 {/* Category Badge */}
-                <div className="absolute top-4 left-4 z-10">
+                <div className="absolute top-4 left-4 z-10 flex gap-2">
                   <span className="inline-block bg-black/80 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full shadow-xs">
                     {event.categories[0]}
                   </span>
+                  {event.id === "nepal-music-festival" && (
+                    <span className="inline-block bg-[#D7B875] text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-xs uppercase tracking-wider">
+                      Featured
+                    </span>
+                  )}
                 </div>
-              </div>
+              </Link>
 
               {/* Event Info & Action Area */}
               <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                 <div>
-                  <h3 className="font-heading text-xl font-bold uppercase text-black">
-                    {event.title}
-                  </h3>
+                  <Link href={`/events/${event.id}`} className="block group/title">
+                    <h3 className="font-heading text-xl font-bold uppercase text-black group-hover/title:text-[#D7B875] transition-colors">
+                      {event.title}
+                    </h3>
+                  </Link>
                   <p className="text-xs sm:text-sm text-[#777777] font-normal mt-1">
                     {event.location}
                   </p>
@@ -161,11 +171,11 @@ export function EventsGridSection() {
                     </span>
                   </div>
 
-                  <Link href="/contact" draggable={false}>
+                  <Link href={`/events/${event.id}`} draggable={false}>
                     <Button
                       size="sm"
                       rounded="full"
-                      className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200 whitespace-nowrap"
+                      className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200 whitespace-nowrap cursor-pointer"
                     >
                       View Detail
                     </Button>
@@ -181,4 +191,3 @@ export function EventsGridSection() {
 }
 
 export default EventsGridSection;
-

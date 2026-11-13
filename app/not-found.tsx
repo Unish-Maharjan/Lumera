@@ -92,13 +92,13 @@ export default function NotFound() {
 
         {/* Primary Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-14 sm:mb-20">
-          <button
-            type="button"
-          
+          <Link
+            href="/"
+            onClick={() => triggerPreloader?.()}
             className="h-11 sm:h-12 px-7 sm:px-9 rounded-full bg-white hover:bg-[#D7B875] text-black font-semibold text-xs tracking-widest uppercase transition-all duration-300 flex items-center gap-2.5 shadow-xl hover:shadow-[0_0_25px_rgba(215,184,117,0.4)] cursor-pointer active:scale-95"
           >
             <span>Return to Home</span>
-          </button>
+          </Link>
         </div>
       </Container>
     </main>

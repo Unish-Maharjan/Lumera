@@ -40,7 +40,7 @@ export function ProductRelated({ currentProductId }: ProductRelatedProps) {
             align="center"
             variant="dark"
           >
-            Displays for every space.
+            Related Architecture
           </Heading>
         </div>
 

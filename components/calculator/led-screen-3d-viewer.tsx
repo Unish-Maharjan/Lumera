@@ -24,9 +24,6 @@ export interface LedScreen3DViewerProps {
 export function LedScreen3DViewer({
   widthM,
   heightM,
-  cols,
-  rows,
-  unit,
   showImage,
   onToggleShowImage,
   modelUrl = "/models/screen_led.glb",
@@ -45,6 +42,7 @@ export function LedScreen3DViewer({
   const controlsRef = useRef<OrbitControls | null>(null);
   const modelWrapperRef = useRef<THREE.Group | null>(null);
   const dimensionGuidesRef = useRef<THREE.Group | null>(null);
+  const floorGridRef = useRef<THREE.GridHelper | null>(null);
   const screenMeshRef = useRef<THREE.Mesh | null>(null);
   const screenTextureRef = useRef<THREE.Texture | null>(null);
   const backMeshRef = useRef<THREE.Mesh | null>(null);
@@ -69,14 +67,10 @@ export function LedScreen3DViewer({
     showImageRef.current = showImage;
   }, [showImage]);
 
-  // 3D Anchor points for measurement labels
-  const widthAnchorRef = useRef<THREE.Vector3>(new THREE.Vector3());
-  const heightAnchorRef = useRef<THREE.Vector3>(new THREE.Vector3());
+  // 3D Anchor point for the depth measurement label
   const depthAnchorRef = useRef<THREE.Vector3>(new THREE.Vector3());
 
-  // HTML Overlay label element refs (direct DOM transforms eliminate 60fps React re-renders)
-  const widthBadgeRef = useRef<HTMLDivElement>(null);
-  const heightBadgeRef = useRef<HTMLDivElement>(null);
+  // HTML Overlay label element ref (direct DOM transforms eliminate 60fps React re-renders)
   const depthBadgeRef = useRef<HTMLDivElement>(null);
 
   // Measured real-world 3D dimensions from Three.js Box3
@@ -105,12 +99,10 @@ export function LedScreen3DViewer({
     const hDist = (size.y / 2) / Math.tan(fov / 2);
     const wDist = (size.x / 2) / (Math.tan(fov / 2) * aspect);
     
-    // Comfortable base framing distance gives the 3D model an elegant, smaller scale (~45-55% of canvas)
-    // with ample architectural breathing room for dimension lines, labels, and steppers.
-    // Crucially, this stable base framing means clicking [+] on width physically expands the model
-    // across the viewport, rather than pulling the camera back and freezing visual width!
-    const baseComfortDist = 7.0;
-    const dynamicFitDist = Math.max(hDist, wDist) * 1.35;
+    // Expansive base framing distance gives the 3D model a prominent scale (~70-80% of canvas)
+    // with clear view of modular cabinets, rear cabling, and precision dimension lines.
+    const baseComfortDist = 4.8;
+    const dynamicFitDist = Math.max(hDist, wDist) * 1.12;
     const targetDist = Math.max(baseComfortDist, dynamicFitDist);
 
     // When animating (Reset View), return to front view. When rescaling, preserve current viewing angle!
@@ -149,7 +141,7 @@ export function LedScreen3DViewer({
     }
   }, []);
 
-  // Update 3D measurement guide lines & ticks
+  // Update 3D measurement guide lines & ticks (depth only)
   const updateDimensionGuides = useCallback((box: THREE.Box3) => {
     const guidesGroup = dimensionGuidesRef.current;
     if (!guidesGroup) return;
@@ -173,50 +165,16 @@ export function LedScreen3DViewer({
     const minY = box.min.y;
     const maxY = box.max.y;
     const minZ = box.min.z;
-    const maxZ = box.max.z + 0.015; // slightly forward to prevent z-fighting
 
     const w = maxX - minX;
     const h = maxY - minY;
 
-    const offsetY = Math.max(0.14, Math.min(0.38, h * 0.09));
     const offsetX = Math.max(0.14, Math.min(0.38, w * 0.09));
     const arrow = Math.max(0.035, Math.min(0.09, Math.min(w, h) * 0.028));
 
     const points: number[] = [];
 
-    // --- 1. TOP WIDTH GUIDE ---
-    const lineY = maxY + offsetY;
-    // Main dimension line across width
-    points.push(minX, lineY, maxZ, maxX, lineY, maxZ);
-    // Extension witness lines from screen corners up to dimension line
-    points.push(minX, maxY + 0.02, maxZ, minX, lineY + offsetY * 0.2, maxZ);
-    points.push(maxX, maxY + 0.02, maxZ, maxX, lineY + offsetY * 0.2, maxZ);
-    // Left end tick & arrowhead
-    points.push(minX, lineY - arrow * 1.2, maxZ, minX, lineY + arrow * 1.2, maxZ);
-    points.push(minX, lineY, maxZ, minX + arrow * 1.6, lineY + arrow * 0.7, maxZ);
-    points.push(minX, lineY, maxZ, minX + arrow * 1.6, lineY - arrow * 0.7, maxZ);
-    // Right end tick & arrowhead
-    points.push(maxX, lineY - arrow * 1.2, maxZ, maxX, lineY + arrow * 1.2, maxZ);
-    points.push(maxX, lineY, maxZ, maxX - arrow * 1.6, lineY + arrow * 0.7, maxZ);
-    points.push(maxX, lineY, maxZ, maxX - arrow * 1.6, lineY - arrow * 0.7, maxZ);
-
-    // --- 2. LEFT HEIGHT GUIDE ---
-    const lineX = minX - offsetX;
-    // Main dimension line across height
-    points.push(lineX, minY, maxZ, lineX, maxY, maxZ);
-    // Extension witness lines from screen corners out to dimension line
-    points.push(minX - 0.02, minY, maxZ, lineX - offsetX * 0.2, minY, maxZ);
-    points.push(minX - 0.02, maxY, maxZ, lineX - offsetX * 0.2, maxY, maxZ);
-    // Bottom end tick & arrowhead
-    points.push(lineX - arrow * 1.2, minY, maxZ, lineX + arrow * 1.2, minY, maxZ);
-    points.push(lineX, minY, maxZ, lineX + arrow * 0.7, minY + arrow * 1.6, maxZ);
-    points.push(lineX, minY, maxZ, lineX - arrow * 0.7, minY + arrow * 1.6, maxZ);
-    // Top end tick & arrowhead
-    points.push(lineX - arrow * 1.2, maxY, maxZ, lineX + arrow * 1.2, maxY, maxZ);
-    points.push(lineX, maxY, maxZ, lineX + arrow * 0.7, maxY - arrow * 1.6, maxZ);
-    points.push(lineX, maxY, maxZ, lineX - arrow * 0.7, maxY - arrow * 1.6, maxZ);
-
-    // --- 3. CABINET DEPTH GUIDE (Bottom Right Corner) ---
+    // --- CABINET DEPTH GUIDE (Bottom Right Corner) ---
     const depthX = maxX + offsetX * 0.6;
     const depthY = minY;
     points.push(depthX, depthY, minZ, depthX, depthY, box.max.z);
@@ -239,9 +197,7 @@ export function LedScreen3DViewer({
     lines.renderOrder = 999;
     guidesGroup.add(lines);
 
-    // Update 3D label anchor points
-    widthAnchorRef.current.set((minX + maxX) / 2, lineY, maxZ);
-    heightAnchorRef.current.set(lineX, (minY + maxY) / 2, maxZ);
+    // Update 3D label anchor point
     depthAnchorRef.current.set(depthX, depthY, (minZ + box.max.z) / 2);
   }, []);
 
@@ -283,6 +239,11 @@ export function LedScreen3DViewer({
       // Update 3D measurement guide lines & tick marks
       updateDimensionGuides(measuredBox);
 
+      // Keep 3D floor coordinate grid grounded just below the bottom edge of the LED wall
+      if (floorGridRef.current) {
+        floorGridRef.current.position.y = measuredBox.min.y - 0.04;
+      }
+
       // Adjust camera to fit the scaled model
       if (shouldFitCamera) {
         fitCameraToModel(measuredBox, false);
@@ -310,8 +271,8 @@ export function LedScreen3DViewer({
     sceneRef.current = scene;
 
     // 2. Camera
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-    camera.position.set(0, 0, 8);
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+    camera.position.set(0, 0, 5.5);
     cameraRef.current = camera;
 
     // 3. Renderer
@@ -372,6 +333,21 @@ export function LedScreen3DViewer({
     const dimensionGuides = new THREE.Group();
     scene.add(dimensionGuides);
     dimensionGuidesRef.current = dimensionGuides;
+
+    // Architectural 3D Ground Coordinate Grid
+    const floorGrid = new THREE.GridHelper(36, 36, 0xd7b875, 0xd8d8d2);
+    floorGrid.position.set(0, -1.8, 0);
+    if (Array.isArray(floorGrid.material)) {
+      floorGrid.material.forEach((m) => {
+        m.transparent = true;
+        m.opacity = 0.55;
+      });
+    } else {
+      floorGrid.material.transparent = true;
+      floorGrid.material.opacity = 0.55;
+    }
+    scene.add(floorGrid);
+    floorGridRef.current = floorGrid;
 
     // 7. Load GLTF / GLB Model
     const loader = new GLTFLoader();
@@ -503,7 +479,7 @@ export function LedScreen3DViewer({
       controls.update();
       renderer.render(scene, camera);
 
-      // Project 3D Measurement Label Anchors to 2D Screen Space directly on DOM
+      // Project 3D Measurement Label Anchor to 2D Screen Space directly on DOM
       if (isLoadedRef.current && containerRef.current) {
         const cWidth = containerRef.current.clientWidth;
         const cHeight = containerRef.current.clientHeight;
@@ -523,8 +499,6 @@ export function LedScreen3DViewer({
           el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         };
 
-        updateBadge(widthBadgeRef.current, widthAnchorRef.current);
-        updateBadge(heightBadgeRef.current, heightAnchorRef.current);
         updateBadge(depthBadgeRef.current, depthAnchorRef.current);
       }
     };
@@ -549,6 +523,10 @@ export function LedScreen3DViewer({
 
       if (screenTextureRef.current) screenTextureRef.current.dispose();
       if (backTextureRef.current) backTextureRef.current.dispose();
+      if (floorGridRef.current) {
+        scene.remove(floorGridRef.current);
+        floorGridRef.current.geometry.dispose();
+      }
       controls.dispose();
       renderer.dispose();
       scene.clear();
@@ -595,6 +573,34 @@ export function LedScreen3DViewer({
     fitCameraToModel(box, true);
   };
 
+  // Zoom in to increase visible 3D model size
+  const handleZoomIn = () => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    if (!camera || !controls) return;
+    const dir = camera.position.clone().sub(controls.target);
+    const dist = dir.length();
+    if (dist > 1.2) {
+      dir.setLength(dist * 0.82);
+      camera.position.copy(controls.target).add(dir);
+      controls.update();
+    }
+  };
+
+  // Zoom out to decrease visible 3D model size
+  const handleZoomOut = () => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    if (!camera || !controls) return;
+    const dir = camera.position.clone().sub(controls.target);
+    const dist = dir.length();
+    if (dist < 30) {
+      dir.setLength(dist * 1.22);
+      camera.position.copy(controls.target).add(dir);
+      controls.update();
+    }
+  };
+
   // Sync auto-rotation state with OrbitControls
   useEffect(() => {
     if (controlsRef.current) {
@@ -602,15 +608,13 @@ export function LedScreen3DViewer({
     }
   }, [isAutoRotating]);
 
-  // Convert dimensions for labels
-  const widthDisplay = unit === "metric" ? `${measuredDims.width.toFixed(2)} m` : `${(measuredDims.width * 3.28084).toFixed(1)} ft`;
-  const heightDisplay = unit === "metric" ? `${measuredDims.height.toFixed(2)} m` : `${(measuredDims.height * 3.28084).toFixed(1)} ft`;
+  // Depth label text
   const depthDisplay = `${Math.round(measuredDims.depth * 1000)} mm`;
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-[420px] sm:h-[480px] lg:h-[540px] xl:h-[580px] overflow-hidden rounded-xl select-none ${className}`}
+      className={`relative w-full h-full min-h-[460px] sm:min-h-[520px] lg:min-h-[580px] xl:min-h-[620px] overflow-hidden rounded-2xl sm:rounded-3xl select-none ${className}`}
     >
       {/* Three.js WebGL Canvas */}
       <canvas
@@ -636,48 +640,44 @@ export function LedScreen3DViewer({
         </div>
       )}
 
-      {/* 3D Measurement Labels Projected in Real-Time */}
+      {/* 3D Measurement Label Projected in Real-Time */}
       {!isLoading && (
-        <>
-          {/* 1. Width Dimension Label Badge (Anchored above 3D model) */}
-          <div
-            ref={widthBadgeRef}
-            className="absolute top-0 left-0 pointer-events-none will-change-transform z-20"
-            style={{ opacity: 0 }}
-          >
-            <div className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/95 border border-[#D7B875] text-[11px] sm:text-xs font-semibold shadow-md backdrop-blur-md whitespace-nowrap flex items-center gap-1.5">
-              <span className="text-zinc-950 font-bold">Width: <span className="text-[#D7B875]">{widthDisplay}</span></span>
-              <span className="text-zinc-500 font-normal">({cols} {cols === 1 ? "panel" : "panels"})</span>
-            </div>
+        <div
+          ref={depthBadgeRef}
+          className="absolute top-0 left-0 pointer-events-none will-change-transform z-20"
+          style={{ opacity: 0 }}
+        >
+          <div className="px-2.5 py-0.5 rounded-full bg-white/95 border border-[#E5E5E0] text-zinc-700 text-[10px] font-medium shadow-xs backdrop-blur-md whitespace-nowrap">
+            Depth: {depthDisplay}
           </div>
-
-          {/* 2. Height Dimension Label Badge (Anchored to the left of 3D model) */}
-          <div
-            ref={heightBadgeRef}
-            className="absolute top-0 left-0 pointer-events-none will-change-transform z-20"
-            style={{ opacity: 0 }}
-          >
-            <div className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/95 border border-[#D7B875] text-[11px] sm:text-xs font-semibold shadow-md backdrop-blur-md whitespace-nowrap flex items-center gap-1.5">
-              <span className="text-zinc-950 font-bold">Height: <span className="text-[#D7B875]">{heightDisplay}</span></span>
-              <span className="text-zinc-500 font-normal">({rows} {rows === 1 ? "panel" : "panels"})</span>
-            </div>
-          </div>
-
-          {/* 3. Depth Dimension Label Badge (Anchored along cabinet profile) */}
-          <div
-            ref={depthBadgeRef}
-            className="absolute top-0 left-0 pointer-events-none will-change-transform z-20"
-            style={{ opacity: 0 }}
-          >
-            <div className="px-2.5 py-0.5 rounded-full bg-white/95 border border-[#E5E5E0] text-zinc-700 text-[10px] font-medium shadow-xs backdrop-blur-md whitespace-nowrap">
-              Depth: {depthDisplay}
-            </div>
-          </div>
-        </>
+        </div>
       )}
 
       {/* Floating 3D Navigation Controls (Top Right) */}
       <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+        {/* Zoom In & Out (+ / −) to Increase and Decrease 3D Model Size */}
+        <div className="flex items-center rounded-full bg-white border border-[#E5E5E0] shadow-xs backdrop-blur-md overflow-hidden">
+          <button
+            type="button"
+            onClick={handleZoomIn}
+            title="Increase 3D model size (Zoom in)"
+            aria-label="Increase 3D model size"
+            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-700 hover:bg-zinc-950 hover:text-white transition-colors font-bold text-sm sm:text-base cursor-pointer active:scale-95"
+          >
+            +
+          </button>
+          <div className="w-[1px] h-3.5 bg-zinc-200" />
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            title="Decrease 3D model size (Zoom out)"
+            aria-label="Decrease 3D model size"
+            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-700 hover:bg-zinc-950 hover:text-white transition-colors font-bold text-sm sm:text-base cursor-pointer active:scale-95"
+          >
+            −
+          </button>
+        </div>
+
         {/* Toggle Auto-Rotation Spin */}
         <button
           type="button"

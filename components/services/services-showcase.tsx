@@ -30,7 +30,7 @@ export const SERVICES: ServiceItem[] = [
     id: "installation",
     title: "Installation",
     description:
-      "Professional installation for flawless performance, anywhere you need it.",
+      "From planning to final setup, we deliver seamless LED installations with precision, ensuring reliable performance and exceptional visual experiences.",
     imageSrc: "/images/ourservices/service-1.jpg",
     imageAlt: "Professional exterior architectural LED installation",
     linkText: "Learn More",
@@ -41,7 +41,7 @@ export const SERVICES: ServiceItem[] = [
     id: "consultation",
     title: "Consultation",
     description:
-      "Expert advice to help you choose the right LED solution.",
+      "We help you find the right LED solution for your space, goals, and budget through expert guidance and carefully planned recommendations.",
     imageSrc: "/images/ourservices/service-2.jpg",
     imageAlt: "Curved panoramic LED atrium display consultation",
     linkText: "Learn More",
@@ -50,9 +50,9 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     id: "custom-solutions",
-    title: "Custom Solutions",
+    title: "Renting",
     description:
-      "Tailored LED displays designed to fit your unique needs and ideas.",
+      "Access high-quality LED displays for concerts, exhibitions, and corporate events, with flexible rental options and professional technical support.",
     imageSrc: "/images/ourservices/service-3.jpg",
     imageAlt: "Custom monumental corner LED display installation",
     linkText: "Learn More",
@@ -141,10 +141,10 @@ export function ServicesShowcase({
           <Heading
             id="services-showcase-heading"
             variant="black"
-            size="2xl"
+            size="xl"
             align="center"
           >
-            OUR <Heading.Accent>SERVICES</Heading.Accent>
+            OUR SERVICES
           </Heading>
         </div>
 
@@ -167,7 +167,9 @@ export function ServicesShowcase({
                 >
                   <div
                     data-parallax-frame
-                    className="group relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 border border-zinc-200/90 transition-colors duration-300 hover:border-zinc-300 shadow-sm"
+                    className="group relative w-full aspect-[16/10] overflow-hidden bg-zinc-100 border
+                     border-zinc-200/90 transition-colors duration-300 rounded-[10px]
+                      hover:border-zinc-300"
                   >
                     <div
                       data-parallax-image
@@ -219,7 +221,7 @@ export function ServicesShowcase({
                         rounded="full"
                         className="group inline-flex items-center gap-2 bg-zinc-950 text-white border-zinc-950 hover:bg-[#D7B875] hover:text-zinc-950 hover:border-[#D7B875] transition-colors"
                       >
-                        <span>{service.linkText || "Learn More"}</span>
+                        inquire now
                       </Button>
                     </Link>
                   </div>

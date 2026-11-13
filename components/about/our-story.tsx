@@ -87,7 +87,7 @@ export function OurStory() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Narrative Column */}
             <div className="lg:col-span-6 flex flex-col justify-center">
-             <Heading size="2xl" variant="dark">The force behind the light</Heading>
+             <Heading size="xl" variant="dark">The force behind the light</Heading>
 
               <p className="font-inter text-base sm:text-lg text-zinc-600 mt-10 font-medium leading-relaxed max-w-xl">
                 Founded on the belief that digital illumination should integrate 

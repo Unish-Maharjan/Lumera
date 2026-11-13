@@ -1,182 +1,186 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 import Container from "@/components/ui/Container";
-import { ProductDetailData, GalleryItem } from "@/data/product-details";
+import { Heading } from "@/components/ui/Heading";
+import { ProductDetailData } from "@/data/product-details";
+import "swiper/css";
+import "swiper/css/navigation";
 
 interface ProductGalleryProps {
-  product: ProductDetailData;
+  product?: ProductDetailData;
+  title?: string;
+  scenarios?: Array<{ id: string; title: string; image: string }>;
 }
 
-export function ProductGallery({ product }: ProductGalleryProps) {
-  const { gallery } = product;
-  const [selectedTag, setSelectedTag] = useState<string>("All");
-  const [activeModalItem, setActiveModalItem] = useState<GalleryItem | null>(null);
+const DEFAULT_SCENARIOS = [
+  {
+    id: "studio-broadcast",
+    title: "Studio&Broadcast",
+    image: "/images/productdetails/scenario-studio.png",
+  },
+  {
+    id: "product-review",
+    title: "Product Review",
+    image: "/images/productdetails/scenario-review.png",
+  },
+  {
+    id: "exhibition-space",
+    title: "Exhibition & Showroom",
+    image: "/images/retail-space.png",
+  },
+  {
+    id: "corporate-boardroom",
+    title: "Executive Boardroom",
+    image: "/images/productdetails/wideview.jpg",
+  },
+  {
+    id: "events-stage",
+    title: "Stage & Live Events",
+    image: "/images/event-screen.png",
+  },
+  {
+    id: "architectural-facade",
+    title: "Architectural Spaces",
+    image: "/images/buildspace/facade.avif",
+  },
+];
 
-  // Extract unique tags
-  const tags = ["All", ...Array.from(new Set(gallery.map((g) => g.tag)))];
-
-  const filteredItems =
-    selectedTag === "All"
-      ? gallery
-      : gallery.filter((g) => g.tag === selectedTag);
-
-  // Keyboard accessibility: ESC key dismisses modal
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setActiveModalItem(null);
-      }
-    };
-    if (activeModalItem) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeModalItem]);
+export function ProductGallery({
+  product,
+  title = "Application Scenario",
+  scenarios = DEFAULT_SCENARIOS,
+}: ProductGalleryProps) {
+  const swiperRef = useRef<SwiperType | null>(null);
 
   return (
     <section
       id="gallery"
-      className="w-full bg-black text-white py-28 sm:py-36 lg:py-44 border-t border-white/[0.08]"
+      aria-labelledby="gallery-heading"
+      data-product-id={product?.id}
+      className="w-full bg-black text-white py-10 sm:py-14 lg:py-22 
+      select-none overflow-hidden"
     >
       <Container size="xl">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
-          <div className="max-w-2xl">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#D7B875] mb-3 block">
-              VISUAL REPERTORY
-            </span>
-            <h2 className="font-heading text-4xl sm:text-6xl font-bold uppercase tracking-tight text-white leading-none">
-              PHOTOGRAPHIC GALLERY.
-            </h2>
-            <p className="mt-4 text-base sm:text-lg text-zinc-400 font-light">
-              High-resolution detail shots, mechanical profiles, and real-world architectural installations.
-            </p>
-          </div>
-
-          {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 shrink-0">
-            {tags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => setSelectedTag(tag)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer ${
-                  selectedTag === tag
-                    ? "bg-[#D7B875] text-black shadow-md"
-                    : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Editorial Asymmetric Photo Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredItems.map((item, index) => {
-            // First item spans 2 columns on desktop for dynamic hierarchy
-            const isFeatured = index === 0 && selectedTag === "All";
-            return (
-              <div
-                key={item.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => setActiveModalItem(item)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setActiveModalItem(item);
-                  }
-                }}
-                className={`group relative rounded-3xl overflow-hidden border border-white/[0.08] bg-[#0E0E10] cursor-pointer hover:border-[#D7B875]/50 transition-all duration-500 focus-visible:ring-2 focus-visible:ring-[#D7B875] outline-none ${
-                  isFeatured
-                    ? "md:col-span-2 lg:col-span-2 min-h-[380px] sm:min-h-[460px]"
-                    : "min-h-[320px] sm:min-h-[360px]"
-                }`}
-              >
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes={
-                    isFeatured
-                      ? "(max-width: 1024px) 100vw, 66vw"
-                      : "(max-width: 768px) 100vw, 33vw"
-                  }
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-
-                {/* Subtle vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
-
-                {/* Tag pill */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-white/20 text-[10px] font-mono uppercase text-[#D7B875] backdrop-blur-md">
-                  {item.tag}
-                </div>
-
-                {/* Bottom Caption */}
-                <div className="absolute bottom-5 inset-x-5">
-                  <h3 className="font-heading text-lg sm:text-xl font-bold uppercase text-white leading-tight">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-xs text-zinc-300 font-light line-clamp-2">
-                    {item.caption}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+        {/* Section Heading: Application Scenario */}
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-14 lg:mb-16">
+          <Heading
+            as="h2"
+            size="lg"
+            variant="white"
+            align="center"
+            id="gallery-heading"
+            className="text-white font-light tracking-tight"
+          >
+            {title}
+          </Heading>
         </div>
       </Container>
 
-      {/* Lightbox Inspection Modal */}
-      {activeModalItem && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8"
-          onClick={() => setActiveModalItem(null)}
+      {/* Horizontal Carousel Container */}
+      <div className="relative w-full max-w-[1700px] mx-auto px-4 sm:px-8">
+        {/* Previous Navigation Arrow */}
+        <button
+          type="button"
+          onClick={() => swiperRef.current?.slidePrev()}
+          aria-label="Previous scenario"
+          className="absolute left-2 sm:left-6 top-[40%] -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-zinc-900/90 text-white border border-zinc-700/80 shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer hover:bg-zinc-800 backdrop-blur-md"
         >
-          <div
-            className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
+          <svg
+            className="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <button
-              type="button"
-              onClick={() => setActiveModalItem(null)}
-              className="absolute -top-12 right-0 text-white/70 hover:text-white font-mono text-sm cursor-pointer p-2"
-            >
-              Close [ESC] ✕
-            </button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
 
-            <div className="relative w-full aspect-[16/10] max-h-[70vh] rounded-2xl overflow-hidden border border-white/20 bg-zinc-950">
-              <Image
-                src={activeModalItem.image}
-                alt={activeModalItem.title}
-                fill
-                priority
-                sizes="100vw"
-                className="object-contain object-center"
-              />
-            </div>
+        {/* Next Navigation Arrow */}
+        <button
+          type="button"
+          onClick={() => swiperRef.current?.slideNext()}
+          aria-label="Next scenario"
+          className="absolute right-2 sm:right-6 top-[40%] -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-zinc-900/90 text-white border border-zinc-700/80 shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer hover:bg-zinc-800 backdrop-blur-md"
+        >
+          <svg
+            className="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
 
-            <div className="mt-4 text-center">
-              <span className="text-xs font-mono text-[#D7B875] uppercase">
-                {activeModalItem.tag}
-              </span>
-              <h4 className="font-heading text-xl font-bold text-white mt-1">
-                {activeModalItem.title}
-              </h4>
-              <p className="text-xs text-zinc-400 mt-1 max-w-lg mx-auto">
-                {activeModalItem.caption}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+        {/* Swiper Slider */}
+        <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          modules={[Navigation, Autoplay]}
+          loop={true}
+          centeredSlides={false}
+          slidesPerView={1.2}
+          spaceBetween={20}
+          autoplay={{
+            delay: 4500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          breakpoints={{
+            640: {
+              slidesPerView: 1.8,
+              spaceBetween: 28,
+            },
+            1024: {
+              slidesPerView: 2.3,
+              spaceBetween: 36,
+            },
+            1440: {
+              slidesPerView: 2.6,
+              spaceBetween: 40,
+            },
+          }}
+          className="w-full !overflow-visible"
+        >
+          {scenarios.map((item) => (
+            <SwiperSlide key={item.id} className="!h-auto">
+              <article className="group flex flex-col items-start w-full cursor-grab active:cursor-grabbing">
+                {/* Rounded Image Container */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-zinc-900 border border-zinc-800/90 shadow-xl transition-all duration-500 group-hover:border-zinc-700">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 85vw, (max-width: 1024px) 55vw, 42vw"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                </div>
+
+                {/* Left-Aligned Label beneath each card */}
+                <span className="mt-4 sm:mt-5 text-sm sm:text-base font-medium tracking-tight text-white font-sans text-left">
+                  {item.title}
+                </span>
+              </article>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </section>
   );
 }

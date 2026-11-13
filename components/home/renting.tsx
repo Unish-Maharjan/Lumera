@@ -25,14 +25,14 @@ export function RentingSection() {
     <section
       id="rental"
       aria-labelledby="rental-heading"
-      className="relative z-20 w-full bg-black text-zinc-950 py-16 sm:py-20 lg:py-28 select-none font-sans overflow-x-clip"
+      className="relative z-20 w-full bg-white text-zinc-950 py-16 sm:py-20 lg:py-28 select-none font-sans overflow-x-clip"
     >
       <Container size="xl" className="relative z-10">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20 text-center">
           <h2
             id="rental-heading"
-            className="font-heading text-3xl sm:text-5xl md:text-6xl text-white font-bold uppercase mb-4 sm:mb-5 tracking-tight"
+            className="font-heading text-3xl sm:text-5xl md:text-6xl text-zinc-950 font-bold uppercase mb-4 sm:mb-5 tracking-tight"
           >
             FOR Renting
           </h2>
@@ -49,7 +49,7 @@ export function RentingSection() {
               title={dir < 0 ? "Previous rental screens" : "Next rental screens"}
               className={`absolute ${
                 dir < 0 ? "-left-2 sm:-left-4 lg:-left-20" : "-right-2 sm:-right-4 lg:-right-20"
-              } top-[42%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-[#D7B875] text-zinc-900 hover:text-black border border-zinc-200 hover:border-[#D7B875] flex items-center justify-center transition-all duration-300 backdrop-blur-md cursor-pointer hover:scale-105 active:scale-95`}
+              } top-[42%] sm:top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-[#D7B875] text-zinc-900 hover:text-black border border-zinc-200 hover:border-[#D7B875] flex items-center justify-center transition-all duration-300 shadow-md backdrop-blur-md cursor-pointer hover:scale-105 active:scale-95`}
             >
               <svg
                 className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${
@@ -82,8 +82,7 @@ export function RentingSection() {
           >
             {RENTAL_SCREENS.map((screen) => (
               <SwiperSlide key={screen.id} className="!h-auto">
-                <article className="group h-full flex flex-col justify-between bg-zinc-200 rounded-xl sm:rounded-2xl 
-                transition-all duration-500 overflow-hidden ">
+                <article className="group h-full flex flex-col justify-between bg-[#F7F7F5] border border-zinc-200/80 rounded-xl sm:rounded-2xl transition-all duration-500 overflow-hidden shadow-xs hover:shadow-md hover:border-zinc-300">
                   {/* Image */}
                   <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full">
                     <Image
@@ -116,7 +115,7 @@ export function RentingSection() {
                       </p>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-white flex items-center justify-end">
+                    <div className="mt-6 pt-4 border-t border-zinc-200 flex items-center justify-end">
                       <Link href="/contact" draggable={false}>
                         <Button size="sm" rounded="full" variant="gold">
                           Enquire Now

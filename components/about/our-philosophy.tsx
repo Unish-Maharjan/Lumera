@@ -32,7 +32,7 @@ const STEPS = [
     name: "Create",
     title: "This is where ideas take shape.",
     description:
-      "Our team brings strategy and creativity together to design and build thoughtful solutions. We focus on the details, challenge assumptions, and keep you involved throughout the process.",
+      "Our team brings strategy and creativity together to design and build thoughtful solutions.",
     icon: faSliders,
   },
   {
@@ -59,10 +59,10 @@ export function OurPhilosophy() {
       <Container size="xl">
         {/* Centered Heading with Subtitle & Philosophy Statement */}
         <div className="mx-auto mb-14 sm:mb-20 flex max-w-3xl flex-col items-center text-center">
-          <Heading size="2xl" variant="dark" align="center" className="w-full">
+          <Heading size="xl" variant="dark" align="center" className="w-full">
             How We Work
           </Heading>
-          <p className="mt-3 font-heading text-lg sm:text-xl font-semibold text-zinc-900">
+          <p className="mt-4 sm:mt-5 font-heading text-md sm:text-xl font-semibold text-zinc-900/70">
             A thoughtful process. From first conversation to final launch.
           </p>
         </div>
@@ -89,7 +89,7 @@ export function OurPhilosophy() {
             {STEPS.map((step) => (
               <li
                 key={step.name}
-                className="flex items-start gap-4 sm:gap-6 border-b border-zinc-200 py-6 first:pt-0 last:border-b-0 last:pb-0 sm:py-7"
+                className="flex items-start gap-5 sm:gap-7 border-b border-zinc-200 py-7 sm:py-8 lg:py-9 first:pt-0 last:border-b-0 last:pb-0"
               >
                 {/* Solid Circular FontAwesome Icon Badge */}
                 <span className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white shadow-xs group-hover:bg-[#D7B875] transition-colors">
@@ -99,11 +99,11 @@ export function OurPhilosophy() {
                   />
                 </span>
 
-                <div className="flex-1 pt-0.5">
+                <div className="flex-1 pt-0.5 sm:pt-1">
                   <h3 className="font-heading text-lg sm:text-xl font-bold leading-snug text-zinc-900">
                     {step.title}
                   </h3>
-                  <p className="mt-1.5 max-w-2xl font-sans text-sm sm:text-base leading-relaxed text-zinc-600">
+                  <p className="mt-3 sm:mt-3.5 max-w-2xl font-sans text-sm sm:text-base leading-relaxed text-zinc-600">
                     {step.description}
                   </p>
                 </div>

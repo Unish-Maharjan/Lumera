@@ -2,7 +2,6 @@ import AboutSection from "@/components/home/about-section";
 import ImageSequencing from "@/components/home/image-sequencing";
 import OurProductSection from "@/components/home/ourproduct-section";
 import RentingSection from "@/components/home/renting";
-import CtaSection from "@/components/home/cta-section";
 import AdsSection from "@/components/home/billboard";
 import WatchInstallation from "@/components/home/installation-section";
 import AboutCta from "@/components/about/about-cta";

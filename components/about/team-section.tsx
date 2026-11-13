@@ -51,24 +51,23 @@ export function TeamSection() {
         {/* Header: title left, short note right */}
         <div className="mb-14 flex flex-col gap-4 pb-8 sm:mb-20 md:flex-row
          md:items-end md:justify-center">
-          <Heading size="2xl" variant="dark">
+          <Heading size="xl" variant="dark">
             Meet our team
           </Heading>
         </div>
 
-        {/* Alternate cards sit lower on large screens, so the row isn't a flat strip */}
-        <ul className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:pb-12">
+        {/* Symmetric team grid */}
+        <ul className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {TEAM_MEMBERS.map((member) => (
-            <li key={member.id} className="group lg:even:translate-y-12">
-              <div className="relative aspect-4/5 overflow-hidden rounded-sm bg-zinc-200">
+            <li key={member.id} className="group">
+              <div className="relative aspect-4/5 overflow-hidden rounded-xl bg-zinc-200">
                 <Image
                   src={member.imageSrc}
                   alt={`${member.name}, ${member.role}`}
                   fill
                   unoptimized
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover object-center rounded-[10px] transition-transform duration-700 
-                  ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
+                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
                 />
               </div>
 

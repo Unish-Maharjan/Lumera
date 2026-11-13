@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import ProductsHero from "@/components/products/products-hero";
 import ProductGridSection from "@/components/products/product-grid-section";
-import ProductCta from "@/components/products/product-cta";
+import AboutCta from "@/components/about/about-cta";
 
 export const metadata: Metadata = {
   title: "Products | Lumera High-Performance LED Displays",
@@ -14,7 +14,7 @@ export default function ProductsPage() {
     <main className="min-h-screen bg-black text-foreground">
       <ProductsHero />
       <ProductGridSection />
-      <ProductCta />
+      <AboutCta/>
     </main>
   );
 }
