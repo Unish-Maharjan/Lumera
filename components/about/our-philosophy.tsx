@@ -1,39 +1,115 @@
-import React from "react";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCommentDots,
+  faMagnifyingGlass,
+  faSliders,
+  faFileLines,
+  faHandshake,
+} from "@fortawesome/free-solid-svg-icons";
 import Container from "@/components/ui/Container";
+import { Heading } from "@/components/ui/Heading";
+
+const STEPS = [
+  {
+    stepNumber: "01",
+    name: "Discover",
+    title: "First, we listen.",
+    description:
+      "We start by understanding your goals, your audience, and the problem you're trying to solve. Before jumping into solutions, we make sure we're asking the right questions.",
+    icon: faCommentDots,
+  },
+  {
+    stepNumber: "02",
+    name: "Strategize",
+    title: "A clear direction makes all the difference.",
+    description:
+      "With a better understanding of your vision, we define the direction, map out the approach, and establish a plan that keeps everyone aligned.",
+    icon: faMagnifyingGlass,
+  },
+  {
+    stepNumber: "03",
+    name: "Create",
+    title: "This is where ideas take shape.",
+    description:
+      "Our team brings strategy and creativity together to design and build thoughtful solutions. We focus on the details, challenge assumptions, and keep you involved throughout the process.",
+    icon: faSliders,
+  },
+  {
+    stepNumber: "04",
+    name: "Refine",
+    title: "Good work deserves another look.",
+    description:
+      "We test, review, and refine every detail. Your feedback matters, and we use it to make sure the final result meets the standard we set out to achieve.",
+    icon: faFileLines,
+  },
+  {
+    stepNumber: "05",
+    name: "Deliver",
+    title: "Ready for what's next.",
+    description:
+      "Once everything is polished, we deliver the final work and make sure you're ready to move forward with confidence.",
+    icon: faHandshake,
+  },
+];
 
 export function OurPhilosophy() {
   return (
-    <section className="relative w-full bg-black text-foreground py-20 sm:py-28 lg:py-36 border-t border-white/10">
+    <section className="w-full bg-[#F7F7F5] pt-12 pb-16 sm:pt-18 sm:pb-24 lg:pt-24 lg:pb-32 text-zinc-950">
       <Container size="xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Visual Column (Asymmetrical Rhythm: Image on Left) */}
-          <div className="lg:col-span-6 order-2 lg:order-1">
-            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden border border-white/10 bg-zinc-950">
+        {/* Centered Heading with Subtitle & Philosophy Statement */}
+        <div className="mx-auto mb-14 sm:mb-20 flex max-w-3xl flex-col items-center text-center">
+          <Heading size="2xl" variant="dark" align="center" className="w-full">
+            How We Work
+          </Heading>
+          <p className="mt-3 font-heading text-lg sm:text-xl font-semibold text-zinc-900">
+            A thoughtful process. From first conversation to final launch.
+          </p>
+        </div>
+
+        {/* 2-Column Architectural Layout: Image with Overlaid Consultation Badge + 5 Steps */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-14 xl:gap-16 items-stretch">
+          {/* Left Column: Architectural Skyscraper Image with Floating Badge */}
+          <div className="relative lg:col-span-5 min-h-[420px] sm:min-h-[500px] lg:min-h-0">
+            {/* Main Rounded Image Container */}
+            <div className="relative w-full h-full min-h-[420px] sm:min-h-[500px] overflow-hidden rounded-3xl border border-black/5 bg-zinc-200 shadow-md">
               <Image
-                src="/images/building-facade.jpg"
-                alt="Architectural structure harmonizing with precision lighting"
+                src="/images/cta.png"
+                alt="Modern skyscraper architectural glass facade"
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-center brightness-95 contrast-[1.05]"
+                priority
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                className="object-cover object-center"
               />
             </div>
           </div>
 
-          {/* Philosophy Text Column */}
-          <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col justify-center">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent mb-4 sm:mb-6 block">
-              OUR PHILOSOPHY
-            </span>
+          {/* Right Column: 5 Process Steps with FontAwesome Badges and Dividers */}
+          <ol className="flex flex-col justify-between lg:col-span-7">
+            {STEPS.map((step) => (
+              <li
+                key={step.name}
+                className="flex items-start gap-4 sm:gap-6 border-b border-zinc-200 py-6 first:pt-0 last:border-b-0 last:pb-0 sm:py-7"
+              >
+                {/* Solid Circular FontAwesome Icon Badge */}
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white shadow-xs group-hover:bg-[#D7B875] transition-colors">
+                  <FontAwesomeIcon
+                    icon={step.icon}
+                    className="h-5 w-5 sm:h-6 sm:w-6"
+                  />
+                </span>
 
-            <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-bold uppercase leading-[1.05] tracking-tight text-white mb-6 sm:mb-8">
-              Precision is not a detail. It is the <span className="text-accent">foundation.</span>
-            </h2>
-
-            <p className="font-sans text-base sm:text-lg text-zinc-300 font-light leading-relaxed max-w-xl">
-              We approach light not as superficial decoration, but as an architectural discipline. By calibrating diode pitch, thermal performance, and chromatic purity at the micron level, our systems achieve uncompromised optical clarity that respects both the viewer and the surrounding structure.
-            </p>
-          </div>
+                <div className="flex-1 pt-0.5">
+                  <h3 className="font-heading text-lg sm:text-xl font-bold leading-snug text-zinc-900">
+                    {step.title}
+                  </h3>
+                  <p className="mt-1.5 max-w-2xl font-sans text-sm sm:text-base leading-relaxed text-zinc-600">
+                    {step.description}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </Container>
     </section>

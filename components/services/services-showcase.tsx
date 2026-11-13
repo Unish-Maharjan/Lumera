@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import { Heading } from "../ui";
+import { Heading } from "@/components/ui/Heading";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -139,11 +139,12 @@ export function ServicesShowcase({
         {/* Section Header at Top Middle */}
         <div className="max-w-2xl mx-auto text-center mb-16 sm:mb-20 lg:mb-28">
           <Heading
-            variant="dark"
+            id="services-showcase-heading"
+            variant="black"
             size="2xl"
             align="center"
           >
-            OUR SERVICES
+            OUR <Heading.Accent>SERVICES</Heading.Accent>
           </Heading>
         </div>
 

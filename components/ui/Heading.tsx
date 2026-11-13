@@ -3,7 +3,7 @@ import React, { forwardRef } from "react";
 export type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "div" | "p";
 export type HeadingSize = "display" | "2xl" | "xl" | "lg" | "md" | "sm" | "xs";
 export type HeadingAlign = "left" | "center" | "right";
-export type HeadingVariant = "white" | "dark" | "gold" | "muted";
+export type HeadingVariant = "white" | "dark" | "black" | "gold" | "muted";
 
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   /** HTML element to render */
@@ -55,6 +55,7 @@ const sizeStyles: Record<HeadingSize, string> = {
 const variantStyles: Record<HeadingVariant, string> = {
   white: "text-white",
   dark: "text-zinc-950",
+  black: "text-zinc-950",
   gold: "text-[#D7B875]",
   muted: "text-zinc-400",
 };
@@ -102,7 +103,7 @@ export function HeadingBadge({
   variant?: HeadingVariant;
   className?: string;
 }) {
-  const isDarkTheme = variant !== "dark";
+  const isDarkTheme = variant !== "dark" && variant !== "black";
 
   return (
     <div
@@ -193,7 +194,7 @@ const HeadingBase = forwardRef<HTMLHeadingElement, HeadingProps>(
         {description && (
           <p
             className={`mt-4 font-sans text-sm sm:text-base md:text-lg leading-relaxed ${
-              variant === "dark" ? "text-zinc-600" : "text-zinc-400"
+              variant === "dark" || variant === "black" ? "text-zinc-600" : "text-zinc-400"
             } ${alignStyles[align].desc} ${descriptionClassName}`.trim()}
           >
             {description}
