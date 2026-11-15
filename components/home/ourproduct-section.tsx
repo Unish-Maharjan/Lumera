@@ -98,7 +98,7 @@ export function OurProductSection() {
                   {/* Active Content: Headline, Summary & Action Buttons */}
                   <div className="absolute top-0 inset-x-0 flex flex-col items-center justify-start text-center z-20 px-4 pt-1">
                     {/* Product Headline */}
-                    <Heading as="h3" size="lg" variant="dark" align="center" className="mb-1.5">
+                    <Heading as="h3" size="md" variant="dark" align="center" className="mb-1.5">
                       {product.name}
                     </Heading>
 

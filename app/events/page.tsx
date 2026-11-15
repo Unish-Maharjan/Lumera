@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import EventsHero from "@/components/events/events-hero";
+// import EventsHero from "@/components/events/events-hero";
 import EventsGridSection from "@/components/events/events-grid-section";
 import AboutCta from "@/components/about/about-cta";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function EventsPage() {
   return (
     <main className="min-h-screen bg-black text-foreground">
-      <EventsHero />
+      {/* <EventsHero /> */}
       <EventsGridSection />
       <AboutCta/>
       {/* <EventsCta /> */}

@@ -18,8 +18,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&h=800&q=80",
   },
   {
-    id: "unish-maharjan",
-    name: "Unish Maharjan",
+    id: "Matheu Parnte",
+    name: "Matheu Parnte",
     role: "Managing Director",
     imageSrc:
       "https://images.unsplash.com/photo-1590086782792-42dd2350140d?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
@@ -71,15 +71,14 @@ export function TeamSection() {
                 />
               </div>
 
-              <div className="mt-4 flex items-baseline justify-between gap-4">
+              <div className="mt-4">
                 <h3 className="font-heading text-lg font-semibold text-zinc-950 sm:text-xl">
                   {member.name}
                 </h3>
-                <span className="h-px flex-1 translate-y-[-4px] bg-zinc-300 transition-colors group-hover:bg-[#B89240]" />
+                <p className="mt-1 font-sans text-sm text-zinc-500">
+                  {member.role}
+                </p>
               </div>
-              <p className="mt-1 font-sans text-sm text-zinc-500">
-                {member.role}
-              </p>
             </li>
           ))}
         </ul>

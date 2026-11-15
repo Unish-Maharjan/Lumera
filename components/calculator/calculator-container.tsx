@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Container } from "@/components/ui/Container";
 import {
   UnitSystem,
   LedPitchVariant,
@@ -17,7 +16,7 @@ export interface CalculatorContainerProps {
 }
 
 export function CalculatorContainer({
-  className = "py-16 sm:py-20 lg:py-24",
+  className = "",
 }: CalculatorContainerProps = {}) {
   const [unit] = useState<UnitSystem>("metric");
 
@@ -29,9 +28,9 @@ export function CalculatorContainer({
     CONTROLLER_SPECS[0]
   );
 
-  // Grid Dimensions
-  const [cols, setCols] = useState<number>(6);
-  const [rows, setRows] = useState<number>(6);
+  // Grid Dimensions (3x3 = 1.80m x 1.01m native 16:9)
+  const [cols, setCols] = useState<number>(3);
+  const [rows, setRows] = useState<number>(3);
 
   // Memoized Master Calculation Engine
   const calc = useMemo(() => {
@@ -39,30 +38,27 @@ export function CalculatorContainer({
   }, [cols, rows, selectedVariant, selectedController]);
 
   const handleColsChange = (newCols: number) => {
-    setCols(newCols);
+    setCols(Math.min(7, Math.max(3, newCols)));
   };
 
   const handleRowsChange = (newRows: number) => {
-    setRows(newRows);
+    setRows(Math.min(7, Math.max(3, newRows)));
   };
 
   return (
-    <div className={`w-full bg-[#F7F7F5] text-zinc-950 ${className}`.trim()}>
-      {/* Main Calculator Workflow Container - Exact 100vh / 100dvh */}
-      <section className="h-screen h-[100dvh] max-h-screen max-h-[100dvh] 
-      w-full bg-[#F7F7F5] sm:py-6 px-2 sm:px-4 flex flex-col justify-between overflow-hidden">
-        <Container size="xl" className="h-full flex flex-col justify-between overflow-hidden">
-          <ScreenVisualizer
-            calc={calc}
-            variant={selectedVariant}
-            controller={selectedController}
-            unit={unit}
-            cols={cols}
-            rows={rows}
-            onChangeCols={handleColsChange}
-            onChangeRows={handleRowsChange}
-          />
-        </Container>
+    <div className={`w-full min-h-screen bg-[#F7F7F5] text-zinc-950 overflow-x-hidden ${className}`.trim()}>
+      {/* Main Calculator Workflow Container full width 100vw */}
+      <section className="h-[115dvh] w-screen max-w-[100vw] bg-[#F7F7F5] pt-14 pb-0 flex flex-col justify-between overflow-hidden">
+        <ScreenVisualizer
+          calc={calc}
+          variant={selectedVariant}
+          controller={selectedController}
+          unit={unit}
+          cols={cols}
+          rows={rows}
+          onChangeCols={handleColsChange}
+          onChangeRows={handleRowsChange}
+        />
       </section>
     </div>
   );

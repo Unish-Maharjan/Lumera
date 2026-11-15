@@ -5,6 +5,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Heading } from "@/components/ui/Heading";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -111,7 +112,6 @@ export default function WatchInstallation() {
         {stages.map((stage, i) => {
           const dark = i === 1;
           const [first, second] = stage.title.split(" & ");
-          const Heading = i === 0 ? "h2" : "p";
 
           return (
             <div
@@ -124,8 +124,11 @@ export default function WatchInstallation() {
               {/* Header */}
               <div className="w-full max-w-7xl mx-auto flex justify-center shrink-0 pt-2 sm:pt-4">
                 <Heading
+                  as={i === 0 ? "h2" : "p"}
                   id={i === 0 ? "process-heading" : undefined}
-                  className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-center"
+                  size="xl"
+                  variant={dark ? "white" : "dark"}
+                  align="center"
                 >
                   Our process.
                 </Heading>

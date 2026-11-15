@@ -85,7 +85,7 @@ export function EventsGridSection() {
       : EVENTS.filter((event) => event.categories.includes(activeTab));
 
   return (
-    <section className="relative w-full bg-[#F5F5F2] py-10 sm:py-18 text-[#0A0A0A] select-none">
+    <section className="relative w-full bg-[#F5F5F2] pb-10 pt-35 sm:pb-18 text-[#0A0A0A] select-none">
       <Container size="xl">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
@@ -139,11 +139,6 @@ export function EventsGridSection() {
                   <span className="inline-block bg-black/80 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full shadow-xs">
                     {event.categories[0]}
                   </span>
-                  {event.id === "nepal-music-festival" && (
-                    <span className="inline-block bg-[#D7B875] text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-xs uppercase tracking-wider">
-                      Featured
-                    </span>
-                  )}
                 </div>
               </Link>
 

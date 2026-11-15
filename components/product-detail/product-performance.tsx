@@ -139,7 +139,7 @@ export function ProductPerformance({
             size="xl"
             align="center"
           >
-            {title} {accent ? <Heading.Accent>{accent}</Heading.Accent> : null}
+            Core performance
           </Heading>
         </div>
 
@@ -196,11 +196,11 @@ export function ProductPerformance({
                       : "order-2 lg:order-1 lg:pr-4 xl:pr-8"
                   }`}
                 >
-                  {item.subtitle && (
+                  {/* {item.subtitle && (
                     <span className="font-mono text-xs sm:text-sm uppercase tracking-widest text-zinc-500 mb-2 sm:mb-3 font-medium block">
                       {item.subtitle}
                     </span>
-                  )}
+                  )} */}
 
                   <h2
                     id={`feature-heading-${item.id}`}

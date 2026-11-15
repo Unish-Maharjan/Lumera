@@ -15,52 +15,33 @@ if (typeof window !== "undefined") {
 
 export function OurStory() {
   const sectionRef = useRef<HTMLElement>(null);
-  const frame1Ref = useRef<HTMLDivElement>(null);
-  const image1Ref = useRef<HTMLDivElement>(null);
-  const frame2Ref = useRef<HTMLDivElement>(null);
-  const image2Ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      // Respect prefers-reduced-motion accessibility
+      // Respect prefers-reduced-motion accessibility preference
       if (
         typeof window !== "undefined" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ) {
-        if (image1Ref.current) gsap.set(image1Ref.current, { yPercent: 0 });
-        if (image2Ref.current) gsap.set(image2Ref.current, { yPercent: 0 });
+        gsap.set("[data-parallax-image]", { yPercent: 0 });
+        gsap.set("[data-parallax-text]", { y: 0 });
         return;
       }
 
-      // Parallax scroll for Container 1 image (Event Screen)
-      if (image1Ref.current && frame1Ref.current) {
-        gsap.fromTo(
-          image1Ref.current,
-          { yPercent: -15 },
-          {
-            yPercent: 15,
-            ease: "none",
-            scrollTrigger: {
-              trigger: frame1Ref.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-              invalidateOnRefresh: true,
-            },
-          }
-        );
-      }
+      // Query all parallax image frames within this section
+      const frames = gsap.utils.toArray<HTMLElement>("[data-parallax-frame]");
+      frames.forEach((frame) => {
+        const img = frame.querySelector<HTMLElement>("[data-parallax-image]");
+        if (!img) return;
 
-      // Parallax scroll for Container 2 image
-      if (image2Ref.current && frame2Ref.current) {
         gsap.fromTo(
-          image2Ref.current,
-          { yPercent: -15 },
+          img,
+          { yPercent: -14 },
           {
-            yPercent: 15,
+            yPercent: 14,
             ease: "none",
             scrollTrigger: {
-              trigger: frame2Ref.current,
+              trigger: frame,
               start: "top bottom",
               end: "bottom top",
               scrub: true,
@@ -68,7 +49,30 @@ export function OurStory() {
             },
           }
         );
-      }
+      });
+
+      // Query all story articles for narrative text parallax
+      const articles = gsap.utils.toArray<HTMLElement>("[data-story-article]");
+      articles.forEach((article) => {
+        const textCol = article.querySelector<HTMLElement>("[data-parallax-text]");
+        if (!textCol) return;
+
+        gsap.fromTo(
+          textCol,
+          { y: 48 },
+          {
+            y: -48,
+            ease: "none",
+            scrollTrigger: {
+              trigger: article,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
     },
     { scope: sectionRef }
   );
@@ -79,15 +83,20 @@ export function OurStory() {
         ref={sectionRef}
         id="our-story"
         aria-labelledby="story-heading"
-        className="relative w-full bg-[#F7F7F5] text-zinc-950 pt-20 sm:pt-28 lg:pt-36 
-        overflow-hidden select-none"
+        className="relative w-full bg-[#F7F7F5] text-zinc-950 pt-20 sm:pt-28 lg:pt-36 overflow-hidden select-none"
       >
-        {/* Container 1: Our Story */}
         <Container size="xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Narrative Column */}
-            <div className="lg:col-span-6 flex flex-col justify-center">
-             <Heading size="xl" variant="dark">The force behind the light</Heading>
+          {/* Container 1: About Us */}
+          <article
+            data-story-article
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center"
+          >
+            {/* Narrative Column with Parallax */}
+            <div
+              data-parallax-text
+              className="lg:col-span-6 flex flex-col justify-center will-change-transform"
+            >
+              <Heading size="xl" variant="dark">About us</Heading>
 
               <p className="font-inter text-base sm:text-lg text-zinc-600 mt-10 font-medium leading-relaxed max-w-xl">
                 Founded on the belief that digital illumination should integrate 
@@ -102,24 +111,75 @@ export function OurStory() {
             {/* Architectural Image Column with Parallax */}
             <div className="lg:col-span-6">
               <div
-                ref={frame1Ref}
-                className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-xl sm:rounded-2xl border border-black/10 bg-zinc-100 shadow-sm"
+                data-parallax-frame
+                className="group relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-zinc-100 border border-black/10 rounded-xl sm:rounded-2xl shadow-sm transition-colors duration-300 hover:border-zinc-300"
               >
                 <div
-                  ref={image1Ref}
-                  className="relative w-full h-[130%] -top-[15%] will-change-transform"
+                  data-parallax-image
+                  className="relative w-full h-[128%] -top-[14%] will-change-transform"
                 >
                   <Image
                     src="/images/event-screen.png"
                     alt="Lumera curved interior LED architectural installation"
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover object-center"
+                    className="object-cover object-center brightness-95 contrast-[1.05]"
                   />
                 </div>
+
+                {/* Subtle Dark Vignette Border */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"
+                  aria-hidden="true"
+                />
               </div>
             </div>
-          </div>
+          </article>
+
+          {/* Container 2: Our Mission */}
+          <article
+            data-story-article
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center mt-20 sm:mt-28 lg:mt-36"
+          >
+            {/* Architectural Image Column with Parallax */}
+            <div className="lg:col-span-6">
+              <div
+                data-parallax-frame
+                className="group relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-zinc-100 border border-black/10 rounded-xl sm:rounded-2xl shadow-sm transition-colors duration-300 hover:border-zinc-300"
+              >
+                <div
+                  data-parallax-image
+                  className="relative w-full h-[128%] -top-[14%] will-change-transform"
+                >
+                  <Image
+                    src="/images/our-mission.jpg"
+                    alt="Lumera architectural mission installation"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover object-center brightness-95 contrast-[1.05]"
+                  />
+                </div>
+
+                {/* Subtle Dark Vignette Border */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+
+            {/* Narrative Column with Parallax */}
+            <div
+              data-parallax-text
+              className="lg:col-span-6 flex flex-col justify-center will-change-transform"
+            >
+              <Heading size="xl" variant="dark">Our mission</Heading>
+
+              <p className="font-inter text-base sm:text-lg text-zinc-600 mt-10 font-medium leading-relaxed max-w-xl">
+                Our mission is to redefine how light interacts with the built environment, creating meaningful visual experiences that elevate architectural spaces. We combine precision engineering, innovative LED technology, and thoughtful design to deliver enduring digital installations that inspire connection, transform environments, and shape the way people experience spaces.
+              </p>
+            </div>          
+          </article>
 
           {/* Integrated Trust Counter */}
           <TrustCounter />

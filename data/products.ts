@@ -23,7 +23,7 @@ export const PRODUCTS: ProductItem[] = [
     tagline: "Ultra-fine pitch MicroLED displays for flagships & studios.",
     summary:
       "Ultra-fine pitch MicroLED displays for flagships & studios with Flip-Chip COB technology and native 16:9 aspect ratios.",
-    imageSrc: "/products/product-1.webp",
+    imageSrc: "/products/product-5.webp",
     specs: [
       { label: "Pixel Pitch", value: "0.93mm – 1.87mm" },
       { label: "Contrast Ratio", value: "1,000,000 : 1" },

@@ -1,10 +1,14 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import { usePreloader } from "@/components/ui/Preloader";
 
 export function EventsCta() {
+  const { triggerPreloader } = usePreloader();
   return (
     <section className="relative w-full min-h-[50vh] sm:min-h-[60vh] flex flex-col items-center justify-center bg-black text-foreground py-20 sm:py-28 lg:py-32 border-t border-white/10 overflow-hidden select-none">
       {/* Background Architectural Moon LED Visual */}
@@ -54,7 +58,13 @@ export function EventsCta() {
                 GET AN EVENT QUOTE
               </Button>
             </Link>
-            <Link href="/calculator">
+            <Link
+              href="/calculator"
+              onClick={(e) => {
+                e.preventDefault();
+                triggerPreloader("/calculator");
+              }}
+            >
               <Button variant="outline" size="sm">
                 BOOK AN EVENT
               </Button>

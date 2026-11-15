@@ -10,6 +10,7 @@ import Container from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import "swiper/css";
 import "swiper/css/pagination";
+import { Heading } from "../ui";
 
 const RENTAL_SCREENS = [
   { id: "lumera-vortex-r", name: "LUMERA VORTEX-R", dimensions: "Up to 24m × 8m (Modular)", pixelPitch: "P1.9mm – P2.6mm", availability: "Available in Fleet", image: "/images/buildspace/events.avif" },
@@ -25,20 +26,20 @@ export function RentingSection() {
     <section
       id="rental"
       aria-labelledby="rental-heading"
-      className="relative z-20 w-full bg-white text-zinc-950 py-16 sm:py-20 lg:py-28 select-none font-sans overflow-x-clip"
+      className="relative z-20 w-full bg-white text-zinc-950 pt-30 
+      select-none font-sans overflow-x-clip"
     >
       <Container size="xl" className="relative z-10">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20 text-center">
-          <h2
-            id="rental-heading"
-            className="font-heading text-3xl sm:text-5xl md:text-6xl text-zinc-950 font-bold uppercase mb-4 sm:mb-5 tracking-tight"
-          >
-            FOR Renting
-          </h2>
+        <Heading
+        size="xl" variant="dark" align="center">
+          For Renting
+        </Heading>
         </div>
 
         <div className="relative group/carousel">
+
           {/* Previous / Next arrows (rewind to the other end is built into Swiper's `rewind`) */}
           {([-1, 1] as const).map((dir) => (
             <button

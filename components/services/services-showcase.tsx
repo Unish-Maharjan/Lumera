@@ -131,6 +131,7 @@ export function ServicesShowcase({
 
   return (
     <section
+      id="services-showcase"
       ref={sectionRef}
       aria-labelledby="services-showcase-heading"
       className="relative w-full bg-white text-zinc-950 py-16 sm:py-20 lg:py-28 overflow-hidden select-none"

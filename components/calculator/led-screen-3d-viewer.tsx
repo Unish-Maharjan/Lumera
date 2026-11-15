@@ -15,10 +15,14 @@ export interface LedScreen3DViewerProps {
   showImage: boolean;
   onToggleShowImage?: () => void;
   modelUrl?: string;
+  screenImageUrl?: string;
   className?: string;
   onDimensionsMeasured?: (dims: { widthM: number; heightM: number; depthM: number }) => void;
   bottomSlot?: React.ReactNode;
   children?: React.ReactNode;
+  hideBuiltInControls?: boolean;
+  viewMode?: "3d" | "top" | "front";
+  resetTrigger?: number;
 }
 
 export function LedScreen3DViewer({
@@ -27,10 +31,14 @@ export function LedScreen3DViewer({
   showImage,
   onToggleShowImage,
   modelUrl = "/models/screen_led.glb",
+  screenImageUrl = "/images/led-screen-display.jpg",
   className = "",
   onDimensionsMeasured,
   bottomSlot,
   children,
+  hideBuiltInControls = false,
+  viewMode = "3d",
+  resetTrigger = 0,
 }: LedScreen3DViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -440,7 +448,7 @@ export function LedScreen3DViewer({
 
         // Load Screen Texture
         const texLoader = new THREE.TextureLoader();
-        texLoader.load("/images/download.webp", (texture) => {
+        texLoader.load(screenImageUrl, (texture) => {
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.wrapS = THREE.ClampToEdgeWrapping;
           texture.wrapT = THREE.ClampToEdgeWrapping;
@@ -531,7 +539,7 @@ export function LedScreen3DViewer({
       renderer.dispose();
       scene.clear();
     };
-  }, [modelUrl]);
+  }, [modelUrl, screenImageUrl]);
 
   // Re-scale whenever target dimensions change
   useEffect(() => {
@@ -567,11 +575,11 @@ export function LedScreen3DViewer({
   }, [showImage]);
 
   // Reset view button handler
-  const handleResetCamera = () => {
+  const handleResetCamera = useCallback(() => {
     if (!modelWrapperRef.current) return;
     const box = new THREE.Box3().setFromObject(modelWrapperRef.current);
     fitCameraToModel(box, true);
-  };
+  }, [fitCameraToModel]);
 
   // Zoom in to increase visible 3D model size
   const handleZoomIn = () => {
@@ -608,13 +616,62 @@ export function LedScreen3DViewer({
     }
   }, [isAutoRotating]);
 
+  // External trigger for reset view
+  useEffect(() => {
+    if (resetTrigger > 0) {
+      handleResetCamera();
+    }
+  }, [resetTrigger, handleResetCamera]);
+
+  // External camera view modes (3d, top, front)
+  useEffect(() => {
+    if (!modelWrapperRef.current || !cameraRef.current || !controlsRef.current) return;
+    const box = new THREE.Box3().setFromObject(modelWrapperRef.current);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+
+    const fov = camera.fov * (Math.PI / 180);
+    const aspect = camera.aspect;
+    const hDist = (size.y / 2) / Math.tan(fov / 2);
+    const wDist = (size.x / 2) / (Math.tan(fov / 2) * aspect);
+    const targetDist = Math.max(4.8, Math.max(hDist, wDist) * 1.15);
+
+    const targetPos = new THREE.Vector3();
+    if (viewMode === "front") {
+      targetPos.set(center.x, center.y, center.z + targetDist);
+    } else if (viewMode === "top") {
+      targetPos.set(center.x, center.y + targetDist * 1.15, center.z + 0.001);
+    } else {
+      targetPos.set(center.x + targetDist * 0.72, center.y + targetDist * 0.35, center.z + targetDist * 0.85);
+    }
+
+    const startPos = camera.position.clone();
+    const startTarget = controls.target.clone();
+    const startTime = performance.now();
+    const duration = 650;
+
+    const step = (now: number) => {
+      const p = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      camera.position.lerpVectors(startPos, targetPos, ease);
+      controls.target.lerpVectors(startTarget, center, ease);
+      controls.update();
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [viewMode]);
+
   // Depth label text
   const depthDisplay = `${Math.round(measuredDims.depth * 1000)} mm`;
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full min-h-[460px] sm:min-h-[520px] lg:min-h-[580px] xl:min-h-[620px] overflow-hidden rounded-2xl sm:rounded-3xl select-none ${className}`}
+      className={`relative w-full h-full min-h-[460px] 
+        sm:min-h-[520px] lg:min-h-[580px] xl:min-h-[620px] overflow-hidden
+        select-none ${className}`}
     >
       {/* Three.js WebGL Canvas */}
       <canvas
@@ -654,96 +711,98 @@ export function LedScreen3DViewer({
       )}
 
       {/* Floating 3D Navigation Controls (Top Right) */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-        {/* Zoom In & Out (+ / −) to Increase and Decrease 3D Model Size */}
-        <div className="flex items-center rounded-full bg-white border border-[#E5E5E0] shadow-xs backdrop-blur-md overflow-hidden">
+      {!hideBuiltInControls && (
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+          {/* Zoom In & Out (+ / −) to Increase and Decrease 3D Model Size */}
+          <div className="flex items-center rounded-full bg-white border border-[#E5E5E0] shadow-xs backdrop-blur-md overflow-hidden">
+            <button
+              type="button"
+              onClick={handleZoomIn}
+              title="Increase 3D model size (Zoom in)"
+              aria-label="Increase 3D model size"
+              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-700 hover:bg-zinc-950 hover:text-white transition-colors font-bold text-sm sm:text-base cursor-pointer active:scale-95"
+            >
+              +
+            </button>
+            <div className="w-[1px] h-3.5 bg-zinc-200" />
+            <button
+              type="button"
+              onClick={handleZoomOut}
+              title="Decrease 3D model size (Zoom out)"
+              aria-label="Decrease 3D model size"
+              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-700 hover:bg-zinc-950 hover:text-white transition-colors font-bold text-sm sm:text-base cursor-pointer active:scale-95"
+            >
+              −
+            </button>
+          </div>
+
+          {/* Toggle Auto-Rotation Spin */}
           <button
             type="button"
-            onClick={handleZoomIn}
-            title="Increase 3D model size (Zoom in)"
-            aria-label="Increase 3D model size"
-            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-700 hover:bg-zinc-950 hover:text-white transition-colors font-bold text-sm sm:text-base cursor-pointer active:scale-95"
-          >
-            +
-          </button>
-          <div className="w-[1px] h-3.5 bg-zinc-200" />
-          <button
-            type="button"
-            onClick={handleZoomOut}
-            title="Decrease 3D model size (Zoom out)"
-            aria-label="Decrease 3D model size"
-            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-700 hover:bg-zinc-950 hover:text-white transition-colors font-bold text-sm sm:text-base cursor-pointer active:scale-95"
-          >
-            −
-          </button>
-        </div>
-
-        {/* Toggle Auto-Rotation Spin */}
-        <button
-          type="button"
-          onClick={() => setIsAutoRotating((prev) => !prev)}
-          title={isAutoRotating ? "Pause 3D auto-spin" : "Start 3D auto-spin"}
-          aria-label={isAutoRotating ? "Pause auto-spin" : "Start auto-spin"}
-          className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-950 text-zinc-700 hover:text-white border border-[#E5E5E0] hover:border-zinc-950 text-xs font-inter flex items-center gap-1.5 transition-all cursor-pointer shadow-xs backdrop-blur-md active:scale-95"
-        >
-          {isAutoRotating ? (
-            <>
-              <svg className="w-3.5 h-3.5 text-[#D7B875]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9v6m4-6v6" />
-              </svg>
-              <span className="hidden sm:inline">Pause Spin</span>
-            </>
-          ) : (
-            <>
-              <svg className="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="hidden sm:inline">Auto-Spin</span>
-            </>
-          )}
-        </button>
-
-        {/* Reset Camera View Button */}
-        <button
-          type="button"
-          onClick={handleResetCamera}
-          title="Reset 3D camera to front elevation"
-          aria-label="Reset camera view"
-          className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-950 text-zinc-700 hover:text-white border border-[#E5E5E0] hover:border-zinc-950 text-xs font-inter flex items-center gap-1.5 transition-all cursor-pointer shadow-xs backdrop-blur-md active:scale-95"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          <span className="hidden sm:inline">Reset View</span>
-        </button>
-
-        {/* Toggle Image Texture */}
-        {onToggleShowImage && (
-          <button
-            type="button"
-            onClick={onToggleShowImage}
-            aria-label={showImage ? "Remove image from LED screen" : "Show image on LED screen"}
+            onClick={() => setIsAutoRotating((prev) => !prev)}
+            title={isAutoRotating ? "Pause 3D auto-spin" : "Start 3D auto-spin"}
+            aria-label={isAutoRotating ? "Pause auto-spin" : "Start auto-spin"}
             className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-950 text-zinc-700 hover:text-white border border-[#E5E5E0] hover:border-zinc-950 text-xs font-inter flex items-center gap-1.5 transition-all cursor-pointer shadow-xs backdrop-blur-md active:scale-95"
           >
-            {showImage ? (
+            {isAutoRotating ? (
               <>
-                <svg className="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg className="w-3.5 h-3.5 text-[#D7B875]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9v6m4-6v6" />
                 </svg>
-                <span>Remove Image</span>
+                <span className="hidden sm:inline">Pause Spin</span>
               </>
             ) : (
               <>
-                <svg className="w-3.5 h-3.5 text-[#D7B875]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg className="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>Show Image</span>
+                <span className="hidden sm:inline">Auto-Spin</span>
               </>
             )}
           </button>
-        )}
-      </div>
+
+          {/* Reset Camera View Button */}
+          <button
+            type="button"
+            onClick={handleResetCamera}
+            title="Reset 3D camera to front elevation"
+            aria-label="Reset camera view"
+            className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-950 text-zinc-700 hover:text-white border border-[#E5E5E0] hover:border-zinc-950 text-xs font-inter flex items-center gap-1.5 transition-all cursor-pointer shadow-xs backdrop-blur-md active:scale-95"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span className="hidden sm:inline">Reset View</span>
+          </button>
+
+          {/* Toggle Image Texture */}
+          {onToggleShowImage && (
+            <button
+              type="button"
+              onClick={onToggleShowImage}
+              aria-label={showImage ? "Remove image from LED screen" : "Show image on LED screen"}
+              className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-950 text-zinc-700 hover:text-white border border-[#E5E5E0] hover:border-zinc-950 text-xs font-inter flex items-center gap-1.5 transition-all cursor-pointer shadow-xs backdrop-blur-md active:scale-95"
+            >
+              {showImage ? (
+                <>
+                  <svg className="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span>Remove Image</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-3.5 h-3.5 text-[#D7B875]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>Show Image</span>
+                </>
+              )}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Bottom Controls / Ratio Grid (In place of Drag to Rotate div) */}
       {bottomSlot || children ? (

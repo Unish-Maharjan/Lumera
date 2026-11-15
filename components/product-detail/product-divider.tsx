@@ -13,7 +13,7 @@ interface ProductDividerProps {
 
 export function ProductDivider({
   title = "Precise Low-Grayscale Color Reproduction",
-  description = "Perfect for luxury car launches, this LED display boasts professional-grade true color reproduction. It finely renders rich color gradations and delicate textures in the vehicle's shadow areas with sharp, clear details. It authentically restores the original paint color and light-shadow finish, meeting the strictest standards for color precision.",
+ description = "Advanced low-grayscale processing ensures smooth, accurate color reproduction even in the darkest areas of an LED display. It preserves subtle shades, fine details, and natural transitions between colors, preventing dark tones from appearing washed out or uneven. This delivers rich contrast, realistic visuals, and consistent image quality, making it ideal for premium events, luxury showcases, and high-end visual presentations.",
   imageSrc = "/images/productdetails/precise-color-car.jpg",
   imageAlt = "Luxury car launch on curved LED display with precise low-grayscale color reproduction",
 }: ProductDividerProps) {

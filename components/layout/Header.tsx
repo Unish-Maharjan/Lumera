@@ -35,6 +35,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isCalculatorPage = pathname === "/calculator" || pathname?.startsWith("/calculator");
+  const isEventsPage = pathname === "/events" || pathname?.startsWith("/events");
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -68,6 +69,7 @@ export function Header() {
       (label === "About Us" ||
         label === "Products" ||
         label === "Services" ||
+        label === "Calculator" ||
         label === "Events" ||
         label === "Contact Us") &&
       typeof window !== "undefined" &&
@@ -83,7 +85,7 @@ export function Header() {
       className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       } ${
-        isScrolled || isMobileMenuOpen || isCalculatorPage
+        isScrolled || isMobileMenuOpen || isCalculatorPage || isEventsPage
           ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-2xl"
           : "bg-transparent border-b border-transparent shadow-none"
       }`}

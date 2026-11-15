@@ -92,7 +92,7 @@ export default async function ProductDetailPage({
 
 
       {/* 6. Protection Features */}
-      <ProductProtection />
+      {/* <ProductProtection /> */}
 
         {/* 4. Photographic Product Gallery (Application Scenario) */}
       <Suspense fallback={null}>

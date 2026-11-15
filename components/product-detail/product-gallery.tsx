@@ -76,7 +76,7 @@ export function ProductGallery({
             variant="white"
             align="center"
             id="gallery-heading"
-            className="text-white font-light tracking-tight"
+            className="text-white tracking-tight"
           >
             {title}
           </Heading>
