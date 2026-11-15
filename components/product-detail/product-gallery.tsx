@@ -8,6 +8,7 @@ import type { Swiper as SwiperType } from "swiper";
 import Container from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { ProductDetailData } from "@/data/product-details";
+import { useIsClient } from "@/lib/use-is-client";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -56,6 +57,7 @@ export function ProductGallery({
   scenarios = DEFAULT_SCENARIOS,
 }: ProductGalleryProps) {
   const swiperRef = useRef<SwiperType | null>(null);
+  const isMounted = useIsClient();
 
   return (
     <section
@@ -128,58 +130,79 @@ export function ProductGallery({
         </button>
 
         {/* Swiper Slider */}
-        <Swiper
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-          }}
-          modules={[Navigation, Autoplay]}
-          loop={true}
-          centeredSlides={false}
-          slidesPerView={1.2}
-          spaceBetween={20}
-          autoplay={{
-            delay: 4500,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          }}
-          breakpoints={{
-            640: {
-              slidesPerView: 1.8,
-              spaceBetween: 28,
-            },
-            1024: {
-              slidesPerView: 2.3,
-              spaceBetween: 36,
-            },
-            1440: {
-              slidesPerView: 2.6,
-              spaceBetween: 40,
-            },
-          }}
-          className="w-full !overflow-visible"
-        >
-          {scenarios.map((item) => (
-            <SwiperSlide key={item.id} className="!h-auto">
-              <article className="group flex flex-col items-start w-full cursor-grab active:cursor-grabbing">
-                {/* Rounded Image Container */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-zinc-900 border border-zinc-800/90 shadow-xl transition-all duration-500 group-hover:border-zinc-700">
+        {isMounted ? (
+          <Swiper
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            modules={[Navigation, Autoplay]}
+            loop={true}
+            centeredSlides={false}
+            slidesPerView={1.2}
+            spaceBetween={20}
+            autoplay={{
+              delay: 4500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 1.8,
+                spaceBetween: 28,
+              },
+              1024: {
+                slidesPerView: 2.3,
+                spaceBetween: 36,
+              },
+              1440: {
+                slidesPerView: 2.6,
+                spaceBetween: 40,
+              },
+            }}
+            className="w-full !overflow-visible"
+          >
+            {scenarios.map((item) => (
+              <SwiperSlide key={item.id} className="!h-auto">
+                <article className="group flex flex-col items-start w-full cursor-grab active:cursor-grabbing">
+                  {/* Rounded Image Container */}
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-zinc-900 border border-zinc-800/90 shadow-xl transition-all duration-500 group-hover:border-zinc-700">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 85vw, (max-width: 1024px) 55vw, 42vw"
+                      className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Left-Aligned Label beneath each card */}
+                  <span className="mt-4 sm:mt-5 text-sm sm:text-base font-medium tracking-tight text-white font-sans text-left">
+                    {item.title}
+                  </span>
+                </article>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {scenarios.slice(0, 3).map((item) => (
+              <article key={item.id} className="flex flex-col items-start w-full">
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-zinc-900 border border-zinc-800/90 shadow-xl">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
                     sizes="(max-width: 640px) 85vw, (max-width: 1024px) 55vw, 42vw"
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="object-cover object-center"
                   />
                 </div>
-
-                {/* Left-Aligned Label beneath each card */}
                 <span className="mt-4 sm:mt-5 text-sm sm:text-base font-medium tracking-tight text-white font-sans text-left">
                   {item.title}
                 </span>
               </article>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

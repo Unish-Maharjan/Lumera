@@ -8,6 +8,7 @@ import type { Swiper as SwiperType } from "swiper";
 import Container from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { StageComponent } from "@/data/event-case-study";
+import { useIsClient } from "@/lib/use-is-client";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -63,6 +64,7 @@ export function EventVisualExperience({
   components,
 }: EventVisualExperienceProps) {
   const swiperRef = useRef<SwiperType | null>(null);
+  const isMounted = useIsClient();
 
   return (
     <section
@@ -133,59 +135,78 @@ export function EventVisualExperience({
           </svg>
         </button>
 
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          onSwiper={(s) => {
-            swiperRef.current = s;
-          }}
-          centeredSlides={true}
-          loop={true}
-          slidesPerView={1.2}
-          spaceBetween={16}
-          breakpoints={{
-            640: { slidesPerView: 1.35, spaceBetween: 24 },
-            768: { slidesPerView: 1.45, spaceBetween: 28 },
-            1024: { slidesPerView: 1.55, spaceBetween: 36 },
-            1440: { slidesPerView: 1.65, spaceBetween: 40 },
-          }}
-          autoplay={{
-            delay: 4500,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          }}
-          speed={700}
-          grabCursor={true}
-          className="w-full !overflow-visible"
-        >
-          {EVENT_IMAGES.map((item, idx) => (
-            <SwiperSlide key={item.src} className="!h-auto">
-              {({ isActive }) => (
-                <div
-                  className={`relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden rounded-2xl sm:rounded-3xl transition-all duration-700 ease-out shadow-2xl bg-zinc-100 ${
-                    isActive
-                      ? "scale-100 opacity-100 ring-1 ring-black/10"
-                      : "scale-[0.93] opacity-60 hover:opacity-85"
-                  }`}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 1024px) 90vw, 70vw"
-                    className="object-cover object-center"
-                    priority={idx === 0}
-                  />
-
-                  {/* Subtle Dark Gradient Overlay at base */}
+        {isMounted ? (
+          <Swiper
+            modules={[Navigation, Autoplay]}
+            onSwiper={(s) => {
+              swiperRef.current = s;
+            }}
+            centeredSlides={true}
+            loop={true}
+            slidesPerView={1.2}
+            spaceBetween={16}
+            breakpoints={{
+              640: { slidesPerView: 1.35, spaceBetween: 24 },
+              768: { slidesPerView: 1.45, spaceBetween: 28 },
+              1024: { slidesPerView: 1.55, spaceBetween: 36 },
+              1440: { slidesPerView: 1.65, spaceBetween: 40 },
+            }}
+            autoplay={{
+              delay: 4500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            speed={700}
+            grabCursor={true}
+            className="w-full !overflow-visible"
+          >
+            {EVENT_IMAGES.map((item, idx) => (
+              <SwiperSlide key={item.src} className="!h-auto">
+                {({ isActive }) => (
                   <div
-                    className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                    className={`relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden rounded-2xl sm:rounded-3xl transition-all duration-700 ease-out shadow-2xl bg-zinc-100 ${
+                      isActive
+                        ? "scale-100 opacity-100 ring-1 ring-black/10"
+                        : "scale-[0.93] opacity-60 hover:opacity-85"
+                    }`}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      sizes="(max-width: 1024px) 90vw, 70vw"
+                      className="object-cover object-center"
+                      priority={idx === 0}
+                    />
+
+                    {/* Subtle Dark Gradient Overlay at base */}
+                    <div
+                      className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"
+                      aria-hidden="true"
+                    />
+                  </div>
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <div className="w-full flex items-center justify-center overflow-hidden">
+            <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full max-w-[1000px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl bg-zinc-100">
+              <Image
+                src={EVENT_IMAGES[0].src}
+                alt={EVENT_IMAGES[0].alt}
+                fill
+                sizes="(max-width: 1024px) 90vw, 70vw"
+                className="object-cover object-center"
+                priority
+              />
+              <div
+                className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

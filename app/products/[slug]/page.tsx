@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -94,7 +95,9 @@ export default async function ProductDetailPage({
       <ProductProtection />
 
         {/* 4. Photographic Product Gallery (Application Scenario) */}
-      <ProductGallery product={product} />
+      <Suspense fallback={null}>
+        <ProductGallery product={product} />
+      </Suspense>
 
       {/* 8. Related Architectural Displays */}
       <ProductRelated currentProductId={product.id} />

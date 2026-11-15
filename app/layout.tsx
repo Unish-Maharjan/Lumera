@@ -75,6 +75,7 @@ const spaceGrotesk = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://lumeraventures.com"),
   title: "Lumera Ventures | Premium LED Lighting & Display Systems",
   description: "High-performance architectural LED lighting and advanced LED display solutions by Lumera Ventures.",
 };

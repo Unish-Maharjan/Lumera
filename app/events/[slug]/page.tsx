@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CONCERT_EVENT_DATA } from "@/data/event-case-study";
@@ -68,7 +69,9 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
       {/* 7. About Venue Section */}
       <EventGallery event={event} gallery={event.gallery} />
       {/* 3. The Visual Experience (Stage Architecture) */}
-      <EventVisualExperience components={event.stageComponents} />
+      <Suspense fallback={null}>
+        <EventVisualExperience components={event.stageComponents} />
+      </Suspense>
 
       {/* 5. Technical Project Highlights (Apple Numerical Typography) */}
       {/* <EventTechnicalHighlights specs={event.specs} /> */}
