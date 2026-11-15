@@ -170,7 +170,7 @@ export function EventsGridSection() {
                     <Button
                       size="sm"
                       rounded="full"
-                      className="!bg-black !text-white !border !border-black hover:!bg-[#D7B875] hover:!text-black hover:!border-[#D7B875] transition-colors duration-200 whitespace-nowrap cursor-pointer"
+                      variant="gold"
                     >
                       View Detail
                     </Button>

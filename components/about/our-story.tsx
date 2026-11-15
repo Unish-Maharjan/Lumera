@@ -171,11 +171,12 @@ export function OurStory() {
             {/* Narrative Column with Parallax */}
             <div
               data-parallax-text
-              className="lg:col-span-6 flex flex-col justify-center will-change-transform"
+              className="lg:col-span-6 flex flex-col justify-center text-right will-change-transform"
             >
-              <Heading size="xl" variant="dark">Our mission</Heading>
+              <Heading size="xl" variant="dark" align="right">Our mission</Heading>
 
-              <p className="font-inter text-base sm:text-lg text-zinc-600 mt-10 font-medium leading-relaxed max-w-xl">
+              <p className="font-inter text-base sm:text-lg text-zinc-600 mt-10 ml-13 font-medium 
+              leading-relaxed max-w-xl">
                 Our mission is to redefine how light interacts with the built environment, creating meaningful visual experiences that elevate architectural spaces. We combine precision engineering, innovative LED technology, and thoughtful design to deliver enduring digital installations that inspire connection, transform environments, and shape the way people experience spaces.
               </p>
             </div>          

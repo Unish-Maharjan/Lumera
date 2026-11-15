@@ -107,7 +107,7 @@ export function ProductRelated({ currentProductId }: ProductRelatedProps) {
             {displayProducts.map((product, idx) => (
               <SwiperSlide key={product.id} className="!h-auto">
                 <article
-                  className="group relative flex flex-col justify-between h-full min-h-[420px] sm:min-h-[480px] lg:min-h-[540px] p-6 sm:p-8 
+                  className="group/product relative flex flex-col justify-between h-full min-h-[420px] sm:min-h-[480px] lg:min-h-[540px] p-6 sm:p-8 
                      rounded-2xl bg-zinc-200/50 border border-[#E5E5E0] 
                      transition-all duration-300 overflow-hidden"
                 >
@@ -121,7 +121,7 @@ export function ProductRelated({ currentProductId }: ProductRelatedProps) {
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-contain select-none pointer-events-none scale-110 sm:scale-115 
-                        transition-all duration-500 group-hover:scale-[1.18] group-hover:translate-y-2 sm:group-hover:translate-y-4"
+                        transition-all duration-500 group-hover/product:scale-[1.18] group-hover/product:translate-y-2 sm:group-hover/product:translate-y-4"
                         priority={idx < 2}
                       />
 

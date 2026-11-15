@@ -175,8 +175,8 @@ export function AdsSection() {
         .fromTo(".js-dots", { opacity: 0 }, { opacity: 0.12, duration: 0.5, ease: "power1.inOut" }, 0.45)
         // Caption
         .fromTo(".js-caption", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.65)
-        // Hold
-        .to({}, { duration: 0.5 });
+        // Extended hold to showcase the billboard longer in full view
+        .to({}, { duration: 0.8 });
     },
     { scope: sectionRef }
   );
@@ -186,7 +186,7 @@ export function AdsSection() {
       ref={sectionRef}
       id="billboard-showcase"
       aria-label="Lumera Commercial Outdoor LED Billboard Showcase"
-      className="relative w-full h-[260vh] bg-black text-[#F5F2EB] overflow-x-clip"
+      className="relative w-full h-[350vh] bg-black text-[#F5F2EB] overflow-x-clip"
     >
       {/* Pinned viewport */}
       <div

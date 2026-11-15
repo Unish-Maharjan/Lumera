@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { Loader2 } from "lucide-react";
 
 export type ButtonVariant =
   | "primary"
@@ -16,40 +17,55 @@ export type ButtonVariant =
 export type ButtonSize = "sm" | "md" | "lg";
 export type ButtonRounded = "none" | "sm" | "md" | "lg" | "xl" | "full";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   rounded?: ButtonRounded;
   isLoading?: boolean;
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  // Architectural Dark Obsidian Rectangle as Normal (Inverts to Bone White on Hover)
-  primary:
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  gold:
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  champagne:
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  "champagne-gold":
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  "gold-gradient":
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  "gradient-gold":
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  "#d7b875":
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  accent:
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  secondary:
-    "bg-[#15171B] text-[#F7F7F5] border border-white/20 hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  outline:
-    "bg-[#050505] text-[#F7F7F5] border border-[#F7F7F5] hover:bg-[#F7F7F5] hover:text-[#050505] hover:border-[#F7F7F5] active:scale-[0.99]",
-  ghost:
-    "bg-transparent text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.99]",
-  white:
-    "bg-white text-black border border-white hover:bg-[#eaeae8] hover:border-[#eaeae8] hover:text-black active:scale-[0.99]",
+/**
+ * base      – resting colours
+ * fill      – colour of the liquid that rises on hover
+ * hoverText – colour of the label that rolls in on hover
+ */
+type Style = { base: string; fill: string; hoverText: string };
+
+const obsidian: Style = {
+  base: "bg-[#050505] text-[#F7F7F5] border-[#F7F7F5]",
+  fill: "bg-[#F7F7F5]",
+  hoverText: "text-[#050505]",
+};
+
+const variantStyles: Record<ButtonVariant, Style> = {
+  primary: obsidian,
+  accent: obsidian,
+  gold: obsidian,
+  champagne: obsidian,
+  "champagne-gold": obsidian,
+  "gold-gradient": obsidian,
+  "gradient-gold": obsidian,
+  "#d7b875": obsidian,
+  secondary: {
+    base: "bg-[#15171B] text-[#F7F7F5] border-white/20",
+    fill: "bg-[#F7F7F5]",
+    hoverText: "text-[#050505]",
+  },
+  outline: {
+    base: "bg-transparent text-[#F7F7F5] border-[#F7F7F5]",
+    fill: "bg-[#F7F7F5]",
+    hoverText: "text-[#050505]",
+  },
+  ghost: {
+    base: "bg-transparent text-white/80 border-transparent",
+    fill: "bg-white/10",
+    hoverText: "text-white",
+  },
+  white: {
+    base: "bg-white text-black border-white",
+    fill: "bg-[#050505]",
+    hoverText: "text-white",
+  },
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -67,6 +83,16 @@ const roundedStyles: Record<ButtonRounded, string> = {
   full: "rounded-full",
 };
 
+const ease = "duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
+
+// Each label copy sits in the same grid cell so the button keeps its size.
+const cell = `col-start-1 row-start-1 flex items-center justify-center [gap:inherit] transition-transform ${ease}`;
+
+/**
+ * Hover animation: a curved "liquid" fill rises from the bottom while the label
+ * rolls up and a second copy (in the hover colour) rolls in from below.
+ * Also plays on keyboard focus.
+ */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -82,12 +108,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const baseStyles =
-      "inline-flex items-center justify-center font-mono font-medium uppercase transition-colors duration-200 ease-out select-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-50 cursor-pointer";
-
-    const variantClass = variantStyles[variant] ?? variantStyles.primary;
-    const sizeClass = sizeStyles[size] ?? sizeStyles.md;
-    const roundedClass = roundedStyles[rounded] ?? roundedStyles.full;
+    const { base, fill, hoverText } = variantStyles[variant] ?? obsidian;
 
     return (
       <button
@@ -95,33 +116,38 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         aria-busy={isLoading}
-        className={`${baseStyles} ${variantClass} ${sizeClass} ${roundedClass} ${className}`.trim()}
+        className={[
+          "group/btn relative inline-flex cursor-pointer select-none items-center justify-center gap-2 overflow-hidden border",
+          "font-mono font-medium uppercase transition-transform duration-200 active:scale-[0.98]",
+          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+          "disabled:pointer-events-none disabled:opacity-50",
+          base,
+          sizeStyles[size] ?? sizeStyles.md,
+          roundedStyles[rounded] ?? roundedStyles.full,
+          className,
+        ].join(" ")}
         {...props}
       >
-        {isLoading && (
-          <svg
-            className="animate-spin -ml-0.5 mr-2 h-4 w-4 text-current"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+        {/* Rising liquid fill (an oversized ellipse gives the curved edge) */}
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute left-[-20%] top-0 w-[140%] h-[250%] rounded-[50%] translate-y-[40%] transition-transform ${ease} group-hover/btn:translate-y-[-30%] group-focus-visible/btn:translate-y-[-30%] ${fill}`}
+        />
+
+        {isLoading && <Loader2 className="relative h-4 w-4 shrink-0 animate-spin" aria-hidden="true" />}
+
+        {/* Rolling label */}
+        <span className="relative grid overflow-hidden [gap:inherit]">
+          <span className={`${cell} group-hover/btn:-translate-y-full group-focus-visible/btn:-translate-y-full`}>
+            {children}
+          </span>
+          <span
             aria-hidden="true"
+            className={`${cell} translate-y-full ${hoverText} group-hover/btn:translate-y-0 group-focus-visible/btn:translate-y-0`}
           >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
-        )}
-        <span>{children}</span>
+            {children}
+          </span>
+        </span>
       </button>
     );
   }

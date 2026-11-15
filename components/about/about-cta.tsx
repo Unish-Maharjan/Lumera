@@ -28,12 +28,16 @@ export function AboutCta() {
 
         {/* Ambient Bottom Gradient (blends smoothly into the dark footer) */}
         <div
-          className="absolute inset-x-0 bottom-0 h-28 sm:h-44 lg:h-56 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-10"
+          className="absolute inset-x-0 bottom-0 h-[40%] sm:h-[45%] min-h-[240px] max-h-[460px] pointer-events-none z-10"
+          style={{
+            background:
+              "linear-gradient(to top, #000000 0%, #000000 12%, rgba(0,0,0,0.98) 20%, rgba(0,0,0,0.92) 28%, rgba(0,0,0,0.82) 38%, rgba(0,0,0,0.66) 50%, rgba(0,0,0,0.48) 62%, rgba(0,0,0,0.30) 74%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.04) 93%, rgba(0,0,0,0) 100%)",
+          }}
           aria-hidden="true"
         />
       </div>
 
-      <Container size="xl" className="relative z-10 w-full">
+      <Container size="xl" className="relative z-20 w-full">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold uppercase text-zinc-950 mb-6 sm:mb-8 tracking-wider">
             Ready to illuminate your vision?
